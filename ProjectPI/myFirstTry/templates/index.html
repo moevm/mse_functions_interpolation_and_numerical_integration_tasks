@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body style="background-color: #AECCC7">
+    <h1 align="center">Генератор заданий для контрольных работ</h1>
+    <div class="container" style="background-color: #AECCC7">
+        <div class="row">
+            <form action="/download" method="get" class = "col mr-4" style="border-radius: 15px; background-color: #E5E5E5">
+                <h3 class="mt-2">Параметры</h3>
+                <div style="height: 2px; width: 150px; background-color: #B4BBCF"></div>
+                <h5>Тема</h5>
+                <div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="Theme" id="exampleRadios1" value="Interpol" checked>
+                      <label class="form-check-label" for="exampleRadios1">Интерполяция функций</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="Theme" id="exampleRadios2" value="Integral">
+                      <label class="form-check-label" for="exampleRadios2">Численное интегрирование</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <h5 class="col">Количество вариантов на листе</h5>
+                    <input class="col-0" type="button" value="i" style=" border-radius: 13px; width: 26px; height: 26px" onclick="this.disabled=1;">
+                    <div class="col-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                      <input type="text" name="Rows" class="form-control">
+                    </div>
+                    <div class="mt-1">&times;</div>
+                    <div class="col-2">
+                      <input type="text" name="Columns" class="form-control">
+                    </div>
+                  </div>
+                <div class="row">
+                    <h5 class="col">Количество переменных в таблице</h5>
+                    <input class="col-0" type="button" value="i" style=" border-radius: 13px; width: 26px; height: 26px" onclick="this.disabled=1;">
+                    <div class="col-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                      <input type="text" name="CountVar" class="form-control">
+                    </div>
+                  </div>
+                <div class="row">
+                    <h5 class="col">Нумерация вариантов</h5>
+                    <input class="col-0" type="button" value="i" style=" border-radius: 13px; width: 26px; height: 26px" onclick="this.disabled=1;">
+                    <div class="col-3"></div>
+                </div>
+                <div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="someRadios" id="someRadios3" value="option1" checked>
+                      <label class="form-check-label" for="someRadios3">Числами</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="someRadios" id="someRadios4" value="option2">
+                        <div class="row">
+
+                            <label class="col form-check-label" for="someRadios4">Пофамильно</label>
+                            <input type="file" name="file" class="col form-control-file" id="exampleFormControlFile1">
+                        </div>
+                    </div>
+                </div>
+                <h5>Куда сохранять</h5>
+                <div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="exampleCheck1" id="exampleCheck1" value="option" checked>
+                      <label class="form-check-label" for="exampleCheck1">PDF</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="exampleCheck2" id="exampleCheck2" value="option">
+                      <label class="form-check-label" for="exampleCheck2">LaTex</label>
+                    </div>
+                </div>
+                <em>Необязательный параметр:</em>
+                <div class="row">
+                    <div class="col">
+                        <h5>Сид для генерации</h5>
+                    </div>
+                    <div class="col ml">
+                        <input type="text" name="SID" class="form-control">
+                    </div>
+                </div>
+                <button type="submit" class="btn mb-2 btn-primary btn-lg active" role="button" aria-pressed="true">Сгенерировать</button>
+            </form>
+
+            <div class="col ml-4" style="border-radius: 15px; background-color: #E5E5E5">
+                <div class="row mt-1 ml-1" >
+                    <input class="col-0 mr-1" disabled type="button" value="i" style="border-color: black;  color: black; border-radius: 13px; width: 26px; height: 26px">
+                    <h3 class="col-0">Информация</h3>
+                </div>
+                <label class="ml-1 mr-1" id="TextInfo">Гоооооооооооооооол</label>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
