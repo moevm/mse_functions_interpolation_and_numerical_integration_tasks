@@ -14,6 +14,6 @@ def download(request):
 
     myDict = request.GET
 
-    if myDict.get('exampleCheck1', '') == '' and myDict.get('exampleCheck2', '') == '':
+    if myDict.get('saveOnPDF', '') == '' and myDict.get('saveOnLaTex', '') == '':
         return HttpResponse("Все очень плохо")
     return render(request, 'page.html')
