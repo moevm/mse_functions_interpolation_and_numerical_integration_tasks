@@ -1,6 +1,6 @@
-from pylatex import Document, Section, NewPage, Command, Package, UnsafeCommand, Center, Tabular, MultiRow
+from pylatex import Document, NewPage, Command, Package, UnsafeCommand, Center, Tabular, MultiRow
 from pylatex.base_classes import CommandBase, Arguments
-from Polynomial import Polynomial
+from interpolation.Polynomial import Polynomial
 import math
 
 
