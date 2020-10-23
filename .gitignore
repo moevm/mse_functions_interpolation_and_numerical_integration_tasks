@@ -1,4 +1,9 @@
+# Default ignored files
+.idea
+*.txt
+*.pdf
+*.tex
+test*
 /**/venv/*
 
 /**/__pycache__/*
-
