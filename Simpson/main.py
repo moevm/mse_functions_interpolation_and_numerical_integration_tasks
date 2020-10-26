@@ -42,19 +42,6 @@ class TrapezoidTask:
                         r"\hspace{1mm}от таблично заданной функции по формуле трапеций по шести и по девяти узлам. " \
                         "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
-    def valueTable(self):
-        tableView = "|l|"
-        tableView += "l|" * len(self.xValues)
-
-        table = Tabular(tableView)
-        table.add_hline()
-        table.add_row(["x"] + ["{0:.1f}".format(i) for i in self.xValues])
-        table.add_hline()
-        table.add_row(["y"] + self.yValues)
-        table.add_hline()
-
-        return table
-
 
 class SimpsonTask:
     def __init__(self):
@@ -109,19 +96,6 @@ class SimpsonTask:
                         r"\hspace{1mm}от таблично заданной функции по формуле Cимпсона по шести и по девяти узлам. " \
                         "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
-    def valueTable(self):
-        tableView = "|l|"
-        tableView += "l|" * len(self.xValues)
-
-        table = Tabular(tableView)
-        table.add_hline()
-        table.add_row(["x"] + ["{0:.1f}".format(i) for i in self.xValues])
-        table.add_hline()
-        table.add_row(["y"] + self.yValues)
-        table.add_hline()
-
-        return table
-
 
 def simpson(y, a, b, n):
     res = y[0] + y[-1]
@@ -150,9 +124,60 @@ def trapezoid(y, a, b, n):
     return res
 
 
+def createTables(xValues, yValues):
+    valueCnt = len(xValues)
+    valueStartPoint = 0
+    tables = []
+
+    while valueCnt > 9:
+        tableView = "|l|"
+        tableView += "l|" * 9
+
+        table = Tabular(tableView)
+        table.add_hline()
+        table.add_row(["x"] + ["{0:.1f}".format(xValues[i]) for i in range(valueStartPoint, valueStartPoint + 9)])
+        table.add_hline()
+        table.add_row(["y"] + yValues[valueStartPoint:valueStartPoint + 9:])
+        table.add_hline()
+
+        tables.append(copy(table))
+        table.clear()
+        valueCnt -= 9
+        valueStartPoint += 9
+
+    tableView = "|l|"
+    tableView += "l|" * valueCnt
+
+    table = Tabular(tableView)
+    table.add_hline()
+    table.add_row(["x"] + ["{0:.1f}".format(xValues[i]) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
+    table.add_hline()
+    table.add_row(["y"] + yValues[valueStartPoint:valueStartPoint + valueCnt:])
+    table.add_hline()
+
+    tables.append(table)
+
+    return tables
+
+
+def fillFullTask(table, firstTask, secondTask):
+    table.add_row(firstTask.taskText(), "" if secondTask is None else secondTask.taskText())
+
+    firstTables = createTables(firstTask.xValues,
+                               firstTask.yValues)
+    secondTables = [] if secondTask is None else createTables(secondTask.xValues,
+                                                              secondTask.yValues)
+    for j in range(len(firstTables)):
+        table.add_row(MultiRow(5, data=firstTables[j]),
+                      MultiRow(5, data=secondTables[j] if secondTables else ""))
+        addEmptySpace(table, 2)
+
+
 def createDocs(answerDoc, taskDoc, taskCnt):
-    simpsonTasks = [SimpsonTask().randomize(9) for i in range(taskCnt)]
-    trapezoidTasks = [TrapezoidTask().randomize(9) for j in range(taskCnt)]
+    simpsonTasks = [SimpsonTask().randomize(11) for i in range(taskCnt)]
+    trapezoidTasks = [TrapezoidTask().randomize(11) for j in range(taskCnt)]
+    trapezoidTasks.append(None)
+    simpsonTasks.append(None)
 
     table = Tabular(" p{9cm} p{9cm} ")
 
@@ -160,20 +185,13 @@ def createDocs(answerDoc, taskDoc, taskCnt):
     for i in range(0, taskCnt, 2):
         addEmptySpace(table, 1)
         table.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
-
         addEmptySpace(table, 1)
 
-        table.add_row(trapezoidTasks[i].taskText(), "" if i + 1 == taskCnt else trapezoidTasks[i + 1].taskText())
-        table.add_row(MultiRow(5, data=trapezoidTasks[i].valueTable()),
-                      MultiRow(5, data="" if i + 1 == taskCnt else trapezoidTasks[i + 1].valueTable()))
+        fillFullTask(table, trapezoidTasks[i], trapezoidTasks[i + 1])
+        addEmptySpace(table, 2)
+        fillFullTask(table, simpsonTasks[i], simpsonTasks[i + 1])
+        addEmptySpace(table, 3)
 
-        addEmptySpace(table, 4)
-
-        table.add_row(simpsonTasks[i].taskText(), "" if i + 1 == taskCnt else simpsonTasks[i + 1].taskText())
-        table.add_row(MultiRow(5, data=simpsonTasks[i].valueTable()),
-                      MultiRow(5, data="" if i + 1 == taskCnt else trapezoidTasks[i + 1].valueTable()))
-
-        addEmptySpace(table, 4)
         addedVariantsCnt += 2
 
         if addedVariantsCnt == 4:
@@ -184,21 +202,27 @@ def createDocs(answerDoc, taskDoc, taskCnt):
 
     taskDoc.append(table)
 
-    for i in range(taskCnt):
-        answerDoc.append(NoEscape(r"\noindent {0}. ".format(i)))
-        trapezoidTasks[i].addTexAnswer(answerDoc)
-        simpsonTasks[i].addTexAnswer(answerDoc)
-        answerDoc.append(NewLine())
+    answerTable = Tabular(" p{9cm} p{9cm} ")
+    for i in range(0, taskCnt, 2):
+        addEmptySpace(answerTable, 1)
+        answerTable.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
+        addEmptySpace(answerTable, 1)
+
+        answerTable.add_row("1)" + str(trapezoidTasks[i].answer), "" if i + 1 == taskCnt else "1)" + str(trapezoidTasks[i + 1].answer))
+        answerTable.add_row("2)" + str(simpsonTasks[i].answer), "" if i + 1 == taskCnt else "2)" + str(simpsonTasks[i + 1].answer))
+        addEmptySpace(answerTable, 1)
+
+    answerDoc.append(answerTable)
 
 
 def addEmptySpace(table, cnt):
-    for j in range(cnt):
+    for i in range(cnt):
         table.add_empty_row()
 
 
-taskCnt = 10
+taskCnt = 11
 
-answerDoc = Document("answers",
+answerDoc = Document("answers", geometry_options={"lmargin": "1cm", "tmargin": "1cm"},
                      documentclass=Command('documentclass', options=['a4paper'], arguments=['article']), page_numbers=False)
 
 taskDoc = Document("tasks", geometry_options={"lmargin": "1cm", "tmargin": "1cm"},
