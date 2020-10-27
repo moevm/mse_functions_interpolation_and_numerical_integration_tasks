@@ -1,6 +1,6 @@
 from pylatex import Document, NewPage, Command, Package, UnsafeCommand, Center, Tabular, MultiRow
 from pylatex.base_classes import CommandBase, Arguments
-from interpolation.Polynomial import Polynomial
+# from Generator.interpolation.Polynomial import Polynomial
 from pylatex.utils import NoEscape
 import math
 
@@ -149,10 +149,10 @@ class Tasks:
             self.tasks.append(NewPage())
             self.answers.append(NewPage())
 
-        self.tasks.generate_pdf('examples/tasks')
-        self.tasks.generate_tex('examples/tasks')
-        self.answers.generate_pdf('examples/answers')
-        self.answers.generate_tex('examples/answers')
+        self.tasks.generate_pdf('tasks')
+        # self.tasks.generate_tex('examples/tasks')
+        # self.answers.generate_pdf('examples/answers')
+        # self.answers.generate_tex('examples/answers')
 
     def suplement_table(self, table, n=4):
         for i in range(n):

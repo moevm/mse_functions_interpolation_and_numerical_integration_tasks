@@ -1,4 +1,4 @@
-from interpolation.Tasks import Tasks
+from Generator.interpolation import Tasks
 
 degree = int(input("Степень многочлена: "))
 options_summary = int(input("Количество вариантов: "))

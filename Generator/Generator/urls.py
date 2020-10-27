@@ -1,4 +1,4 @@
-"""ProjectPI URL Configuration
+"""Generator URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
@@ -13,10 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls import url
-from . import views
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
-    url(r'^download', views.download),
-    url(r'', views.show)
+    path('admin/', admin.site.urls),
+    path('interpolation_integration_generator/', include('interpolation_integration_generator.urls')),
+
 ]

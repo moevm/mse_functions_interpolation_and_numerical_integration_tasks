@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Генератор</title>
+</head>
+<body style="background-color: #AECCC7;">
+    <h1 align="center">Генератор заданий для контрольных работ</h1>
+    <div class="container" style="background-color: #AECCC7">
+        <div class="row">
+            <form action="generate_interpolation" method="get" class = "col mr-4" style="border-radius: 15px; background-color: #E5E5E5">
+                <h3 class="mt-2">Интерполяционный многочлен Ньютона и Лагранжа</h3>
+                <div style="height: 2px; width: 150px; background-color: #B4BBCF"></div>
+                <div class="row">
+                    <h5 class="col">Количество вариантов в строке</h5>
+                </div>
+                <div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="number" id="exampleRadios1" value="2" checked>
+                      <label class="form-check-label" for="exampleRadios1">2</label>
+                    </div>
+                    <div class="form-check last-number">
+                      <input class="form-check-input" type="radio" name="number" id="exampleRadios2" value="3">
+                      <label class="form-check-label" for="exampleRadios2" id="three-in-line">3</label>
+                    </div>
+                  </div>
+                <br>
+                <div class="row">
+                    <h5 class="col">Наибольшая степень многочлена</h5>
+                </div>
+                <div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="degree" id="exampleRadios2" value="3" checked>
+                      <label class="form-check-label" for="exampleRadios1">3</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="degree" id="exampleRadios2" value="4">
+                      <label class="form-check-label" for="exampleRadios2">4</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="degree" id="exampleRadios2" value="5">
+                      <label class="form-check-label" for="exampleRadios2">5</label>
+                    </div>
+                    <div class="form-check last-degree">
+                      <input class="form-check-input" type="radio" name="degree" id="exampleRadios2" value="6">
+                      <label class="form-check-label" for="exampleRadios2">6</label>
+                    </div>
+                  </div>
+                <br>
+                <div class="row">
+                    <h5 class="col">Нумерация вариантов</h5>
+                </div>
+                <div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="Numbering" id="someRadios3" value="Digits" checked>
+                      <label class="form-check-label" for="someRadios3">Числами</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Numbering" id="someRadios4" value="Surnames">
+                        <div class="row">
+
+                            <label class="col form-check-label" for="someRadios4">Пофамильно</label>
+                            <input type="file" name="file" class="col form-control-file" id="exampleFormControlFile1">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <h5>Формат генерации</h5>
+                <div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="saveOnPDF" id="exampleCheck1" value="Yes" checked>
+                      <label class="form-check-label" for="exampleCheck1">pdf</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="saveOnLaTex" id="exampleCheck2" value="Yes">
+                      <label class="form-check-label" for="exampleCheck2">tex</label>
+                    </div>
+                </div>
+                <br>
+                <em>Необязательный параметр:</em>
+                <div class="row">
+                    <div class="col">
+                        <h5>Сид для генерации</h5>
+                    </div>
+                    <div class="col ml">
+                        <input type="number" name="SID" class="form-control">
+                    </div>
+                </div>
+                <button type="submit" class="btn mb-2 btn-primary btn-lg active" role="button" aria-pressed="true" id="button">Сгенерировать</button>
+            </form>
+
+            <form action="/download_test" method="get" class = "col mr-4" style="border-radius: 15px; background-color: #E5E5E5">
+                <h3 class="mt-2">Параметры</h3>
+                <div style="height: 2px; width: 150px; background-color: #B4BBCF"></div>
+                <h5>Тема</h5>
+                <div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="Theme" id="exampleRadios1" value="Interpol" checked>
+                      <label class="form-check-label" for="exampleRadios1">Интерполяция функций</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="Theme" id="exampleRadios2" value="Integral">
+                      <label class="form-check-label" for="exampleRadios2">Численное интегрирование</label>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <h5 class="col">Количество вариантов в строке</h5>
+                    <input class="col-0" type="button" value="i" style=" border-radius: 13px; width: 26px; height: 26px" onclick="this.disabled=1;">
+                    <div class="col-3"></div>
+                </div>
+                <div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="number" id="exampleRadios1" value="2" checked>
+                      <label class="form-check-label" for="exampleRadios1">2</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="number" id="exampleRadios2" value="3">
+                      <label class="form-check-label" for="exampleRadios2">3</label>
+                    </div>
+                  </div>
+                <div class="row">
+                    <h5 class="col">Количество переменных в таблице</h5>
+                    <input class="col-0" type="button" value="i" style=" border-radius: 13px; width: 26px; height: 26px" onclick="this.disabled=1;">
+                    <div class="col-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                      <input type="text" name="CountVar" class="form-control">
+                    </div>
+                  </div>
+                <div class="row">
+                    <h5 class="col">Нумерация вариантов</h5>
+                    <input class="col-0" type="button" value="i" style=" border-radius: 13px; width: 26px; height: 26px" onclick="this.disabled=1;">
+                    <div class="col-3"></div>
+                </div>
+                <div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="Numbering" id="someRadios3" value="Digits" checked>
+                      <label class="form-check-label" for="someRadios3">Числами</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Numbering" id="someRadios4" value="Surnames">
+                        <div class="row">
+
+                            <label class="col form-check-label" for="someRadios4">Пофамильно</label>
+                            <input type="file" name="file" class="col form-control-file" id="exampleFormControlFile1">
+                        </div>
+                    </div>
+                </div>
+                <h5>Куда сохранять</h5>
+                <div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="saveOnPDF" id="exampleCheck1" value="Yes" checked>
+                      <label class="form-check-label" for="exampleCheck1">PDF</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="saveOnLaTex" id="exampleCheck2" value="Yes">
+                      <label class="form-check-label" for="exampleCheck2">LaTex</label>
+                    </div>
+                </div>
+                <em>Необязательный параметр:</em>
+                <div class="row">
+                    <div class="col">
+                        <h5>Сид для генерации</h5>
+                    </div>
+                    <div class="col ml">
+                        <input type="text" name="SID" class="form-control">
+                    </div>
+                </div>
+                <button type="submit" class="btn mb-2 btn-primary btn-lg active" role="button" aria-pressed="true">Сгенерировать</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        $(button).click(function(e) {
+            $.ajax({
+                type: "GET",
+                url: "generate_interpolation/",
+                data: {
+
+                },
+
+            })
+        })
+        last_degree = document.getElementsByClassName("last-degree")[0];
+        last_number = document.getElementsByClassName("last-number")[0];
+        var radios = document.getElementsByName("number");
+        var degrees = document.getElementsByName("degree");
+
+        for(var i = 0; i < radios.length; i++) {
+            radios[i].addEventListener("change", function() {
+                if (this.value == "3") {
+                    console.log(1);
+                    last_degree.style.visibility = "hidden";
+                    if (degrees[degrees.length-1].checked == true) {
+                        degrees[0].checked = true;
+                    }
+                } else {
+                    console.log(2);
+                    last_degree.style.visibility = "visible";
+                }
+            }, 0);
+        }
+
+        for (var i = 0; i < degrees.length; ++i) {
+            degrees[i].addEventListener("change", function() {
+                if (this.value == "6") {
+                    console.log(1);
+                    last_number.style.visibility = "hidden";
+                    radios[0].checked = true;
+                } else {
+                    console.log(2);
+                    last_number.style.visibility = "visible";
+                }
+            }, 0);
+        }
+
+
+        last_degree.addEventListener("change", function () {
+            radios[0].checked = true;
+        });
+
+    </script>
+</body>
+</html>
