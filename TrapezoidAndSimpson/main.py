@@ -18,7 +18,7 @@ class TrapezoidTask:
         firstX = randint(-30, 30)
         while True:
             lastX = randint(-30 + dotsCnt * 5, 30 + dotsCnt * 5)
-            if (lastX - firstX) % dotsCnt == 0:
+            if (lastX - firstX) % dotsCnt * 6 == 0:
                 if lastX - dotsCnt == firstX:
                     step = 1
                     break
@@ -37,9 +37,14 @@ class TrapezoidTask:
 
         self.yValues.append(0)
         for i in range(1, dotsCnt):
-            self.yValues.append(self.yValues[i - 1] + randint(-1, 1))
+            self.yValues.append(self.yValues[i - 1] + randint(-10, 10))
         if self.yValues[-1] % 2 != 0:
             self.yValues[-1] -= 1
+
+        coef = randint(-5, 5)
+        for i in range(len(self.yValues)):
+            self.yValues[i] /= 10
+            self.yValues[i] += coef
 
         self.answer = trapezoid(self.yValues, self.xValues[0], self.xValues[-1], self.n)
         self.halfAnswer = trapezoid(self.yValues[::2], self.xValues[0], self.xValues[-1], self.n / 2 + self.n % 2)
@@ -92,9 +97,14 @@ class SimpsonTask:
 
         self.yValues.append(0)
         for i in range(1, dotsCnt):
-            self.yValues.append(self.yValues[i - 1] + randint(-1, 1))
+            self.yValues.append(self.yValues[i - 1] + randint(-10, 10))
         if self.yValues[-1] % 2 != 0:
             self.yValues[-1] -= 1
+
+        coef = randint(-5, 5)
+        for i in range(len(self.yValues)):
+            self.yValues[i] /= 10
+            self.yValues[i] += coef
 
         self.answer = trapezoid(self.yValues, self.xValues[0], self.xValues[-1], self.n)
         self.halfAnswer = trapezoid(self.yValues[::2], self.xValues[0], self.xValues[-1], self.n / 2 + self.n % 2)
@@ -144,21 +154,21 @@ def createTables(xValues, yValues):
     valueStartPoint = 0
     tables = []
 
-    while valueCnt > 9:
+    while valueCnt > 8:
         tableView = "|l|"
-        tableView += "l|" * 9
+        tableView += "l|" * 8
 
         table = Tabular(tableView)
         table.add_hline()
-        table.add_row(["x"] + ["{0:.1f}".format(xValues[i]) for i in range(valueStartPoint, valueStartPoint + 9)])
+        table.add_row(["x"] + ["{0:.1f}".format(xValues[i]) for i in range(valueStartPoint, valueStartPoint + 8)])
         table.add_hline()
-        table.add_row(["y"] + yValues[valueStartPoint:valueStartPoint + 9:])
+        table.add_row(["y"] + ["{0:.1f}".format(yValues[i]) for i in range(valueStartPoint, valueStartPoint + 8)])
         table.add_hline()
 
         tables.append(copy(table))
         table.clear()
-        valueCnt -= 9
-        valueStartPoint += 9
+        valueCnt -= 8
+        valueStartPoint += 8
 
     tableView = "|l|"
     tableView += "l|" * valueCnt
@@ -186,9 +196,7 @@ def fillTaskTables(table, firstTask, secondTask):
         addEmptySpace(table, 2)
 
 
-def createDocs(answerDoc, taskDoc, taskCnt):
-    simpsonTasks = [SimpsonTask().randomize(11) for i in range(taskCnt)]
-    trapezoidTasks = [TrapezoidTask().randomize(11) for j in range(taskCnt)]
+def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks):
     trapezoidTasks.append(None)
     simpsonTasks.append(None)
 
@@ -210,7 +218,7 @@ def createDocs(answerDoc, taskDoc, taskCnt):
 
         addedVariantsCnt += 2
 
-        if addedVariantsCnt == 4:
+        if addedVariantsCnt == 4 and addedVariantsCnt != taskCnt:
             addedVariantsCnt = 0
             taskDoc.append(copy(table))
             taskDoc.append(NewPage())
@@ -245,7 +253,7 @@ def createDocs(answerDoc, taskDoc, taskCnt):
         addEmptySpace(answerTable, 2)
 
         addedVariantsCnt += 2
-        if addedVariantsCnt == 4:
+        if addedVariantsCnt == 4 and addedVariantsCnt != taskCnt:
             addedVariantsCnt = 0
             answerDoc.append(copy(answerTable))
             answerDoc.append(NewPage())
@@ -259,19 +267,25 @@ def addEmptySpace(table, cnt):
         table.add_empty_row()
 
 
-taskCnt = 9
+def f(taskCnt, trapezoidsDotsCnt, SimpsonDotsCnt):
+    answerDoc = Document("answers", geometry_options={"lmargin": "1cm", "tmargin": "1cm"},
+                         documentclass=Command('documentclass', options=['a4paper'], arguments=['article']),
+                         page_numbers=False)
 
-answerDoc = Document("answers", geometry_options={"lmargin": "1cm", "tmargin": "1cm"},
-                     documentclass=Command('documentclass', options=['a4paper'], arguments=['article']), page_numbers=False)
+    taskDoc = Document("tasks", geometry_options={"lmargin": "1cm", "tmargin": "1cm"},
+                       documentclass=Command('documentclass', options=['a4paper'], arguments=['article']),
+                       page_numbers=False)
 
-taskDoc = Document("tasks", geometry_options={"lmargin": "1cm", "tmargin": "1cm"},
-                   documentclass=Command('documentclass', options=['a4paper'], arguments=['article']), page_numbers=False)
+    answerDoc.packages.append(Package('babel', options=["russian"]))
+    taskDoc.packages.append(Package('babel', options=["russian"]))
 
-answerDoc.packages.append(Package('babel', options=["russian"]))
-taskDoc.packages.append(Package('babel', options=["russian"]))
+    simpsonTasks = [SimpsonTask().randomize(11) for i in range(taskCnt)]
+    trapezoidTasks = [TrapezoidTask().randomize(11) for j in range(taskCnt)]
 
-createDocs(answerDoc, taskDoc, taskCnt)
+    createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks)
 
-answerDoc.generate_tex()
-taskDoc.generate_tex()
+    answerDoc.generate_tex()
+    taskDoc.generate_tex()
 
+
+f(4, 11, 9)
