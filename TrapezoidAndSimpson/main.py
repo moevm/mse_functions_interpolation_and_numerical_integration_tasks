@@ -11,30 +11,43 @@ class TrapezoidTask:
         self.xValues = []
         self.yValues = []
         self.answer = 0
+        self.halfAnswer = 0
         self.n = 0
 
     def randomize(self, dotsCnt):
-        self.n = choice([5, 10])
-
-        a = randint(0, 3)
-        self.xValues = [a + i * (1 / self.n) for i in range(dotsCnt)]
+        firstX = randint(-30, 30)
         while True:
-            self.yValues = [randint(-20, 20) for i in range(dotsCnt)]
-            if (self.yValues[0] + self.yValues[-1]) % 2 == 1:
-                self.yValues[-1] += 1
+            lastX = randint(-30 + dotsCnt * 5, 30 + dotsCnt * 5)
+            if (lastX - firstX) % dotsCnt == 0:
+                if lastX - dotsCnt == firstX:
+                    step = 1
+                    break
+                if lastX - dotsCnt * 2 == firstX:
+                    step = 2
+                    break
+                if lastX - dotsCnt * 5 == firstX:
+                    step = 5
+                    break
 
-            self.answer = trapezoid(self.yValues, self.xValues[0], self.xValues[-1], self.n)
-            if 30 > abs(self.answer) >= 1:
-                return self
+        step /= 10
+        firstX /= 10
+        self.xValues = [i * step + firstX for i in range(dotsCnt)]
+        self.xValues[-1] = lastX / 10
+        self.n = dotsCnt
+
+        self.yValues.append(0)
+        for i in range(1, dotsCnt):
+            self.yValues.append(self.yValues[i - 1] + randint(-1, 1))
+        if self.yValues[-1] % 2 != 0:
+            self.yValues[-1] -= 1
+
+        self.answer = trapezoid(self.yValues, self.xValues[0], self.xValues[-1], self.n)
+        self.halfAnswer = trapezoid(self.yValues[::2], self.xValues[0], self.xValues[-1], self.n / 2 + self.n % 2)
+
+        return self
 
     def errorRunge(self):
-        return abs(simpson(self.yValues, self.xValues[0], self.xValues[-1], self.n) -
-                   simpson(self.yValues, self.xValues[0], self.xValues[-1], self.n * 2)) / 3
-
-    def addTexAnswer(self, answerDoc):
-        answerDoc.append(NoEscape("1) Ответ: {0}, погрешность: {1}".format("{0:.1f}".format(self.answer),
-                                                                           "{0:.4f}".format(self.errorRunge()))))
-        answerDoc.append(NewLine())
+        return abs(self.halfAnswer - self.answer) / 3
 
     def taskText(self):
         return NoEscape("1) Вычислить приближённое значение " +
@@ -42,53 +55,54 @@ class TrapezoidTask:
                         r"\hspace{1mm}от таблично заданной функции по формуле трапеций по шести и по девяти узлам. " \
                         "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
+    def answerStr(self):
+        return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.3f}".format(self.halfAnswer) +
+                        r"\rightarrow" + "{0:.3f}".format(self.answer) + r"\rightarrow" +
+                        "{0:.3f}".format(self.answer + self.errorRunge()) +  r"$\hspace{1mm}(трапеции)")
+
 
 class SimpsonTask:
     def __init__(self):
         self.xValues = []
         self.yValues = []
         self.answer = 0
+        self.halfAnswer = 0
         self.n = 0
 
     def randomize(self, dotsCnt):
-        self.n = choice([5, 10])
-
-        a = randint(0, 3)
-        self.xValues = [a + i * (1 / self.n) for i in range(dotsCnt)]
+        firstX = randint(-30, 30)
         while True:
-            self.__generateYValues(dotsCnt)
-            if 30 > abs(self.answer) >= 1:
-                return self
+            lastX = randint(-30 + dotsCnt * 5, 30 + dotsCnt * 5)
+            if (lastX - firstX) % dotsCnt * 6 == 0:
+                if lastX - dotsCnt == firstX:
+                    step = 1
+                    break
+                if lastX - dotsCnt * 2 == firstX:
+                    step = 2
+                    break
+                if lastX - dotsCnt * 5 == firstX:
+                    step = 5
+                    break
 
-    def __generateYValues(self, dotsCnt):
-        self.yValues = [randint(-20, 20) for i in range(dotsCnt)]
+        step /= 10
+        firstX /= 10
+        self.xValues = [i * step + firstX for i in range(dotsCnt)]
+        self.xValues[-1] = lastX / 10
+        self.n = dotsCnt
 
-        res = self.yValues[0]
-        for i in range(1, len(self.yValues) - 1):
-            if i % 2 == 1:
-                res += 4 * self.yValues[i]
-            else:
-                res += 2 * self.yValues[i]
+        self.yValues.append(0)
+        for i in range(1, dotsCnt):
+            self.yValues.append(self.yValues[i - 1] + randint(-1, 1))
+        if self.yValues[-1] % 2 != 0:
+            self.yValues[-1] -= 1
 
-        resDenominator = self.n * 3
+        self.answer = trapezoid(self.yValues, self.xValues[0], self.xValues[-1], self.n)
+        self.halfAnswer = trapezoid(self.yValues[::2], self.xValues[0], self.xValues[-1], self.n / 2 + self.n % 2)
 
-        self.yValues[-1] = resDenominator - res % resDenominator
-        res += self.yValues[-1]
-
-        res /= resDenominator
-        res *= (self.xValues[-1] - self.xValues[0])
-        self.answer = res
+        return self
 
     def errorRunge(self):
-        return abs(simpson(self.yValues, self.xValues[0], self.xValues[-1], self.n) -
-                   simpson(self.yValues, self.xValues[0], self.xValues[-1], self.n * 2)) / 15
-
-    def addTexAnswer(self, answerDoc):
-
-        answerDoc.append(NoEscape(r"\hspace*{4mm}" + "2) Ответ: {0}, погрешность: "
-                                                     "{1}".format("{0:.1f}".format(self.answer),
-                                                                  "{0:.4f}".format(self.errorRunge()))))
-        answerDoc.append(NewLine())
+        return abs(self.halfAnswer - self.answer) / 15
 
     def taskText(self):
         return NoEscape("2) Вычислить приближённое значение " +
@@ -96,18 +110,20 @@ class SimpsonTask:
                         r"\hspace{1mm}от таблично заданной функции по формуле Cимпсона по шести и по девяти узлам. " \
                         "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
+    def answerStr(self):
+        return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.3f}".format(self.halfAnswer) +
+                        r"\rightarrow" + "{0:.3f}".format(self.halfAnswer) + r"\rightarrow" +
+                        "{0:.3f}".format(self.answer + self.errorRunge()) + r"$\hspace{1mm}(Симпсон)")
+
 
 def simpson(y, a, b, n):
     res = y[0] + y[-1]
 
-    for i in range(1, len(y) - 1):
-        if i % 2 == 1:
-            res += 4 * y[i]
-        else:
-            res += 2 * y[i]
+    for i in range(0, len(y) - 1):
+        res += 2 * y[i]
+        res += 2 * (y[i] + y[i + 1])
 
-    res /= n * 3
-    res *= (b - a)
+    res *= (b - a) / (n * 6)
 
     return res
 
@@ -116,10 +132,9 @@ def trapezoid(y, a, b, n):
     res = (y[0] + y[-1]) / 2
 
     for i in range(1, len(y) - 1):
-        res += y[i]
+        res += 2 * y[i]
 
-    res /= n
-    res *= (b - a)
+    res *= (b - a) / n
 
     return res
 
@@ -160,9 +175,7 @@ def createTables(xValues, yValues):
     return tables
 
 
-def fillFullTask(table, firstTask, secondTask):
-    table.add_row(firstTask.taskText(), "" if secondTask is None else secondTask.taskText())
-
+def fillTaskTables(table, firstTask, secondTask):
     firstTables = createTables(firstTask.xValues,
                                firstTask.yValues)
     secondTables = [] if secondTask is None else createTables(secondTask.xValues,
@@ -187,9 +200,12 @@ def createDocs(answerDoc, taskDoc, taskCnt):
         table.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
         addEmptySpace(table, 1)
 
-        fillFullTask(table, trapezoidTasks[i], trapezoidTasks[i + 1])
+        table.add_row(trapezoidTasks[i].taskText(), "" if trapezoidTasks[i + 1] is None else trapezoidTasks[i + 1].taskText())
+        fillTaskTables(table, trapezoidTasks[i], trapezoidTasks[i + 1])
         addEmptySpace(table, 2)
-        fillFullTask(table, simpsonTasks[i], simpsonTasks[i + 1])
+
+        table.add_row(simpsonTasks[i].taskText(),  "" if simpsonTasks[i + 1] is None else simpsonTasks[i + 1].taskText())
+        fillTaskTables(table, simpsonTasks[i], simpsonTasks[i + 1])
         addEmptySpace(table, 3)
 
         addedVariantsCnt += 2
@@ -203,14 +219,37 @@ def createDocs(answerDoc, taskDoc, taskCnt):
     taskDoc.append(table)
 
     answerTable = Tabular(" p{9cm} p{9cm} ")
+
+    addedVariantsCnt = 0
     for i in range(0, taskCnt, 2):
         addEmptySpace(answerTable, 1)
         answerTable.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
         addEmptySpace(answerTable, 1)
 
-        answerTable.add_row("1)" + str(trapezoidTasks[i].answer), "" if i + 1 == taskCnt else "1)" + str(trapezoidTasks[i + 1].answer))
-        answerTable.add_row("2)" + str(simpsonTasks[i].answer), "" if i + 1 == taskCnt else "2)" + str(simpsonTasks[i + 1].answer))
+        fillTaskTables(answerTable, trapezoidTasks[i], trapezoidTasks[i + 1])
+        addEmptySpace(answerTable, 2)
+
+        answerTable.add_row(trapezoidTasks[i].answerStr(), "" if i + 1 == taskCnt else trapezoidTasks[i + 1].answerStr())
         addEmptySpace(answerTable, 1)
+        answerTable.add_row("Err = " + "{0:.4f}".format(trapezoidTasks[i].errorRunge()),
+                            "" if i + 1 == taskCnt else "Err = " + "{0:.4f}".format(trapezoidTasks[i + 1].errorRunge()))
+
+        fillTaskTables(answerTable, simpsonTasks[i], simpsonTasks[i + 1])
+        addEmptySpace(answerTable, 2)
+
+        answerTable.add_row(simpsonTasks[i].answerStr(),
+                            "" if i + 1 == taskCnt else simpsonTasks[i + 1].answerStr())
+        addEmptySpace(answerTable, 1)
+        answerTable.add_row("Err = " + "{0:.4f}".format(simpsonTasks[i].errorRunge()),
+                            "" if i + 1 == taskCnt else "Err = " + "{0:.4f}".format(simpsonTasks[i + 1].errorRunge()))
+        addEmptySpace(answerTable, 2)
+
+        addedVariantsCnt += 2
+        if addedVariantsCnt == 4:
+            addedVariantsCnt = 0
+            answerDoc.append(copy(answerTable))
+            answerDoc.append(NewPage())
+            answerTable.clear()
 
     answerDoc.append(answerTable)
 
@@ -220,7 +259,7 @@ def addEmptySpace(table, cnt):
         table.add_empty_row()
 
 
-taskCnt = 11
+taskCnt = 9
 
 answerDoc = Document("answers", geometry_options={"lmargin": "1cm", "tmargin": "1cm"},
                      documentclass=Command('documentclass', options=['a4paper'], arguments=['article']), page_numbers=False)
