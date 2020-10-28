@@ -4,6 +4,7 @@ from os.path import basename
 from django.http import HttpResponse
 from django.shortcuts import render
 from interpolation.Tasks import Tasks
+import os
 
 
 def index(request):
@@ -18,9 +19,16 @@ def generate_interpolations(request):
     is_pdf = True if request.GET.get("saveOnPDF") == "Yes" else False
     is_latex = True if request.GET.get("saveOnLaTex") == "Yes" else False
     filename = request.GET.get("filename")
+    seed = None
+    try:
+        int(request.GET.get("seed"))
+    except Exception:
+        pass
+    else:
+        seed = int(request.GET.get("seed"))
 
     document = Tasks(options_summary, options_in_line, degree)
-    document.generate(filename, is_pdf, is_latex)
+    document.generate(filename, is_pdf, is_latex, seed)
 
     folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
     filenames = []
@@ -38,5 +46,13 @@ def generate_interpolations(request):
     response = HttpResponse(open(f'{folder}/result.zip', 'rb'))
     response['Content-Type'] = 'application/x-zip-compressed'
     response['Content-Disposition'] = f'attachment; filename="{folder}/result.zip"'
+
+    # удаляем сгенеринные pdf и tex после их записи в возвращаемый архив
+    if is_pdf:
+        os.remove(f"{folder}/{filename}.pdf")
+        os.remove(f'{folder}/answers_for_{filename}.pdf')
+    if is_latex:
+        os.remove(f"{folder}/{filename}.tex")
+        os.remove(f'{folder}/answers_for_{filename}.tex')
 
     return response

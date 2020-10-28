@@ -5,3 +5,4 @@ test*
 /**/venv/*
 
 /**/__pycache__/*
+/Generator/interpolation_integration_generator/static/interpolation_integration_generator/*.zip
