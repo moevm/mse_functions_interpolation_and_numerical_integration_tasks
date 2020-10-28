@@ -1,6 +1,6 @@
 # Default ignored files
 .idea
-*.txt
+#*.txt
 test*
 /**/venv/*
 
