@@ -23,7 +23,7 @@ class Polynomial:
             if len(tmp_x) < degree + 1:
                 continue
             else:
-                self.x = sample(tmp_x.tolist(), degree + 1)
+                self.x = sorted(sample(tmp_x.tolist(), degree + 1))
                 self.y = list(map(self.f, self.x))
 
     def f(self, x):
