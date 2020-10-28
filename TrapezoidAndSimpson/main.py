@@ -16,38 +16,25 @@ class TrapezoidTask:
 
     def randomize(self, dotsCnt):
         firstX = randint(-30, 30)
-        while True:
-            lastX = randint(-30 + dotsCnt * 5, 30 + dotsCnt * 5)
-            if (lastX - firstX) % dotsCnt * 6 == 0:
-                if lastX - dotsCnt == firstX:
-                    step = 1
-                    break
-                if lastX - dotsCnt * 2 == firstX:
-                    step = 2
-                    break
-                if lastX - dotsCnt * 5 == firstX:
-                    step = 5
-                    break
 
-        step /= 10
+        h = choice([0.1, 0.2, 0.5])
         firstX /= 10
-        self.xValues = [i * step + firstX for i in range(dotsCnt)]
-        self.xValues[-1] = lastX / 10
+        self.xValues = [i * h + firstX for i in range(dotsCnt)]
+
         self.n = dotsCnt
 
-        self.yValues.append(0)
+        self.yValues.append(choice([0, 2, 4, 6, 8, 10]))
         for i in range(1, dotsCnt):
-            self.yValues.append(self.yValues[i - 1] + randint(-10, 10))
+            self.yValues.append(self.yValues[i - 1] + randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
+
         if self.yValues[-1] % 2 != 0:
             self.yValues[-1] -= 1
 
-        coef = randint(-5, 5)
         for i in range(len(self.yValues)):
             self.yValues[i] /= 10
-            self.yValues[i] += coef
 
-        self.answer = trapezoid(self.yValues, self.xValues[0], self.xValues[-1], self.n)
-        self.halfAnswer = trapezoid(self.yValues[::2], self.xValues[0], self.xValues[-1], self.n / 2 + self.n % 2)
+        self.answer = trapezoid(self.yValues, self.xValues[1] - self.xValues[0], self.n)
+        self.halfAnswer = trapezoid(self.yValues[::2], self.xValues[1] - self.xValues[0], self.n / 2 + self.n % 2)
 
         return self
 
@@ -61,9 +48,9 @@ class TrapezoidTask:
                         "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
     def answerStr(self):
-        return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.3f}".format(self.halfAnswer) +
-                        r"\rightarrow" + "{0:.3f}".format(self.answer) + r"\rightarrow" +
-                        "{0:.3f}".format(self.answer + self.errorRunge()) +  r"$\hspace{1mm}(трапеции)")
+        return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.2f}".format(self.halfAnswer) +
+                        r"\rightarrow" + "{0:.2f}".format(self.answer) + r"\rightarrow" +
+                        "{0:.3f}".format(self.answer + self.errorRunge()) + r"$\hspace{1mm}(трапеции)")
 
 
 class SimpsonTask:
@@ -76,38 +63,25 @@ class SimpsonTask:
 
     def randomize(self, dotsCnt):
         firstX = randint(-30, 30)
-        while True:
-            lastX = randint(-30 + dotsCnt * 5, 30 + dotsCnt * 5)
-            if (lastX - firstX) % dotsCnt * 6 == 0:
-                if lastX - dotsCnt == firstX:
-                    step = 1
-                    break
-                if lastX - dotsCnt * 2 == firstX:
-                    step = 2
-                    break
-                if lastX - dotsCnt * 5 == firstX:
-                    step = 5
-                    break
 
-        step /= 10
+        h = 0.6
         firstX /= 10
-        self.xValues = [i * step + firstX for i in range(dotsCnt)]
-        self.xValues[-1] = lastX / 10
+        self.xValues = [i * h + firstX for i in range(dotsCnt)]
+
         self.n = dotsCnt
 
-        self.yValues.append(0)
+        self.yValues.append(choice([0, 2, 4, 6, 8, 10]))
         for i in range(1, dotsCnt):
-            self.yValues.append(self.yValues[i - 1] + randint(-10, 10))
+            self.yValues.append(self.yValues[i - 1] + randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
+
         if self.yValues[-1] % 2 != 0:
             self.yValues[-1] -= 1
 
-        coef = randint(-5, 5)
         for i in range(len(self.yValues)):
             self.yValues[i] /= 10
-            self.yValues[i] += coef
 
-        self.answer = trapezoid(self.yValues, self.xValues[0], self.xValues[-1], self.n)
-        self.halfAnswer = trapezoid(self.yValues[::2], self.xValues[0], self.xValues[-1], self.n / 2 + self.n % 2)
+        self.answer = simpson(self.yValues, self.xValues[1] - self.xValues[0], self.n)
+        self.halfAnswer = simpson(self.yValues[::2], self.xValues[1] - self.xValues[0], self.n / 2 + self.n % 2)
 
         return self
 
@@ -122,29 +96,29 @@ class SimpsonTask:
 
     def answerStr(self):
         return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.3f}".format(self.halfAnswer) +
-                        r"\rightarrow" + "{0:.3f}".format(self.halfAnswer) + r"\rightarrow" +
+                        r"\rightarrow" + "{0:.3f}".format(self.answer) + r"\rightarrow" +
                         "{0:.3f}".format(self.answer + self.errorRunge()) + r"$\hspace{1mm}(Симпсон)")
 
 
-def simpson(y, a, b, n):
+def simpson(y, h, n):
     res = y[0] + y[-1]
 
     for i in range(0, len(y) - 1):
         res += 2 * y[i]
         res += 2 * (y[i] + y[i + 1])
 
-    res *= (b - a) / (n * 6)
+    res *= h / 6
 
     return res
 
 
-def trapezoid(y, a, b, n):
+def trapezoid(y, h, n):
     res = (y[0] + y[-1]) / 2
 
     for i in range(1, len(y) - 1):
         res += 2 * y[i]
 
-    res *= (b - a) / n
+    res *= h
 
     return res
 
@@ -153,22 +127,23 @@ def createTables(xValues, yValues):
     valueCnt = len(xValues)
     valueStartPoint = 0
     tables = []
+    colmsCnt = 8
 
     while valueCnt > 8:
         tableView = "|l|"
-        tableView += "l|" * 8
+        tableView += "l|" * colmsCnt
 
         table = Tabular(tableView)
         table.add_hline()
-        table.add_row(["x"] + ["{0:.1f}".format(xValues[i]) for i in range(valueStartPoint, valueStartPoint + 8)])
+        table.add_row(["x"] + ["{0:.1f}".format(xValues[i]) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
         table.add_hline()
-        table.add_row(["y"] + ["{0:.1f}".format(yValues[i]) for i in range(valueStartPoint, valueStartPoint + 8)])
+        table.add_row(["y"] + ["{0:.1f}".format(yValues[i]) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
         table.add_hline()
 
         tables.append(copy(table))
         table.clear()
-        valueCnt -= 8
-        valueStartPoint += 8
+        valueCnt -= colmsCnt
+        valueStartPoint += colmsCnt
 
     tableView = "|l|"
     tableView += "l|" * valueCnt
@@ -177,7 +152,7 @@ def createTables(xValues, yValues):
     table.add_hline()
     table.add_row(["x"] + ["{0:.1f}".format(xValues[i]) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
     table.add_hline()
-    table.add_row(["y"] + yValues[valueStartPoint:valueStartPoint + valueCnt:])
+    table.add_row(["y"] + ["{0:.1f}".format(yValues[i]) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
     table.add_hline()
 
     tables.append(table)
@@ -267,7 +242,7 @@ def addEmptySpace(table, cnt):
         table.add_empty_row()
 
 
-def f(taskCnt, trapezoidsDotsCnt, SimpsonDotsCnt):
+def initDocs():
     answerDoc = Document("answers", geometry_options={"lmargin": "1cm", "tmargin": "1cm"},
                          documentclass=Command('documentclass', options=['a4paper'], arguments=['article']),
                          page_numbers=False)
@@ -279,13 +254,18 @@ def f(taskCnt, trapezoidsDotsCnt, SimpsonDotsCnt):
     answerDoc.packages.append(Package('babel', options=["russian"]))
     taskDoc.packages.append(Package('babel', options=["russian"]))
 
-    simpsonTasks = [SimpsonTask().randomize(11) for i in range(taskCnt)]
-    trapezoidTasks = [TrapezoidTask().randomize(11) for j in range(taskCnt)]
+    return answerDoc, taskDoc
 
+
+def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt):
+    simpsonTasks = [SimpsonTask().randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
+    trapezoidTasks = [TrapezoidTask().randomize(simpsonDotsCnt) for j in range(taskCnt)]
+
+    answerDoc, taskDoc = initDocs()
     createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks)
 
     answerDoc.generate_tex()
     taskDoc.generate_tex()
 
 
-f(4, 11, 9)
+run(11, 15, 15)
