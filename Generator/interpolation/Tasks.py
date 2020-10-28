@@ -1,6 +1,6 @@
 from pylatex import Document, NewPage, Command, Package, UnsafeCommand, Center, Tabular, MultiRow
 from pylatex.base_classes import CommandBase, Arguments
-# from Generator.interpolation.Polynomial import Polynomial
+from interpolation.Polynomial import Polynomial
 from pylatex.utils import NoEscape
 import math
 
@@ -75,7 +75,7 @@ class Tasks:
         center.append(NoEscape(result))
         return center
 
-    def generate(self):
+    def generate(self, filename, is_pdf, is_latex):
         quantity_of_variants_on_one_page = self.options_in_line * 6  # 6 rows in one page
         quantity_of_pages = math.ceil(self.options_summary / quantity_of_variants_on_one_page)
         column_size = 18 // self.options_in_line  # 18cm - width of a4 format
@@ -107,7 +107,7 @@ class Tasks:
                             arguments=Arguments(page*quantity_of_variants_on_one_page + i*self.options_in_line + j))))
                         answers_row.append(MultiRow(5, width=f'{column_size}cm', data=answertext(
                             arguments=Arguments(page*quantity_of_variants_on_one_page + i*self.options_in_line + j))))
-                        print(f"Вариант {page * quantity_of_variants_on_one_page + i * self.options_in_line + j}, полином: {variants[j].coefficients}")
+                        # print(f"Вариант {page * quantity_of_variants_on_one_page + i * self.options_in_line + j}, полином: {variants[j].coefficients}")
 
                 tasks_table.add_row(tasks_row)
                 answers_table.add_row(answers_row)
@@ -149,10 +149,13 @@ class Tasks:
             self.tasks.append(NewPage())
             self.answers.append(NewPage())
 
-        self.tasks.generate_pdf('tasks')
-        # self.tasks.generate_tex('examples/tasks')
-        # self.answers.generate_pdf('examples/answers')
-        # self.answers.generate_tex('examples/answers')
+        folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
+        if is_pdf:
+            self.tasks.generate_pdf(f'{folder}/{filename}')
+            self.answers.generate_pdf(f'{folder}/answers_for_{filename}')
+        if is_latex:
+            self.tasks.generate_tex(f'{folder}/{filename}')
+            self.answers.generate_tex(f'{folder}/answers_for_{filename}')
 
     def suplement_table(self, table, n=4):
         for i in range(n):
