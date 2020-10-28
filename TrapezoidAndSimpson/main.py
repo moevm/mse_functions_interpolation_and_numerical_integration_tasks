@@ -5,6 +5,28 @@ from pylatex import Document, Tabular, Package, NewLine, \
     MultiRow, Command, NewPage
 from pylatex.utils import NoEscape
 
+d = {
+    1: "одному",
+    2: "двум",
+    3: "трем",
+    4: "четырем",
+    5: "пяти",
+    6: "шести",
+    7: "семи",
+    8: "восьми",
+    9: "девяти",
+    10: "десяти",
+    11: "одиннадцати",
+    12: "двенадцати",
+    13: "тринадцати",
+    14: "четырнадцати",
+    15: "пятнадцати",
+    16: "шестнадцати",
+    17: "семнадцати",
+    18: "восемнадцати",
+    19: "девятнадцати",
+    20: "двадцати"
+}
 
 class TrapezoidTask:
     def __init__(self):
@@ -33,8 +55,8 @@ class TrapezoidTask:
         for i in range(len(self.yValues)):
             self.yValues[i] /= 10
 
-        self.answer = trapezoid(self.yValues, self.xValues[1] - self.xValues[0], self.n)
-        self.halfAnswer = trapezoid(self.yValues[::2], self.xValues[1] - self.xValues[0], self.n / 2 + self.n % 2)
+        self.answer = trapezoid(self.yValues, h)
+        self.halfAnswer = trapezoid(self.yValues[::2], h)
 
         return self
 
@@ -44,7 +66,8 @@ class TrapezoidTask:
     def taskText(self):
         return NoEscape("1) Вычислить приближённое значение " +
                         r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(self.xValues[-1]) + "}f(x)dx$" \
-                        r"\hspace{1mm}от таблично заданной функции по формуле трапеций по шести и по девяти узлам. " \
+                        r"\hspace{1mm}от таблично заданной функции по формуле трапеций по "
+                        + d[int(self.n / 2) + self.n % 2] + "и по " + d[self.n]  + " узлам." \
                         "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
     def answerStr(self):
@@ -80,8 +103,8 @@ class SimpsonTask:
         for i in range(len(self.yValues)):
             self.yValues[i] /= 10
 
-        self.answer = simpson(self.yValues, self.xValues[1] - self.xValues[0], self.n)
-        self.halfAnswer = simpson(self.yValues[::2], self.xValues[1] - self.xValues[0], self.n / 2 + self.n % 2)
+        self.answer = simpson(self.yValues, h)
+        self.halfAnswer = simpson(self.yValues[::2], h)
 
         return self
 
@@ -89,10 +112,11 @@ class SimpsonTask:
         return abs(self.halfAnswer - self.answer) / 15
 
     def taskText(self):
-        return NoEscape("2) Вычислить приближённое значение " +
+        return NoEscape("1) Вычислить приближённое значение " +
                         r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(self.xValues[-1]) + "}f(x)dx$" \
-                        r"\hspace{1mm}от таблично заданной функции по формуле Cимпсона по шести и по девяти узлам. " \
-                        "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
+                        r"\hspace{1mm}от таблично заданной функции по формуле Симпсона по "
+                        + d[int(self.n / 2) + self.n % 2] + " и по " + d[self.n] + " узлам." \
+                        " Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
     def answerStr(self):
         return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.3f}".format(self.halfAnswer) +
@@ -100,23 +124,22 @@ class SimpsonTask:
                         "{0:.3f}".format(self.answer + self.errorRunge()) + r"$\hspace{1mm}(Симпсон)")
 
 
-def simpson(y, h, n):
+def simpson(y, h):
     res = y[0] + y[-1]
 
-    for i in range(0, len(y) - 1):
-        res += 2 * y[i]
-        res += 2 * (y[i] + y[i + 1])
+    for i in range(1, len(y) - 1):
+        res += 4 * y[i] if i % 2 == 1 else 2 * y[i]
 
-    res *= h / 6
+    res *= h / 3
 
     return res
 
 
-def trapezoid(y, h, n):
+def trapezoid(y, h):
     res = (y[0] + y[-1]) / 2
 
     for i in range(1, len(y) - 1):
-        res += 2 * y[i]
+        res += y[i]
 
     res *= h
 
@@ -193,7 +216,7 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks):
 
         addedVariantsCnt += 2
 
-        if addedVariantsCnt == 4 and addedVariantsCnt != taskCnt:
+        if addedVariantsCnt == 4 and i + 2 < taskCnt:
             addedVariantsCnt = 0
             taskDoc.append(copy(table))
             taskDoc.append(NewPage())
@@ -228,7 +251,7 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks):
         addEmptySpace(answerTable, 2)
 
         addedVariantsCnt += 2
-        if addedVariantsCnt == 4 and addedVariantsCnt != taskCnt:
+        if addedVariantsCnt == 4 and i + 2 < taskCnt:
             addedVariantsCnt = 0
             answerDoc.append(copy(answerTable))
             answerDoc.append(NewPage())
@@ -268,4 +291,6 @@ def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt):
     taskDoc.generate_tex()
 
 
-run(11, 15, 15)
+run(7, 15, 15)
+print(trapezoid([0.0, 1.6, 3.1, 4.4, 5.9, 7.5, 7.4, 7.6, 8.7, 9.4, 7.6], 0.2))
+print(simpson([5.7, 7.0, 7.9, 9.4, 8.4, 7.7, 8.3, 7.4, 6.0], 0.2))
