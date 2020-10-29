@@ -1,6 +1,9 @@
 # Default ignored files
 .idea
 #*.txt
+#*.tex
+#*.pdf
+#*.zip
 test*
 /**/venv/*
 
