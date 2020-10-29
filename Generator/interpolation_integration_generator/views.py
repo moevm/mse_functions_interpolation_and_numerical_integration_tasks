@@ -51,7 +51,7 @@ def generate_integration(request):
     is_latex = True if request.GET.get("saveOnLaTex") == "Yes" else False
     filename = request.GET.get("fileName")
 
-    run(variantsCnt, TrapezoidPointsCnt, SimpsonPointsCnt, filename, is_pdf, is_latex)
+    run(variantsCnt, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_latex)
 
     folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
     filenames = []
