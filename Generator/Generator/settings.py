@@ -6,6 +6,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'interpolation'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'integration'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '9df26^0rqkmttzd_f!fw-z&0#x#1^p$q_jp3-h2n!!qw7@8-@7'

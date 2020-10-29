@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="sanya.css">
     <meta charset="UTF-8">
     <title>Генератор</title>
 </head>
@@ -49,7 +50,7 @@
                 </div>
                 <div>
                     <div class="form-check">
-                            <input class="form-check-input" type="radio" name="degree" id="exampleRadios2" value="3"
+                        <input class="form-check-input" type="radio" name="degree" id="exampleRadios2" value="3"
                                checked>
                         <label class="form-check-label" for="exampleRadios1">3</label>
                     </div>
@@ -81,7 +82,7 @@
                         <div class="row">
 
                             <label class="col form-check-label" for="someRadios4">Пофамильно</label>
-                            <input type="file" name="file" class="col form-control-file" id="exampleFormControlFile1">
+                            <input type="file" name="file" class="col form-control-file fileInput" id="exampleFormControlFile1" style="margin-right: 15px">
                         </div>
                     </div>
                 </div>
@@ -115,10 +116,103 @@
                 </button>
             </form>
         </div>
-        <form action="/download_test" method="get" class="col mr-4" style="border-radius: 15px; background-color: #E5E5E5">
+        <div class="col mr-4" style="border-radius: 15px; background-color: #E5E5E5">
+            <form action="generate_integration" method="get" class="col mr-4"
+                  style="border-radius: 15px; background-color: #E5E5E5">
+                <h3 class="mt-2">Численное интегрирование по формуле трапеций и Симпсона</h3>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <h5>Имя файла</h5>
+                    </div>
+                    <div class="col ml">
+                        <input name="fileName" class="form-control" min="1">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <h5>Количество вариантов</h5>
+                    </div>
+                    <div class="col ml">
+                        <input type="number" name="variantsCnt" class="form-control" min="1">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <h5>Количество точек (формула трапеций)</h5>
+                    </div>
+                    <div class="col ml">
+                        <input type="number" name="TrapezoidPointsCnt" class="form-control" min="1" required>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <h5>Количество точек (формула Симпсона)</h5>
+                    </div>
+                    <div class="col ml">
+                        <input type="number" name="SimpsonPointsCnt" class="form-control" min="1" required>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <h5 class="col">Нумерация вариантов</h5>
+                </div>
+                <div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Numbering" id="someRadios5" value="Digits"
+                               checked>
+                        <label class="form-check-label" for="someRadios5">Числами</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Numbering" id="someRadios6" value="Surnames">
+                        <div class="row">
+                            <label class="col form-check-label" for="someRadios6">Пофамильно</label>
+                            <input type="file" name="file" class="col form-control-file fileInput" id="exampleFormControlFile2" style="margin-right: 15px">
+                        </div>
+                    </div>
+                </div>
+                <h5>Формат генерации</h5>
+                <div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="saveOnPDF" id="exampleCheck3" value="Yes"
+                               checked>
+                        <label class="form-check-label" for="exampleCheck3">pdf</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="saveOnLaTex" id="exampleCheck4"
+                               value="Yes">
+                        <label class="form-check-label" for="exampleCheck4">tex</label>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <em>Необязательный параметр:</em>
+                <div class="row">
+                    <div class="col">
+                        <h5>Сид для генерации</h5>
+                    </div>
+                    <div class="col ml">
+                        <input type="number" name="SID" class="form-control">
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="btn mb-2 btn-primary btn-lg active" role="button" aria-pressed="true"
+                        id="button2">Сгенерировать
+                </button>
+            </form>
 
-        </form>
+        </div>
+
     </div>
+</div>
+
+
 </div>
 <script>
     last_degree = document.getElementsByClassName("last-degree")[0];
