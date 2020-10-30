@@ -28,6 +28,7 @@ d = {
     20: "двадцати"
 }
 
+
 class TrapezoidTask:
     def __init__(self):
         self.xValues = []
@@ -67,7 +68,7 @@ class TrapezoidTask:
         return NoEscape("1) Вычислить приближённое значение " +
                         r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(self.xValues[-1]) + "}f(x)dx$" \
                         r"\hspace{1mm}от таблично заданной функции по формуле трапеций по "
-                        + d[int(self.n / 2) + self.n % 2] + "и по " + d[self.n]  + " узлам." \
+                        + d[int(self.n / 2) + self.n % 2] + "и по " + d[self.n] + " узлам." \
                         "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
     def answerStr(self):
@@ -280,17 +281,17 @@ def initDocs():
     return answerDoc, taskDoc
 
 
-def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt):
+def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex):
     simpsonTasks = [SimpsonTask().randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
     trapezoidTasks = [TrapezoidTask().randomize(simpsonDotsCnt) for j in range(taskCnt)]
 
     answerDoc, taskDoc = initDocs()
     createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks)
 
-    answerDoc.generate_tex()
-    taskDoc.generate_tex()
-
-
-run(7, 15, 15)
-print(trapezoid([0.0, 1.6, 3.1, 4.4, 5.9, 7.5, 7.4, 7.6, 8.7, 9.4, 7.6], 0.2))
-print(simpson([5.7, 7.0, 7.9, 9.4, 8.4, 7.7, 8.3, 7.4, 6.0], 0.2))
+    folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
+    if is_pdf:
+        taskDoc.generate_pdf(f'{folder}/integration_{fileName}')
+        answerDoc.generate_pdf(f'{folder}/integration_answers_for_{fileName}')
+    if is_latex:
+        taskDoc.generate_tex(f'{folder}/integration_{fileName}')
+        answerDoc.generate_tex(f'{folder}/integration_answers_for_{fileName}')
