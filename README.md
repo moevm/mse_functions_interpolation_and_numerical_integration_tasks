@@ -4,7 +4,7 @@
 > sudo apt-get install python3-dev python3-pip texlive-fonts-recommended texlive-lang-cyrillic texlive-latex-extra texlive-latex-recommended
 
 2) Создать виртуальное окружение:
-> python -m venv <имя>
+> python -m venv <venv_name>
 
 3) Активировать виртуальное окружение:
 > source <venv_name>/bin/activate
