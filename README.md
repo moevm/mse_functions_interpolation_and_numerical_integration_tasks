@@ -1,19 +1,19 @@
-<h1>Подготовка </h1>
+<h1>Подготовка среды</h1>
 
-1) sudo apt-get install python3-dev python3-pip texlive-fonts-recommended texlive-lang-cyrillic texlive-latex-extra texlive-latex-recommended
+1) `sudo apt-get install python3-dev python3-pip texlive-fonts-recommended texlive-lang-cyrillic texlive-latex-extra texlive-latex-recommended`
 
-2) Создать виртуальное окружение: python -m venv <имя>
+2) Создать виртуальное окружение: `python -m venv <имя>`
 
-3) Активировать виртуальное окружение, используя команду source <venva name>/bin/activate (Linux)
+3) Активировать виртуальное окружение, используя команду `source <venva name>/bin/activate`
 
-4) Установить виртуальное окружение: pip install -r requirments.txt
+4) Установить виртуальное окружение: `pip install -r requirments.txt`
 
 5) Загрузить проект в это окружение
 
 
-<h1>Запустить сервер</h1>
+<h1>Запуск сервера</h1>
  
-python manage.py runserver
+`python manage.py runserver`
 
 
 <h1>Трекер задач</h1>
