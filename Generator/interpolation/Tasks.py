@@ -14,7 +14,8 @@ class answertext(CommandBase):
 
 
 class Tasks:
-    def __init__(self, options_summary: int, options_in_line: int, degree: int):
+    def __init__(self, options_summary: int, options_in_line: int, degree: int, seed=None):
+        self.seed = seed
         self.options_summary = options_summary
         self.options_in_line = options_in_line
         self.degree = degree
@@ -91,7 +92,7 @@ class Tasks:
                 variants = []
                 answers = []
                 for j in range(self.options_in_line):
-                    polynom = Polynomial(self.degree)
+                    polynom = Polynomial(self.degree, self.seed)
                     variants.append(polynom)
                     answers.append(polynom)
                 tasks_row = []

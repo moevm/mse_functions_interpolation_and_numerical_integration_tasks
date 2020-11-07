@@ -18,8 +18,9 @@ def generate_interpolations(request):
     is_pdf = True if request.GET.get("saveOnPDF") == "Yes" else False
     is_latex = True if request.GET.get("saveOnLaTex") == "Yes" else False
     filename = request.GET.get("filename")
+    seed = int(request.GET.get("seed"))
 
-    document = Tasks(options_summary, options_in_line, degree)
+    document = Tasks(options_summary, options_in_line, degree, seed)
     document.generate(filename, is_pdf, is_latex)
 
     folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
