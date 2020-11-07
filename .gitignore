@@ -4,7 +4,7 @@
 #*.tex
 #*.pdf
 #*.zip
-test*
+test.py
 /**/venv/*
 
 /**/__pycache__/*
