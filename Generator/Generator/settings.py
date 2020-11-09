@@ -15,7 +15,6 @@ SECRET_KEY = '9df26^0rqkmttzd_f!fw-z&0#x#1^p$q_jp3-h2n!!qw7@8-@7'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-print(sys.path)
 
 # Application definition
 

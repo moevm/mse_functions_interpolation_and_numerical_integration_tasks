@@ -18,7 +18,12 @@ def generate_interpolations(request):
     is_pdf = True if request.GET.get("saveOnPDF") == "Yes" else False
     is_latex = True if request.GET.get("saveOnLaTex") == "Yes" else False
     filename = request.GET.get("filename")
-    seed = int(request.GET.get("seed"))
+    seed = None
+    try:
+        seed = int(request.GET.get("seed"))
+    except ValueError:
+        pass
+
 
     document = Tasks(options_summary, options_in_line, degree, seed)
     document.generate(filename, is_pdf, is_latex)
