@@ -17,8 +17,12 @@
 
 
 <h1>Запуск сервера</h1>
- 
-> python Generator/manage.py runserver
+
+> cd Generator 
+
+Запуск (временно) выполняется только из директории `Generator`
+
+> python manage.py runserver
 
 
 <h1>Трекер задач</h1>
