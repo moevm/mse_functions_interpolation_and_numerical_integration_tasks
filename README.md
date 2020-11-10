@@ -9,11 +9,12 @@
 3) Активировать виртуальное окружение:
 > source <venv_name>/bin/activate
 
-4) Установить виртуальное окружение: 
+4) Загрузить проект в это окружение:
+> git clone https://github.com/moevm/mse_functions_interpolation_and_numerical_integration_tasks.git
+
+5) Установить виртуальное окружение: 
 > pip install -r requirments.txt
 
-5) Загрузить проект в это окружение:
-> git clone https://github.com/moevm/mse_functions_interpolation_and_numerical_integration_tasks.git
 
 
 <h1>Запуск сервера</h1>
