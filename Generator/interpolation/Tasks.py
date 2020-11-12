@@ -92,7 +92,7 @@ class Tasks:
                 variants = []
                 answers = []
                 for j in range(self.options_in_line):
-                    polynom = PolynomialHelper(self.degree, self.seed)
+                    polynom = PolynomialHelper.generatePolynomial(self.degree, self.seed)
                     variants.append(polynom)
                     answers.append(polynom)
                 tasks_row = []
