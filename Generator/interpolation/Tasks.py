@@ -1,6 +1,6 @@
 from pylatex import Document, NewPage, Command, Package, UnsafeCommand, Center, Tabular, MultiRow
 from pylatex.base_classes import CommandBase, Arguments
-from interpolation.Polynomial import Polynomial
+from interpolation.PolynomialHelper import PolynomialHelper
 from pylatex.utils import NoEscape
 import math
 
@@ -92,7 +92,7 @@ class Tasks:
                 variants = []
                 answers = []
                 for j in range(self.options_in_line):
-                    polynom = Polynomial(self.degree, self.seed)
+                    polynom = PolynomialHelper(self.degree, self.seed)
                     variants.append(polynom)
                     answers.append(polynom)
                 tasks_row = []
