@@ -14,7 +14,7 @@ def index(request):
 
 
 async def generate_interpolations(request):
-    timestamp = str(datetime.now()).replace(":", "-")
+    timestamp = str(datetime.now()).replace(":", "-").replace(" ", "_")
     folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
     os.mkdir(f"{folder}")
 
@@ -46,9 +46,8 @@ async def generate_interpolations(request):
     with zipfile.ZipFile(f'{folder}/result.zip', 'w') as zipObj:
         for file in filenames:
             zipObj.write(file, basename(file))
-    response = HttpResponse(open(f'{folder}/result.zip', 'rb'))
-    response['Content-Type'] = 'application/x-zip-compressed'
-    response['Content-Disposition'] = f'attachment; filename="{folder}/result.zip"'
+    response = HttpResponse(open(f'{folder}/result.zip', 'rb'), content_type='application/zip')
+    response['Content-Disposition'] = f'attachment; filename="{timestamp}_result.zip"'
 
     return response
 
