@@ -1,20 +1,15 @@
 import numpy as np
-from numpy import random as nprd
-from random import sample
-import random
+from numpy import random
 
 class Polynomial:
     degree = None
 
-    def __init__(self, degree, seed=None):
-        random.seed(seed, version=2)
-        nprd.seed(seed)
-
+    def __init__(self, degree):
         self.x = []
         self.y = []
 
         while len(self.x) != degree + 1:
-            self.coefficients = nprd.randint(-10, 11, degree + 1)
+            self.coefficients = random.randint(-10, 11, degree + 1)
             x = np.arange(-20, 21)
             y = self.f(x)
             x = x[np.logical_and(-60 <= y, y <= 60)]
@@ -23,7 +18,7 @@ class Polynomial:
             if len(x) < degree + 1:
                 continue
             else:
-                self.x = sorted(sample(x.tolist(), degree + 1))
+                self.x = sorted(random.choice(x.tolist(), degree + 1, replace=False))
                 self.y = list(map(self.f, self.x))
 
     def __eq__(self, obj):

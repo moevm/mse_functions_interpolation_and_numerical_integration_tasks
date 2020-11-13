@@ -3,6 +3,7 @@ from pylatex.base_classes import CommandBase, Arguments
 from interpolation.PolynomialHelper import PolynomialHelper
 from pylatex.utils import NoEscape
 import math
+from numpy import random
 
 
 class tasktext(CommandBase):
@@ -77,6 +78,7 @@ class Tasks:
         return center
 
     def generate(self, filename, is_pdf, is_latex, timestamp):
+        random.seed(self.seed)
         quantity_of_variants_on_one_page = self.options_in_line * 6  # 6 rows in one page
         quantity_of_pages = math.ceil(self.options_summary / quantity_of_variants_on_one_page)
         column_size = 18 // self.options_in_line  # 18cm - width of a4 format
@@ -92,7 +94,7 @@ class Tasks:
                 variants = []
                 answers = []
                 for j in range(self.options_in_line):
-                    polynom = PolynomialHelper.generatePolynomial(self.degree, self.seed)
+                    polynom = PolynomialHelper.generatePolynomial(self.degree)
                     variants.append(polynom)
                     answers.append(polynom)
                 tasks_row = []
