@@ -4,7 +4,9 @@ from numpy import random
 class Polynomial:
     degree = None
 
-    def __init__(self, degree):
+    def __init__(self, degree, seed=None):
+        if seed is not None:
+            random.seed(seed)
         self.x = []
         self.y = []
 
