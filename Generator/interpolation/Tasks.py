@@ -76,7 +76,7 @@ class Tasks:
         center.append(NoEscape(result))
         return center
 
-    def generate(self, filename, is_pdf, is_latex):
+    def generate(self, filename, is_pdf, is_latex, timestamp):
         quantity_of_variants_on_one_page = self.options_in_line * 6  # 6 rows in one page
         quantity_of_pages = math.ceil(self.options_summary / quantity_of_variants_on_one_page)
         column_size = 18 // self.options_in_line  # 18cm - width of a4 format
@@ -150,7 +150,7 @@ class Tasks:
             self.tasks.append(NewPage())
             self.answers.append(NewPage())
 
-        folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
+        folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
         if is_pdf:
             self.tasks.generate_pdf(f'{folder}/{filename}')
             self.answers.generate_pdf(f'{folder}/answers_for_{filename}')
