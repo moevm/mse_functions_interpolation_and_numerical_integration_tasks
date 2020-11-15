@@ -1,0 +1,30 @@
+body {
+    background-color: #AECCC7;
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
+    background-color: #AECCC7;
+}
+
+.col {
+    border-radius: 15px;
+    background-color: #E5E5E5;
+}
+
+#div {
+    height: 2px;
+    width: 150px;
+    background-color: #B4BBCF;
+}
+
+.form-check-label {
+    position: static;
+}
+
+#exampleFormControlFile1, #exampleFormControlFile1 {
+    margin-right: 15px;
+}

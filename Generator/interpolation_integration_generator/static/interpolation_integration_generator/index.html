@@ -3,18 +3,19 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/interpolation_integration_generator/css/style.css">
     <meta charset="UTF-8">
     <title>Генератор</title>
 </head>
-<body style="background-color: #AECCC7;">
-<h1 align="center">Генератор заданий для контрольных работ</h1>
-<div class="container" style="background-color: #AECCC7">
+
+<body>
+<h1>Генератор заданий для контрольных работ</h1>
+<div class="container">
     <div class="row">
-        <div class="col mr-4" style="border-radius: 15px; background-color: #E5E5E5">
-            <form action="generate_interpolation" method="get" class="col mr-4"
-                  style="border-radius: 15px; background-color: #E5E5E5">
+        <div class="col mr-4">
+            <form action="generate_interpolation" method="get" class="col mr-4">
                 <h3 class="mt-2">Интерполяционный многочлен Ньютона и Лагранжа</h3>
-                <div style="height: 2px; width: 150px; background-color: #B4BBCF"></div>
+                <div id="div"></div>
                 <div class="row">
                     <h5 class="col">Имя файла</h5>
                     <input type="text" name="filename" required>
@@ -81,7 +82,8 @@
                         <div class="row">
 
                             <label class="col form-check-label" for="someRadios4">Пофамильно</label>
-                            <input type="file" name="file" class="col form-control-file fileInput" id="exampleFormControlFile1" style="margin-right: 15px">
+                            <input type="file" name="file" class="col form-control-file fileInput"
+                                   id="exampleFormControlFile1">
                         </div>
                     </div>
                 </div>
@@ -115,9 +117,8 @@
                 </button>
             </form>
         </div>
-        <div class="col mr-4" style="border-radius: 15px; background-color: #E5E5E5">
-            <form action="generate_integration" method="get" class="col mr-4"
-                  style="border-radius: 15px; background-color: #E5E5E5">
+        <div class="col mr-4">
+            <form action="generate_integration" method="get" class="col mr-4">
                 <h3 class="mt-2">Численное интегрирование по формуле трапеций и Симпсона</h3>
                 <br>
                 <div class="row">
@@ -169,7 +170,8 @@
                         <input class="form-check-input" type="radio" name="Numbering" id="someRadios6" value="Surnames">
                         <div class="row">
                             <label class="col form-check-label" for="someRadios6">Пофамильно</label>
-                            <input type="file" name="file" class="col form-control-file fileInput" id="exampleFormControlFile2" style="margin-right: 15px">
+                            <input type="file" name="file" class="col form-control-file fileInput"
+                                   id="exampleFormControlFile2">
                         </div>
                     </div>
                 </div>
@@ -213,45 +215,6 @@
 
 
 </div>
-<script>
-    last_degree = document.getElementsByClassName("last-degree")[0];
-    last_number = document.getElementsByClassName("last-number")[0];
-    var radios = document.getElementsByName("number");
-    var degrees = document.getElementsByName("degree");
-
-    for (var i = 0; i < radios.length; i++) {
-        radios[i].addEventListener("change", function () {
-            if (this.value == "3") {
-                console.log(1);
-                last_degree.style.visibility = "hidden";
-                if (degrees[degrees.length - 1].checked == true) {
-                    degrees[0].checked = true;
-                }
-            } else {
-                console.log(2);
-                last_degree.style.visibility = "visible";
-            }
-        }, 0);
-    }
-
-    for (var i = 0; i < degrees.length; ++i) {
-        degrees[i].addEventListener("change", function () {
-            if (this.value == "6") {
-                console.log(1);
-                last_number.style.visibility = "hidden";
-                radios[0].checked = true;
-            } else {
-                console.log(2);
-                last_number.style.visibility = "visible";
-            }
-        }, 0);
-    }
-
-
-    last_degree.addEventListener("change", function () {
-        radios[0].checked = true;
-    });
-
-</script>
+<script src="static/interpolation_integration_generator/js/script.js"></script>
 </body>
 </html>

@@ -1,16 +1,23 @@
+import os
 import zipfile
+from datetime import datetime
 from os.path import basename
 
 from django.http import HttpResponse
 from django.shortcuts import render
-from interpolation.Tasks import Tasks
 from integration.main import run
+from interpolation.Tasks import Tasks
+
 
 def index(request):
     return render(request, "interpolation_integration_generator/index.html", {})
 
 
-def generate_interpolations(request):
+async def generate_interpolations(request):
+    timestamp = str(datetime.now()).replace(":", "-").replace(" ", "_")
+    folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+    os.mkdir(f"{folder}")
+
     options_in_line = int(request.GET.get("number"))
     degree = int(request.GET.get("degree"))
     options_summary = int(request.GET.get("options_summary"))
@@ -18,12 +25,15 @@ def generate_interpolations(request):
     is_pdf = True if request.GET.get("saveOnPDF") == "Yes" else False
     is_latex = True if request.GET.get("saveOnLaTex") == "Yes" else False
     filename = request.GET.get("filename")
-    seed = int(request.GET.get("seed"))
+    seed = None
+    try:
+        seed = int(request.GET.get("seed"))
+    except ValueError:
+        pass
 
     document = Tasks(options_summary, options_in_line, degree, seed)
-    document.generate(filename, is_pdf, is_latex)
+    document.generate(filename, is_pdf, is_latex, timestamp)
 
-    folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
     filenames = []
     if is_pdf:
         filenames.append(f"{folder}/{filename}.pdf")
@@ -36,9 +46,8 @@ def generate_interpolations(request):
     with zipfile.ZipFile(f'{folder}/result.zip', 'w') as zipObj:
         for file in filenames:
             zipObj.write(file, basename(file))
-    response = HttpResponse(open(f'{folder}/result.zip', 'rb'))
-    response['Content-Type'] = 'application/x-zip-compressed'
-    response['Content-Disposition'] = f'attachment; filename="{folder}/result.zip"'
+    response = HttpResponse(open(f'{folder}/result.zip', 'rb'), content_type='application/zip')
+    response['Content-Disposition'] = f'attachment; filename="{timestamp}_result.zip"'
 
     return response
 

@@ -1,8 +1,9 @@
 from pylatex import Document, NewPage, Command, Package, UnsafeCommand, Center, Tabular, MultiRow
 from pylatex.base_classes import CommandBase, Arguments
-from interpolation.Polynomial import Polynomial
+from interpolation.PolynomialHelper import PolynomialHelper
 from pylatex.utils import NoEscape
 import math
+from numpy import random
 
 
 class tasktext(CommandBase):
@@ -76,7 +77,8 @@ class Tasks:
         center.append(NoEscape(result))
         return center
 
-    def generate(self, filename, is_pdf, is_latex):
+    def generate(self, filename, is_pdf, is_latex, timestamp):
+        random.seed(self.seed)
         quantity_of_variants_on_one_page = self.options_in_line * 6  # 6 rows in one page
         quantity_of_pages = math.ceil(self.options_summary / quantity_of_variants_on_one_page)
         column_size = 18 // self.options_in_line  # 18cm - width of a4 format
@@ -92,7 +94,7 @@ class Tasks:
                 variants = []
                 answers = []
                 for j in range(self.options_in_line):
-                    polynom = Polynomial(self.degree, self.seed)
+                    polynom = PolynomialHelper.generatePolynomial(self.degree)
                     variants.append(polynom)
                     answers.append(polynom)
                 tasks_row = []
@@ -150,7 +152,7 @@ class Tasks:
             self.tasks.append(NewPage())
             self.answers.append(NewPage())
 
-        folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
+        folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
         if is_pdf:
             self.tasks.generate_pdf(f'{folder}/{filename}')
             self.answers.generate_pdf(f'{folder}/answers_for_{filename}')
