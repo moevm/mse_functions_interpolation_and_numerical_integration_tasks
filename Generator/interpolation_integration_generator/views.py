@@ -1,5 +1,6 @@
 import zipfile
 from os.path import basename
+from django.views.decorators.csrf import csrf_exempt
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -8,7 +9,6 @@ from integration.main import run
 
 def index(request):
     return render(request, "interpolation_integration_generator/index.html", {})
-
 
 def generate_interpolations(request):
     options_in_line = int(request.GET.get("number"))
@@ -48,16 +48,22 @@ def generate_interpolations(request):
     return response
 
 
+@csrf_exempt
 def generate_integration(request):
-    variantsCnt = int(request.GET.get("variantsCnt"))
-    TrapezoidPointsCnt = int(request.GET.get("TrapezoidPointsCnt"))
-    SimpsonPointsCnt = int(request.GET.get("SimpsonPointsCnt"))
+    TrapezoidPointsCnt = int(request.POST.get("TrapezoidPointsCnt"))
+    SimpsonPointsCnt = int(request.POST.get("SimpsonPointsCnt"))
 
-    is_pdf = True if request.GET.get("saveOnPDF") == "Yes" else False
-    is_latex = True if request.GET.get("saveOnLaTex") == "Yes" else False
-    filename = request.GET.get("fileName")
+    is_pdf = True if request.POST.get("saveOnPDF") == "Yes" else False
+    is_latex = True if request.POST.get("saveOnLaTex") == "Yes" else False
+    filename = request.POST.get("fileName")
 
-    run(variantsCnt, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_latex)
+    variantsType = request.POST.get("Numbering")
+
+    if variantsType == "Digits":
+        run(int(request.POST.get("variantsCnt")), SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_latex)
+    else:
+        surnames = request.FILES['surnameFile'].read().decode("utf-8").split("\r\n")
+        run(len(surnames), SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_latex, surnames)
 
     folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
     filenames = []
