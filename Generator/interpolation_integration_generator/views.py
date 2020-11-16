@@ -4,8 +4,7 @@ from os.path import basename
 from django.http import HttpResponse
 from django.shortcuts import render
 from interpolation.Tasks import Tasks
-import os
-
+from integration.main import run
 
 def index(request):
     return render(request, "interpolation_integration_generator/index.html", {})
@@ -21,14 +20,13 @@ def generate_interpolations(request):
     filename = request.GET.get("filename")
     seed = None
     try:
-        int(request.GET.get("seed"))
-    except Exception:
-        pass
-    else:
         seed = int(request.GET.get("seed"))
+    except ValueError:
+        pass
 
-    document = Tasks(options_summary, options_in_line, degree)
-    document.generate(filename, is_pdf, is_latex, seed)
+
+    document = Tasks(options_summary, options_in_line, degree, seed)
+    document.generate(filename, is_pdf, is_latex)
 
     folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
     filenames = []
@@ -47,12 +45,36 @@ def generate_interpolations(request):
     response['Content-Type'] = 'application/x-zip-compressed'
     response['Content-Disposition'] = f'attachment; filename="{folder}/result.zip"'
 
-    # удаляем сгенеринные pdf и tex после их записи в возвращаемый архив
+    return response
+
+
+def generate_integration(request):
+    variantsCnt = int(request.GET.get("variantsCnt"))
+    TrapezoidPointsCnt = int(request.GET.get("TrapezoidPointsCnt"))
+    SimpsonPointsCnt = int(request.GET.get("SimpsonPointsCnt"))
+
+    is_pdf = True if request.GET.get("saveOnPDF") == "Yes" else False
+    is_latex = True if request.GET.get("saveOnLaTex") == "Yes" else False
+    filename = request.GET.get("fileName")
+
+    run(variantsCnt, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_latex)
+
+    folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
+    filenames = []
+
     if is_pdf:
-        os.remove(f"{folder}/{filename}.pdf")
-        os.remove(f'{folder}/answers_for_{filename}.pdf')
+        filenames.append(f"{folder}/integration_{filename}.pdf")
+        filenames.append(f'{folder}/integration_answers_for_{filename}.pdf')
+
     if is_latex:
-        os.remove(f"{folder}/{filename}.tex")
-        os.remove(f'{folder}/answers_for_{filename}.tex')
+        filenames.append(f"{folder}/integration_{filename}.tex")
+        filenames.append(f'{folder}/integration_answers_for_{filename}.tex')
+
+    with zipfile.ZipFile(f'{folder}/integration_result.zip', 'w') as zipObj:
+        for file in filenames:
+            zipObj.write(file, basename(file))
+    response = HttpResponse(open(f'{folder}/integration_result.zip', 'rb'))
+    response['Content-Type'] = 'application/x-zip-compressed'
+    response['Content-Disposition'] = f'attachment; filename="{folder}/integration_result.zip"'
 
     return response

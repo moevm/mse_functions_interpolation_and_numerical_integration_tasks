@@ -1,8 +1,13 @@
 # Default ignored files
 .idea
 #*.txt
-test*
+#*.tex
+#*.pdf
+#*.zip
+test.py
 /**/venv/*
 
 /**/__pycache__/*
-/Generator/interpolation_integration_generator/static/interpolation_integration_generator/*.zip
+Generator/interpolation_integration_generator/static/interpolation_integration_generator/*.tex
+Generator/interpolation_integration_generator/static/interpolation_integration_generator/*.pdf
+Generator/interpolation_integration_generator/static/interpolation_integration_generator/*.zip
