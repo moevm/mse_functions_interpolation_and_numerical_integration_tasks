@@ -113,7 +113,7 @@ class SimpsonTask:
         return abs(self.halfAnswer - self.answer) / 15
 
     def taskText(self):
-        return NoEscape("1) Вычислить приближённое значение " +
+        return NoEscape("2) Вычислить приближённое значение " +
                         r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(self.xValues[-1]) + "}f(x)dx$" \
                         r"\hspace{1mm}от таблично заданной функции по формуле Симпсона по "
                         + d[int(self.n / 2) + self.n % 2] + " и по " + d[self.n] + " узлам." \
@@ -203,7 +203,8 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
     if surnames is not None:
         surnames.append(None)
 
-    table = Tabular(" p{9cm} p{9cm} ")
+    table = Tabular(" |p{9cm}|p{9cm}| ")
+    table.add_hline()
 
     addedVariantsCnt = 0
     for i in range(0, taskCnt, 2):
@@ -227,13 +228,16 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
 
         if addedVariantsCnt == 4 and i + 2 < taskCnt:
             addedVariantsCnt = 0
+            table.add_hline()
             taskDoc.append(copy(table))
             taskDoc.append(NewPage())
             table.clear()
+        table.add_hline()
 
     taskDoc.append(table)
 
-    answerTable = Tabular(" p{9cm} p{9cm} ")
+    answerTable = Tabular("|p{9cm}|p{9cm}|")
+    answerTable.add_hline()
 
     addedVariantsCnt = 0
     for i in range(0, taskCnt, 2):
@@ -266,9 +270,11 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
         addedVariantsCnt += 2
         if addedVariantsCnt == 4 and i + 2 < taskCnt:
             addedVariantsCnt = 0
+            answerTable.add_hline()
             answerDoc.append(copy(answerTable))
             answerDoc.append(NewPage())
             answerTable.clear()
+        answerTable.add_hline()
 
     answerDoc.append(answerTable)
 

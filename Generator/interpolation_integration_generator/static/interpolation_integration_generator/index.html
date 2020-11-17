@@ -13,7 +13,7 @@
 <div class="container">
     <div class="row">
         <div class="col mr-4">
-            <form action="generate_interpolation" method="get" class="col mr-4">
+            <form action="generate_interpolation/" method="post" enctype="multipart/form-data" class="col mr-4">
                 <h3 class="mt-2">Интерполяционный многочлен Ньютона и Лагранжа</h3>
                 <div id="div"></div>
                 <div class="row">
@@ -78,12 +78,11 @@
                         <label class="form-check-label" for="someRadios3">Числами</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="Numbering" id="someRadios4" value="Surnames">
+                        <input class="form-check-input" type="radio" name="Numbering" id="someRadios15" value="Surnames">
                         <div class="row">
-
-                            <label class="col form-check-label" for="someRadios4">Пофамильно</label>
-                            <input type="file" name="file" class="col form-control-file fileInput"
-                                   id="exampleFormControlFile1">
+                            <label class="col form-check-label" for="exampleFormControlFile3">Пофамильно</label>
+                            <input type="file" name="surnameFile" class="col form-control-file fileInput" accept=".txt"
+                                   id="exampleFormControlFile3">
                         </div>
                     </div>
                 </div>
