@@ -14,8 +14,13 @@ def index(request):
 
 
 async def generate_interpolations(request):
+    names = []
+    files = []
+    sizes = []
+
     timestamp = str(datetime.now()).replace(":", "-").replace(" ", "_")
     folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+    static_folder = f"/static/interpolation_integration_generator/{timestamp}"
     os.mkdir(f"{folder}")
 
     options_in_line = int(request.GET.get("number"))
@@ -39,17 +44,39 @@ async def generate_interpolations(request):
         filenames.append(f"{folder}/{filename}.pdf")
         filenames.append(f'{folder}/answers_for_{filename}.pdf')
 
+        names.append(f"{filename}.pdf")
+        files.append(f"{static_folder}/{filename}.pdf")
+        sizes.append(os.path.getsize(f"{folder}/{filename}.pdf"))
+
+        names.append(f"answers_for_{filename}.pdf")
+        files.append(f"{static_folder}/answers_for_{filename}.pdf")
+        sizes.append(os.path.getsize(f"{folder}/answers_for_{filename}.pdf"))
+
     if is_latex:
         filenames.append(f"{folder}/{filename}.tex")
         filenames.append(f'{folder}/answers_for_{filename}.tex')
 
+        names.append(f"{filename}.tex")
+        files.append(f"{static_folder}/{filename}.tex")
+        sizes.append(os.path.getsize(f"{folder}/{filename}.tex"))
+
+        names.append(f"answers_for_{filename}.tex")
+        files.append(f"{static_folder}/answers_for_{filename}.tex")
+        sizes.append(os.path.getsize(f"{folder}/answers_for_{filename}.tex"))
+
     with zipfile.ZipFile(f'{folder}/result.zip', 'w') as zipObj:
         for file in filenames:
             zipObj.write(file, basename(file))
-    response = HttpResponse(open(f'{folder}/result.zip', 'rb'), content_type='application/zip')
-    response['Content-Disposition'] = f'attachment; filename="{timestamp}_result.zip"'
 
-    return response
+    names.append("result.zip")
+    files.append(f"{static_folder}/result.zip")
+
+    sizes = list(map(lambda size: round(size/1024, 1), sizes))
+    sizes.append(os.path.getsize(f"{folder}/result.zip"))
+
+    context = {'files': zip(names, files, sizes)}
+
+    return render(request, "interpolation_integration_generator/result_page.html", context=context)
 
 
 def generate_integration(request):
