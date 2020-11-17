@@ -1,0 +1,30 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'interpolation_integration_generator/css/result_page.css' %}">
+    <meta charset="UTF-8">
+    <title>Result page</title>
+</head>
+<body>
+<h1>Список полученных файлов</h1>
+<div class="container">
+    <div class="row">
+        <h5 class="col mt-2">Имя</h5>
+        <div class="horizontal-delimiter"></div>
+        <h5 class="col-2 mt-2 ">Размер</h5>
+    </div>
+    {% for name, file, size in files %}
+        <div class="vertical-delimiter"></div>
+        <div class="row file-stroke">
+            <a class="col" target="_blank" id="ListNames" href="{{ file }}">{{ name }}</a>
+            <div class="horizontal-delimiter"></div>
+            <label class="col-2" id="ListSizes">{{ size }} MB</label>
+        </div>
+    {% endfor %}
+</div>
+</body>
+</html>
