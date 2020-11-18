@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'interpolation_integration_generator',
-    'interpolation',
 ]
 
 MIDDLEWARE = [
