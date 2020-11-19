@@ -281,14 +281,14 @@ def initDocs():
     return answerDoc, taskDoc
 
 
-def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex):
+def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex, timestamp):
     simpsonTasks = [SimpsonTask().randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
     trapezoidTasks = [TrapezoidTask().randomize(simpsonDotsCnt) for j in range(taskCnt)]
 
     answerDoc, taskDoc = initDocs()
     createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks)
 
-    folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
+    folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
     if is_pdf:
         taskDoc.generate_pdf(f'{folder}/integration_{fileName}')
         answerDoc.generate_pdf(f'{folder}/integration_answers_for_{fileName}')

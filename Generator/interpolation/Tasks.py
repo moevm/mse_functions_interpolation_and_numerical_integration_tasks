@@ -154,11 +154,11 @@ class Tasks:
 
         folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
         if is_pdf:
-            self.tasks.generate_pdf(f'{folder}/{filename}')
-            self.answers.generate_pdf(f'{folder}/answers_for_{filename}')
+            self.tasks.generate_pdf(f'{folder}/interpolation_{filename}')
+            self.answers.generate_pdf(f'{folder}/interpolation_answers_for_{filename}')
         if is_latex:
-            self.tasks.generate_tex(f'{folder}/{filename}')
-            self.answers.generate_tex(f'{folder}/answers_for_{filename}')
+            self.tasks.generate_tex(f'{folder}/interpolation_{filename}')
+            self.answers.generate_tex(f'{folder}/interpolation_answers_for_{filename}')
 
     def suplement_table(self, table, n=4):
         for i in range(n):
