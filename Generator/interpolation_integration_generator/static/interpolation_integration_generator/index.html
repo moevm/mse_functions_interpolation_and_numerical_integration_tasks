@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="static/interpolation_integration_generator/css/index.css">
+    <link rel="stylesheet" href="static/interpolation_integration_generator/css/style.css">
     <meta charset="UTF-8">
     <title>Генератор</title>
 </head>
@@ -13,7 +13,7 @@
 <div class="container">
     <div class="row">
         <div class="col mr-4">
-            <form action="generate_interpolation" method="get" class="col mr-4">
+            <form action="generate_interpolation/" method="post" enctype="multipart/form-data" class="col mr-4">
                 <h3 class="mt-2">Интерполяционный многочлен Ньютона и Лагранжа</h3>
                 <div id="div"></div>
                 <div class="row">
@@ -78,12 +78,11 @@
                         <label class="form-check-label" for="someRadios3">Числами</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="Numbering" id="someRadios4" value="Surnames">
+                        <input class="form-check-input" type="radio" name="Numbering" id="someRadios15" value="Surnames">
                         <div class="row">
-
-                            <label class="col form-check-label" for="someRadios4">Пофамильно</label>
-                            <input type="file" name="file" class="col form-control-file fileInput"
-                                   id="exampleFormControlFile1">
+                            <label class="col form-check-label" for="exampleFormControlFile3">Пофамильно</label>
+                            <input type="file" name="surnameFile" class="col form-control-file fileInput" accept=".txt"
+                                   id="exampleFormControlFile3">
                         </div>
                     </div>
                 </div>
@@ -118,7 +117,7 @@
             </form>
         </div>
         <div class="col mr-4">
-            <form action="generate_integration" method="get" class="col mr-4">
+            <form action="generate_integration/" method="post" enctype="multipart/form-data" class="col mr-4">
                 <h3 class="mt-2">Численное интегрирование по формуле трапеций и Симпсона</h3>
                 <br>
                 <div class="row">
@@ -169,8 +168,8 @@
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="Numbering" id="someRadios6" value="Surnames">
                         <div class="row">
-                            <label class="col form-check-label" for="someRadios6">Пофамильно</label>
-                            <input type="file" name="file" class="col form-control-file fileInput"
+                            <label class="col form-check-label" for="exampleFormControlFile2">Пофамильно</label>
+                            <input type="file" name="surnameFile" class="col form-control-file fileInput" accept=".txt"
                                    id="exampleFormControlFile2">
                         </div>
                     </div>
