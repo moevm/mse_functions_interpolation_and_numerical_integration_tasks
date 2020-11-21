@@ -1,7 +1,11 @@
+import asyncio
 import os
 import zipfile
 from datetime import datetime
 from os.path import basename
+
+from asgiref.sync import sync_to_async
+from django.views.decorators.csrf import csrf_exempt
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -12,8 +16,8 @@ from interpolation.Tasks import Tasks
 def index(request):
     return render(request, "interpolation_integration_generator/index.html", {})
 
-
-async def generate_interpolations(request):
+@csrf_exempt
+def generate_interpolations(request):
     names = []
     files = []
     sizes = []
@@ -23,21 +27,32 @@ async def generate_interpolations(request):
     static_folder = f"/static/interpolation_integration_generator/{timestamp}"
     os.mkdir(f"{folder}")
 
-    options_in_line = int(request.GET.get("number"))
-    degree = int(request.GET.get("degree"))
-    options_summary = int(request.GET.get("options_summary"))
+    options_in_line = int(request.POST.get("number"))
+    degree = int(request.POST.get("degree"))
 
-    is_pdf = True if request.GET.get("saveOnPDF") == "Yes" else False
-    is_latex = True if request.GET.get("saveOnLaTex") == "Yes" else False
-    filename = request.GET.get("filename")
+    is_pdf = True if request.POST.get("saveOnPDF") == "Yes" else False
+    is_latex = True if request.POST.get("saveOnLaTex") == "Yes" else False
+    filename = request.POST.get("filename")
     seed = None
     try:
-        seed = int(request.GET.get("seed"))
+        seed = int(request.POST.get("seed"))
     except ValueError:
         pass
 
+    variantsType = request.POST.get("Numbering")
+
+    surnames = None
+    options_summary = 0
+    if variantsType == "Digits":
+        options_summary = int(request.POST.get("options_summary"))
+    else:
+        surnames = request.FILES['file'].read().decode("utf-8").splitlines()
+        options_summary = len(surnames)
+
     document = Tasks(options_summary, options_in_line, degree, seed)
-    document.generate(filename, is_pdf, is_latex, timestamp)
+    loop = asyncio.new_event_loop()
+    result = loop.run_until_complete(document.generate(filename, is_pdf, is_latex, timestamp, surnames))
+    loop.close()
 
     filenames = []
     if is_pdf:
@@ -78,8 +93,8 @@ async def generate_interpolations(request):
 
     return render(request, "interpolation_integration_generator/result_page.html", context=context)
 
-
-async def generate_integration(request):
+@csrf_exempt
+def generate_integration(request):
     names = []
     files = []
     sizes = []
@@ -89,15 +104,27 @@ async def generate_integration(request):
     static_folder = f"/static/interpolation_integration_generator/{timestamp}"
     os.mkdir(f"{folder}")
 
-    variantsCnt = int(request.GET.get("variantsCnt"))
-    TrapezoidPointsCnt = int(request.GET.get("TrapezoidPointsCnt"))
-    SimpsonPointsCnt = int(request.GET.get("SimpsonPointsCnt"))
+    TrapezoidPointsCnt = int(request.POST.get("TrapezoidPointsCnt"))
+    SimpsonPointsCnt = int(request.POST.get("SimpsonPointsCnt"))
 
-    is_pdf = True if request.GET.get("saveOnPDF") == "Yes" else False
-    is_latex = True if request.GET.get("saveOnLaTex") == "Yes" else False
-    filename = request.GET.get("fileName")
+    is_pdf = True if request.POST.get("saveOnPDF") == "Yes" else False
+    is_latex = True if request.POST.get("saveOnLaTex") == "Yes" else False
+    filename = request.POST.get("fileName")
 
-    run(variantsCnt, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_latex, timestamp)
+    variantsType = request.POST.get("Numbering")
+
+    options_count = None
+    surnames = None
+
+    if variantsType == "Digits":
+        options_count = int(request.POST.get("variantsCnt"))
+    else:
+        surnames = request.FILES['file'].read().decode("utf-8").splitlines()
+        options_count = len(surnames)
+
+    loop = asyncio.new_event_loop()
+    result = loop.run_until_complete(run(options_count, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_latex, timestamp, surnames))
+    loop.close()
 
     # folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
     filenames = []
