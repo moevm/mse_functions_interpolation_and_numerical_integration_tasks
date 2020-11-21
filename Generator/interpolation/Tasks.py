@@ -36,8 +36,9 @@ class Tasks:
             document.packages.append(Package('longtable'))
             document.packages.append(Package('lastpage'))
 
-            text_variant = r'Вариант {#1}.\newline Построить интерполяционный многочлен в форме Лагранжа, в форме Ньютона и сравнить результаты.'
-            answer_variant = r'Ответ для варианта {#1}:'
+            text_variant = r'{#1}.\newline Построить интерполяционный многочлен в форме Лагранжа, в форме Ньютона и ' \
+                           r'сравнить результаты.'
+            answer_variant = r'Ответ для {#1}:'
             document.append(UnsafeCommand('newcommand', r'\tasktext', options=1, extra_arguments=text_variant))
             document.append(UnsafeCommand('newcommand', r'\answertext', options=1, extra_arguments=answer_variant))
 
@@ -77,7 +78,7 @@ class Tasks:
         center.append(NoEscape(result))
         return center
 
-    def generate(self, filename, is_pdf, is_latex, timestamp):
+    async def generate(self, filename, is_pdf, is_latex, timestamp, surnames=None):
         random.seed(self.seed)
         quantity_of_variants_on_one_page = self.options_in_line * 6  # 6 rows in one page
         quantity_of_pages = math.ceil(self.options_summary / quantity_of_variants_on_one_page)
@@ -106,11 +107,14 @@ class Tasks:
                         tasks_row.append(MultiRow(5, width=f'{column_size}cm'))
                         answers_row.append(MultiRow(5, width=f'{column_size}cm'))
                     else:
-                        tasks_row.append(MultiRow(5, width=f'{column_size}cm', data=tasktext(
-                            arguments=Arguments(page*quantity_of_variants_on_one_page + i*self.options_in_line + j))))
-                        answers_row.append(MultiRow(5, width=f'{column_size}cm', data=answertext(
-                            arguments=Arguments(page*quantity_of_variants_on_one_page + i*self.options_in_line + j))))
-                        # print(f"Вариант {page * quantity_of_variants_on_one_page + i * self.options_in_line + j}, полином: {variants[j].coefficients}")
+                        taskArgument = None
+                        if surnames is None:
+                            taskArgument = f"Вариант {page * quantity_of_variants_on_one_page + i * self.options_in_line + j}"
+                        else:
+                            taskArgument = surnames[page * quantity_of_variants_on_one_page + i * self.options_in_line + j]
+
+                        tasks_row.append(MultiRow(5, width=f'{column_size}cm', data=tasktext(arguments=Arguments(taskArgument))))
+                        answers_row.append(MultiRow(5, width=f'{column_size}cm', data=answertext(arguments=Arguments(taskArgument))))
 
                 tasks_table.add_row(tasks_row)
                 answers_table.add_row(answers_row)
@@ -154,11 +158,11 @@ class Tasks:
 
         folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
         if is_pdf:
-            self.tasks.generate_pdf(f'{folder}/{filename}')
-            self.answers.generate_pdf(f'{folder}/answers_for_{filename}')
+            self.tasks.generate_pdf(f'{folder}/interpolation_{filename}')
+            self.answers.generate_pdf(f'{folder}/interpolation_answers_for_{filename}')
         if is_latex:
-            self.tasks.generate_tex(f'{folder}/{filename}')
-            self.answers.generate_tex(f'{folder}/answers_for_{filename}')
+            self.tasks.generate_tex(f'{folder}/interpolation_{filename}')
+            self.answers.generate_tex(f'{folder}/interpolation_answers_for_{filename}')
 
     def suplement_table(self, table, n=4):
         for i in range(n):
