@@ -195,16 +195,24 @@ def fillTaskTables(table, firstTask, secondTask):
         addEmptySpace(table, 2)
 
 
-def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks):
+def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames=None):
     trapezoidTasks.append(None)
     simpsonTasks.append(None)
 
-    table = Tabular(" p{9cm} p{9cm} ")
+    if surnames is not None:
+        surnames.append(None)
+
+    table = Tabular(" |p{9cm}|p{9cm}| ")
+    table.add_hline()
 
     addedVariantsCnt = 0
     for i in range(0, taskCnt, 2):
         addEmptySpace(table, 1)
-        table.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
+        if surnames is None:
+            table.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
+        else:
+            table.add_row([surnames[i], "" if surnames[i + 1] is None else surnames[i + 1]])
+
         addEmptySpace(table, 1)
 
         table.add_row(trapezoidTasks[i].taskText(), "" if trapezoidTasks[i + 1] is None else trapezoidTasks[i + 1].taskText())
@@ -219,18 +227,25 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks):
 
         if addedVariantsCnt == 4 and i + 2 < taskCnt:
             addedVariantsCnt = 0
+            table.add_hline()
             taskDoc.append(copy(table))
             taskDoc.append(NewPage())
             table.clear()
+        table.add_hline()
 
     taskDoc.append(table)
 
-    answerTable = Tabular(" p{9cm} p{9cm} ")
+    answerTable = Tabular(" |p{9cm}|p{9cm}| ")
+    answerTable.add_hline()
 
     addedVariantsCnt = 0
     for i in range(0, taskCnt, 2):
         addEmptySpace(answerTable, 1)
-        answerTable.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
+        if surnames is None:
+            answerTable.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
+        else:
+            answerTable.add_row([surnames[i], "" if surnames[i + 1] is None else surnames[i + 1]])
+
         addEmptySpace(answerTable, 1)
 
         fillTaskTables(answerTable, trapezoidTasks[i], trapezoidTasks[i + 1])
@@ -254,9 +269,11 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks):
         addedVariantsCnt += 2
         if addedVariantsCnt == 4 and i + 2 < taskCnt:
             addedVariantsCnt = 0
+            answerTable.add_hline()
             answerDoc.append(copy(answerTable))
             answerDoc.append(NewPage())
             answerTable.clear()
+        answerTable.add_hline()
 
     answerDoc.append(answerTable)
 
@@ -281,14 +298,14 @@ def initDocs():
     return answerDoc, taskDoc
 
 
-def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex):
+async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex, timestamp, surnames=None):
     simpsonTasks = [SimpsonTask().randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
     trapezoidTasks = [TrapezoidTask().randomize(simpsonDotsCnt) for j in range(taskCnt)]
 
     answerDoc, taskDoc = initDocs()
-    createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks)
+    createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames)
 
-    folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
+    folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
     if is_pdf:
         taskDoc.generate_pdf(f'{folder}/integration_{fileName}')
         answerDoc.generate_pdf(f'{folder}/integration_answers_for_{fileName}')
