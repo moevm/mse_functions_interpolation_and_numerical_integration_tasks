@@ -38,23 +38,19 @@ class TrapezoidTask:
         self.n = 0
 
     def randomize(self, dotsCnt):
-        firstX = randint(-30, 30)
+        firstX = randint(-10, 10)
 
-        h = choice([0.1, 0.2, 0.5])
-        firstX /= 10
+        h = choice([0.1, 0.2, 0.3])
         self.xValues = [i * h + firstX for i in range(dotsCnt)]
 
         self.n = dotsCnt
 
-        self.yValues.append(choice([0, 2, 4, 6, 8, 10]))
+        self.yValues.append(randint(-10, 10))
         for i in range(1, dotsCnt):
             self.yValues.append(self.yValues[i - 1] + randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
 
-        if self.yValues[-1] % 2 != 0:
+        if (self.yValues[-1] + self.yValues[0]) % 2 != 0:
             self.yValues[-1] -= 1
-
-        for i in range(len(self.yValues)):
-            self.yValues[i] /= 10
 
         self.answer = trapezoid(self.yValues, h)
         self.halfAnswer = trapezoid(self.yValues[::2], h)
@@ -86,23 +82,19 @@ class SimpsonTask:
         self.n = 0
 
     def randomize(self, dotsCnt):
-        firstX = randint(-30, 30)
+        firstX = randint(-10, 10)
 
         h = 0.6
-        firstX /= 10
         self.xValues = [i * h + firstX for i in range(dotsCnt)]
 
         self.n = dotsCnt
 
-        self.yValues.append(choice([0, 2, 4, 6, 8, 10]))
+        self.yValues.append(randint(-10, 10))
         for i in range(1, dotsCnt):
             self.yValues.append(self.yValues[i - 1] + randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
 
-        if self.yValues[-1] % 2 != 0:
+        if (self.yValues[-1] + self.yValues[0]) % 2 != 0:
             self.yValues[-1] -= 1
-
-        for i in range(len(self.yValues)):
-            self.yValues[i] /= 10
 
         self.answer = simpson(self.yValues, h)
         self.halfAnswer = simpson(self.yValues[::2], h)
@@ -151,9 +143,9 @@ def createTables(xValues, yValues):
     valueCnt = len(xValues)
     valueStartPoint = 0
     tables = []
-    colmsCnt = 8
+    colmsCnt = 7
 
-    while valueCnt > 8:
+    while valueCnt > 7:
         tableView = "|l|"
         tableView += "l|" * colmsCnt
 
