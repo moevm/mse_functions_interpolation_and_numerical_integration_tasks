@@ -123,7 +123,8 @@ def generate_integration(request):
         options_count = len(surnames)
 
     loop = asyncio.new_event_loop()
-    result = loop.run_until_complete(run(options_count, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_latex, timestamp, surnames))
+    result = loop.run_until_complete(run(options_count, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_latex, timestamp,
+                                         request.POST.get("seed"), surnames))
     loop.close()
 
     # folder = 'interpolation_integration_generator/static/interpolation_integration_generator'

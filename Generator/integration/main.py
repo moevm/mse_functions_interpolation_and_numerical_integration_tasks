@@ -1,9 +1,10 @@
-from random import randint
-from random import choice
+import random
 from copy import copy
 from pylatex import Document, Tabular, Package, NewLine, \
     MultiRow, Command, NewPage
 from pylatex.utils import NoEscape
+
+seeds = {}
 
 d = {
     1: "одному",
@@ -30,24 +31,31 @@ d = {
 
 
 class TrapezoidTask:
-    def __init__(self):
+    def __init__(self, seed=''):
         self.xValues = []
         self.yValues = []
         self.answer = 0
         self.halfAnswer = 0
         self.n = 0
 
-    def randomize(self, dotsCnt):
-        firstX = randint(-10, 10)
+        if seed != '':
+            random.seed(seed)
 
-        h = choice([0.1, 0.2, 0.3])
+    def randomize(self, dotsCnt):
+
+        if type(dotsCnt) != int:
+            return None
+
+        firstX = random.randint(-10, 10)
+
+        h = random.choice([0.1, 0.2, 0.3])
         self.xValues = [i * h + firstX for i in range(dotsCnt)]
 
         self.n = dotsCnt
 
-        self.yValues.append(randint(-10, 10))
+        self.yValues.append(random.randint(-10, 10))
         for i in range(1, dotsCnt):
-            self.yValues.append(self.yValues[i - 1] + randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
+            self.yValues.append(self.yValues[i - 1] + random.randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
 
         if (self.yValues[-1] + self.yValues[0]) % 2 != 0:
             self.yValues[-1] -= 1
@@ -74,24 +82,31 @@ class TrapezoidTask:
 
 
 class SimpsonTask:
-    def __init__(self):
+    def __init__(self, seed=''):
         self.xValues = []
         self.yValues = []
         self.answer = 0
         self.halfAnswer = 0
         self.n = 0
 
+        if seed != '':
+            random.seed(seed)
+
     def randomize(self, dotsCnt):
-        firstX = randint(-10, 10)
+
+        if type(dotsCnt) != int:
+            return None
+
+        firstX = random.randint(-10, 10)
 
         h = 0.6
         self.xValues = [i * h + firstX for i in range(dotsCnt)]
 
         self.n = dotsCnt
 
-        self.yValues.append(randint(-10, 10))
+        self.yValues.append(random.randint(-10, 10))
         for i in range(1, dotsCnt):
-            self.yValues.append(self.yValues[i - 1] + randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
+            self.yValues.append(self.yValues[i - 1] + random.randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
 
         if (self.yValues[-1] + self.yValues[0]) % 2 != 0:
             self.yValues[-1] -= 1
@@ -187,7 +202,7 @@ def fillTaskTables(table, firstTask, secondTask):
         addEmptySpace(table, 2)
 
 
-def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames=None):
+def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames):
     trapezoidTasks.append(None)
     simpsonTasks.append(None)
 
@@ -290,12 +305,13 @@ def initDocs():
     return answerDoc, taskDoc
 
 
-async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex, timestamp, surnames=None):
-    simpsonTasks = [SimpsonTask().randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
-    trapezoidTasks = [TrapezoidTask().randomize(simpsonDotsCnt) for j in range(taskCnt)]
+async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex, timestamp, seed, surnames=None):
+    simpsonTasks = [SimpsonTask(seed).randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
+    trapezoidTasks = [TrapezoidTask(seed).randomize(simpsonDotsCnt) for j in range(taskCnt)]
 
     answerDoc, taskDoc = initDocs()
     createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames)
+
 
     folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
     if is_pdf:
