@@ -1,10 +1,8 @@
-import random
+from numpy import random
 from copy import copy
 from pylatex import Document, Tabular, Package, NewLine, \
     MultiRow, Command, NewPage
 from pylatex.utils import NoEscape
-
-seeds = {}
 
 d = {
     1: "одному",
@@ -31,14 +29,14 @@ d = {
 
 
 class TrapezoidTask:
-    def __init__(self, seed=''):
+    def __init__(self, seed=None):
         self.xValues = []
         self.yValues = []
         self.answer = 0
         self.halfAnswer = 0
         self.n = 0
 
-        if seed != '':
+        if seed != None:
             random.seed(seed)
 
     def randomize(self, dotsCnt):
@@ -311,7 +309,6 @@ async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_l
 
     answerDoc, taskDoc = initDocs()
     createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames)
-
 
     folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
     if is_pdf:

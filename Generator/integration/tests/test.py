@@ -65,6 +65,5 @@ class Test(unittest.TestCase):
         self.assertNotEqual(taskT.yValues, taskT2.yValues)
 
 
-
 if __name__ == '__main__':
     unittest.main()
