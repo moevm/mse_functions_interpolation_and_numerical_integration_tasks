@@ -1,5 +1,4 @@
-from random import randint
-from random import choice
+from numpy import random
 from copy import copy
 from pylatex import Document, Tabular, Package, NewLine, \
     MultiRow, Command, NewPage
@@ -30,31 +29,34 @@ d = {
 
 
 class TrapezoidTask:
-    def __init__(self):
+    def __init__(self, seed=None):
         self.xValues = []
         self.yValues = []
         self.answer = 0
         self.halfAnswer = 0
         self.n = 0
 
-    def randomize(self, dotsCnt):
-        firstX = randint(-30, 30)
+        if seed != None:
+            random.seed(seed)
 
-        h = choice([0.1, 0.2, 0.5])
-        firstX /= 10
+    def randomize(self, dotsCnt):
+
+        if type(dotsCnt) != int:
+            return None
+
+        firstX = random.randint(-10, 10)
+
+        h = random.choice([0.1, 0.2, 0.3])
         self.xValues = [i * h + firstX for i in range(dotsCnt)]
 
         self.n = dotsCnt
 
-        self.yValues.append(choice([0, 2, 4, 6, 8, 10]))
+        self.yValues.append(random.randint(-10, 10))
         for i in range(1, dotsCnt):
-            self.yValues.append(self.yValues[i - 1] + randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
+            self.yValues.append(self.yValues[i - 1] + random.randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
 
-        if self.yValues[-1] % 2 != 0:
+        if (self.yValues[-1] + self.yValues[0]) % 2 != 0:
             self.yValues[-1] -= 1
-
-        for i in range(len(self.yValues)):
-            self.yValues[i] /= 10
 
         self.answer = trapezoid(self.yValues, h)
         self.halfAnswer = trapezoid(self.yValues[::2], h)
@@ -78,31 +80,34 @@ class TrapezoidTask:
 
 
 class SimpsonTask:
-    def __init__(self):
+    def __init__(self, seed=''):
         self.xValues = []
         self.yValues = []
         self.answer = 0
         self.halfAnswer = 0
         self.n = 0
 
+        if seed != '':
+            random.seed(seed)
+
     def randomize(self, dotsCnt):
-        firstX = randint(-30, 30)
+
+        if type(dotsCnt) != int:
+            return None
+
+        firstX = random.randint(-10, 10)
 
         h = 0.6
-        firstX /= 10
         self.xValues = [i * h + firstX for i in range(dotsCnt)]
 
         self.n = dotsCnt
 
-        self.yValues.append(choice([0, 2, 4, 6, 8, 10]))
+        self.yValues.append(random.randint(-10, 10))
         for i in range(1, dotsCnt):
-            self.yValues.append(self.yValues[i - 1] + randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
+            self.yValues.append(self.yValues[i - 1] + random.randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
 
-        if self.yValues[-1] % 2 != 0:
+        if (self.yValues[-1] + self.yValues[0]) % 2 != 0:
             self.yValues[-1] -= 1
-
-        for i in range(len(self.yValues)):
-            self.yValues[i] /= 10
 
         self.answer = simpson(self.yValues, h)
         self.halfAnswer = simpson(self.yValues[::2], h)
@@ -151,9 +156,9 @@ def createTables(xValues, yValues):
     valueCnt = len(xValues)
     valueStartPoint = 0
     tables = []
-    colmsCnt = 8
+    colmsCnt = 7
 
-    while valueCnt > 8:
+    while valueCnt > 7:
         tableView = "|l|"
         tableView += "l|" * colmsCnt
 
@@ -195,7 +200,7 @@ def fillTaskTables(table, firstTask, secondTask):
         addEmptySpace(table, 2)
 
 
-def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames=None):
+def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames):
     trapezoidTasks.append(None)
     simpsonTasks.append(None)
 
@@ -298,9 +303,9 @@ def initDocs():
     return answerDoc, taskDoc
 
 
-async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex, timestamp, surnames=None):
-    simpsonTasks = [SimpsonTask().randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
-    trapezoidTasks = [TrapezoidTask().randomize(simpsonDotsCnt) for j in range(taskCnt)]
+async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex, timestamp, seed, surnames=None):
+    simpsonTasks = [SimpsonTask(seed).randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
+    trapezoidTasks = [TrapezoidTask(seed).randomize(simpsonDotsCnt) for j in range(taskCnt)]
 
     answerDoc, taskDoc = initDocs()
     createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames)

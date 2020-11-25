@@ -115,6 +115,7 @@ def generate_integration(request):
 
     options_count = None
     surnames = None
+    seed = request.POST.get("seed")
 
     if variantsType == "Digits":
         options_count = int(request.POST.get("variantsCnt"))
@@ -123,7 +124,8 @@ def generate_integration(request):
         options_count = len(surnames)
 
     loop = asyncio.new_event_loop()
-    result = loop.run_until_complete(run(options_count, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_latex, timestamp, surnames))
+    result = loop.run_until_complete(run(options_count, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_latex, timestamp,
+                                         int(seed) if seed != '' else None, surnames))
     loop.close()
 
     # folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
