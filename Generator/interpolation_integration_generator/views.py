@@ -112,7 +112,6 @@ def generate_integration(request):
 
     variantsType = request.POST.get("Numbering")
 
-    options_count = None
     surnames = None
 
     if variantsType == "Digits":
@@ -159,8 +158,8 @@ def generate_integration(request):
     names.append("integration_result.zip")
     files.append(f"{static_folder}/integration_result.zip")
 
-    sizes = list(map(lambda size: round(size/1024, 1), sizes))
     sizes.append(os.path.getsize(f"{folder}/integration_result.zip"))
+    sizes = list(map(lambda size: round(size/1024, 1), sizes))
 
     context = {'files': zip(names, files, sizes)}
 

@@ -64,7 +64,7 @@ class TrapezoidTask:
         return NoEscape("1) Вычислить приближённое значение " +
                         r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(self.xValues[-1]) + "}f(x)dx$" \
                         r"\hspace{1mm}от таблично заданной функции по формуле трапеций по "
-                        + d[int(self.n / 2) + self.n % 2] + "и по " + d[self.n] + " узлам." \
+                        + d[int(self.n / 2) + self.n % 2] + " и по " + d[self.n] + " узлам." \
                         "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
     def answerStr(self):
