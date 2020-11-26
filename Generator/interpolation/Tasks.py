@@ -1,8 +1,9 @@
 from pylatex import Document, NewPage, Command, Package, UnsafeCommand, Center, Tabular, MultiRow
 from pylatex.base_classes import CommandBase, Arguments
-from interpolation.Polynomial import Polynomial
+from interpolation.PolynomialHelper import PolynomialHelper
 from pylatex.utils import NoEscape
 import math
+from numpy import random
 
 
 class tasktext(CommandBase):
@@ -35,8 +36,9 @@ class Tasks:
             document.packages.append(Package('longtable'))
             document.packages.append(Package('lastpage'))
 
-            text_variant = r'Вариант {#1}.\newline Построить интерполяционный многочлен в форме Лагранжа, в форме Ньютона и сравнить результаты.'
-            answer_variant = r'Ответ для варианта {#1}:'
+            text_variant = r'{#1}.\newline Построить интерполяционный многочлен в форме Лагранжа, в форме Ньютона и ' \
+                           r'сравнить результаты.'
+            answer_variant = r'Ответ для {#1}:'
             document.append(UnsafeCommand('newcommand', r'\tasktext', options=1, extra_arguments=text_variant))
             document.append(UnsafeCommand('newcommand', r'\answertext', options=1, extra_arguments=answer_variant))
 
@@ -76,7 +78,8 @@ class Tasks:
         center.append(NoEscape(result))
         return center
 
-    def generate(self, filename, is_pdf, is_latex):
+    async def generate(self, filename, is_pdf, is_latex, timestamp, surnames=None):
+        random.seed(self.seed)
         quantity_of_variants_on_one_page = self.options_in_line * 6  # 6 rows in one page
         quantity_of_pages = math.ceil(self.options_summary / quantity_of_variants_on_one_page)
         column_size = 18 // self.options_in_line  # 18cm - width of a4 format
@@ -92,7 +95,7 @@ class Tasks:
                 variants = []
                 answers = []
                 for j in range(self.options_in_line):
-                    polynom = Polynomial(self.degree, self.seed)
+                    polynom = PolynomialHelper.generatePolynomial(self.degree)
                     variants.append(polynom)
                     answers.append(polynom)
                 tasks_row = []
@@ -104,11 +107,16 @@ class Tasks:
                         tasks_row.append(MultiRow(5, width=f'{column_size}cm'))
                         answers_row.append(MultiRow(5, width=f'{column_size}cm'))
                     else:
-                        tasks_row.append(MultiRow(5, width=f'{column_size}cm', data=tasktext(
-                            arguments=Arguments(page*quantity_of_variants_on_one_page + i*self.options_in_line + j))))
-                        answers_row.append(MultiRow(5, width=f'{column_size}cm', data=answertext(
-                            arguments=Arguments(page*quantity_of_variants_on_one_page + i*self.options_in_line + j))))
-                        # print(f"Вариант {page * quantity_of_variants_on_one_page + i * self.options_in_line + j}, полином: {variants[j].coefficients}")
+                        variant_number = page * quantity_of_variants_on_one_page + i * self.options_in_line + j + 1
+                        if surnames is None:
+                            task_argument = f"Вариант {variant_number}"
+                            answer_argument = f"{variant_number}-го варианта"
+                        else:
+                            task_argument = surnames[variant_number]
+                            answer_argument = surnames[variant_number]
+
+                        tasks_row.append(MultiRow(5, width=f'{column_size}cm', data=tasktext(arguments=Arguments(task_argument))))
+                        answers_row.append(MultiRow(5, width=f'{column_size}cm', data=answertext(arguments=Arguments(answer_argument))))
 
                 tasks_table.add_row(tasks_row)
                 answers_table.add_row(answers_row)
@@ -150,13 +158,13 @@ class Tasks:
             self.tasks.append(NewPage())
             self.answers.append(NewPage())
 
-        folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
+        folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
         if is_pdf:
-            self.tasks.generate_pdf(f'{folder}/{filename}')
-            self.answers.generate_pdf(f'{folder}/answers_for_{filename}')
+            self.tasks.generate_pdf(f'{folder}/interpolation_{filename}')
+            self.answers.generate_pdf(f'{folder}/interpolation_answers_for_{filename}')
         if is_latex:
-            self.tasks.generate_tex(f'{folder}/{filename}')
-            self.answers.generate_tex(f'{folder}/answers_for_{filename}')
+            self.tasks.generate_tex(f'{folder}/interpolation_{filename}')
+            self.answers.generate_tex(f'{folder}/interpolation_answers_for_{filename}')
 
     def suplement_table(self, table, n=4):
         for i in range(n):

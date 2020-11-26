@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="static/interpolation_integration_generator/css/style.css">
+    <link rel="stylesheet" href="static/interpolation_integration_generator/css/index.css">
     <meta charset="UTF-8">
     <title>Генератор</title>
 </head>
@@ -13,7 +13,7 @@
 <div class="container">
     <div class="row">
         <div class="col mr-4">
-            <form action="generate_interpolation" method="get" class="col mr-4">
+            <form action="generate_interpolation/" method="post" enctype="multipart/form-data" class="col mr-4">
                 <h3 class="mt-2">Интерполяционный многочлен Ньютона и Лагранжа</h3>
                 <div id="div"></div>
                 <div class="row">
@@ -118,7 +118,7 @@
             </form>
         </div>
         <div class="col mr-4">
-            <form action="generate_integration" method="get" class="col mr-4">
+            <form action="generate_integration/" method="post" enctype="multipart/form-data" class="col mr-4">
                 <h3 class="mt-2">Численное интегрирование по формуле трапеций и Симпсона</h3>
                 <br>
                 <div class="row">
@@ -199,7 +199,7 @@
                         <h5>Сид для генерации</h5>
                     </div>
                     <div class="col ml">
-                        <input type="number" name="SID" class="form-control">
+                        <input type="number" name="seed" class="form-control">
                     </div>
                 </div>
                 <br>
