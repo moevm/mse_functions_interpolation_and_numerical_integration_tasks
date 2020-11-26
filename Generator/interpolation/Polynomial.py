@@ -12,9 +12,9 @@ class Polynomial:
 
         while len(self.x) != degree + 1:
             self.coefficients = random.randint(-10, 11, degree + 1)
-            x = np.arange(-20, 21)
+            x = np.arange(-10, 11)
             y = self.f(x)
-            x = x[np.logical_and(-60 <= y, y <= 60)]
+            x = x[np.logical_and(-50 <= y, y <= 50)]
 
             # если нам не хватает подходящих пар x и y заново генерим коэфициенты многочлена
             if len(x) < degree + 1:

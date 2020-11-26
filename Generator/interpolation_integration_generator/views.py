@@ -42,7 +42,6 @@ def generate_interpolations(request):
     variantsType = request.POST.get("Numbering")
 
     surnames = None
-    options_summary = 0
     if variantsType == "Digits":
         options_summary = int(request.POST.get("options_summary"))
     else:
@@ -86,8 +85,8 @@ def generate_interpolations(request):
     names.append("interpolation_result.zip")
     files.append(f"{static_folder}/interpolation_result.zip")
 
-    sizes = list(map(lambda size: round(size/1024, 1), sizes))
     sizes.append(os.path.getsize(f"{folder}/interpolation_result.zip"))
+    sizes = list(map(lambda size: round(size/1024, 1), sizes))
 
     context = {'files': zip(names, files, sizes)}
 
@@ -113,7 +112,6 @@ def generate_integration(request):
 
     variantsType = request.POST.get("Numbering")
 
-    options_count = None
     surnames = None
     seed = request.POST.get("seed")
 
@@ -162,8 +160,8 @@ def generate_integration(request):
     names.append("integration_result.zip")
     files.append(f"{static_folder}/integration_result.zip")
 
-    sizes = list(map(lambda size: round(size/1024, 1), sizes))
     sizes.append(os.path.getsize(f"{folder}/integration_result.zip"))
+    sizes = list(map(lambda size: round(size/1024, 1), sizes))
 
     context = {'files': zip(names, files, sizes)}
 

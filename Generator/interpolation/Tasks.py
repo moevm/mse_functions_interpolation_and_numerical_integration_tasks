@@ -107,14 +107,16 @@ class Tasks:
                         tasks_row.append(MultiRow(5, width=f'{column_size}cm'))
                         answers_row.append(MultiRow(5, width=f'{column_size}cm'))
                     else:
-                        taskArgument = None
+                        variant_number = page * quantity_of_variants_on_one_page + i * self.options_in_line + j + 1
                         if surnames is None:
-                            taskArgument = f"Вариант {page * quantity_of_variants_on_one_page + i * self.options_in_line + j}"
+                            task_argument = f"Вариант {variant_number}"
+                            answer_argument = f"{variant_number}-го варианта"
                         else:
-                            taskArgument = surnames[page * quantity_of_variants_on_one_page + i * self.options_in_line + j]
+                            task_argument = surnames[variant_number]
+                            answer_argument = surnames[variant_number]
 
-                        tasks_row.append(MultiRow(5, width=f'{column_size}cm', data=tasktext(arguments=Arguments(taskArgument))))
-                        answers_row.append(MultiRow(5, width=f'{column_size}cm', data=answertext(arguments=Arguments(taskArgument))))
+                        tasks_row.append(MultiRow(5, width=f'{column_size}cm', data=tasktext(arguments=Arguments(task_argument))))
+                        answers_row.append(MultiRow(5, width=f'{column_size}cm', data=answertext(arguments=Arguments(answer_argument))))
 
                 tasks_table.add_row(tasks_row)
                 answers_table.add_row(answers_row)
