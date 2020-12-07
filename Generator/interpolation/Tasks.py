@@ -112,8 +112,8 @@ class Tasks:
                             task_argument = f"Вариант {variant_number}"
                             answer_argument = f"{variant_number}-го варианта"
                         else:
-                            task_argument = surnames[variant_number]
-                            answer_argument = surnames[variant_number]
+                            task_argument = surnames[variant_number-1]
+                            answer_argument = surnames[variant_number-1]
 
                         tasks_row.append(MultiRow(5, width=f'{column_size}cm', data=tasktext(arguments=Arguments(task_argument))))
                         answers_row.append(MultiRow(5, width=f'{column_size}cm', data=answertext(arguments=Arguments(answer_argument))))
