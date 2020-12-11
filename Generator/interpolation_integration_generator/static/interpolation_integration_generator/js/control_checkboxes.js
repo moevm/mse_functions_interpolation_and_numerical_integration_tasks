@@ -1,6 +1,11 @@
 checkboxes = document.getElementsByName('generation_format');
 checkboxes[0].disabled = true;
 
+document.getElementById("submit").onclick = function(){
+    checkboxes[0].disabled = false;
+    checkboxes[1].disabled = false;
+};
+
 checkboxes[0].addEventListener('change', function () {
     if (checkboxes[0].checked === true) {
         if (checkboxes[1].checked === true) {

@@ -8,9 +8,8 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from integration.main import run
 from interpolation.Tasks import Tasks
-
-from interpolation_integration_generator.forms.InterpolationForm import InterpolationForm
 from interpolation_integration_generator.forms.IntegrationForm import IntegrationForm
+from interpolation_integration_generator.forms.InterpolationForm import InterpolationForm
 
 
 @csrf_exempt
@@ -28,8 +27,6 @@ def integration(request):
 def generate_interpolation(request):
     if request.method == 'POST':
         form = InterpolationForm(request.POST)
-        # if request.FILES['file_with_surnames']:
-        #     form.set_file(request.FILES['file_with_surnames'])
         if form.is_valid():
             information = form.cleaned_data
 
@@ -136,11 +133,11 @@ def generate_integration(request):
                 options_count = len(surnames)
 
             loop = asyncio.new_event_loop()
-            result = loop.run_until_complete(
-                run(options_count, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_tex, timestamp, seed, surnames))
+            loop.run_until_complete(
+                run(options_count, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_tex, timestamp, seed,
+                    surnames))
             loop.close()
 
-            # folder = 'interpolation_integration_generator/static/interpolation_integration_generator'
             filenames = []
 
             if is_pdf:
