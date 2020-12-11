@@ -25,6 +25,10 @@ def integration(request):
     return render(request, 'interpolation_integration_generator/integration.html', context={'form': form})
 
 
+def index(request):
+    return render(request, 'interpolation_integration_generator/index.html')
+
+
 def generate_interpolation(request):
     if request.method == 'POST':
         form = InterpolationForm(request.POST)
