@@ -1,9 +1,10 @@
 from django.urls import path
 
 from . import views
-from .views import integration, interpolation
+from .views import integration, interpolation, index
 
 urlpatterns = [
+    path('', index, name='index'),
     path('interpolation/', interpolation, name='interpolation'),
     path('integration/', integration, name='integration'),
     path('generate_interpolation/', views.generate_interpolation, name='generate_interpolation'),
