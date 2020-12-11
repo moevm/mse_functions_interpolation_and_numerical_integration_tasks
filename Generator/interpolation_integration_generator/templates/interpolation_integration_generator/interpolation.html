@@ -13,8 +13,8 @@
 <div class="container">
     <div class="row">
         <div class="col mr-4">
-{#            <form action="generate_interpolation/" method="post" enctype="multipart/form-data" class="col mr-4">#}
-            <form action="{% url 'generate_interpolation' %}" method="post" enctype="multipart/form-data" class="col mr-4">
+            <form action="{% url 'generate_interpolation' %}" method="post" enctype="multipart/form-data"
+                  class="col mr-4">
                 {% csrf_token %}
                 <h3 class="mt-2">Интерполяционный многочлен Ньютона и Лагранжа</h3>
 
@@ -118,4 +118,5 @@
 </body>
 <script src="{% static 'interpolation_integration_generator/js/relations_between_variants_and_max_degree.js' %}"></script>
 <script src="{% static 'interpolation_integration_generator/js/relation_between_file_field_and_variants.js' %}"></script>
+<script src="{% static 'interpolation_integration_generator/js/control_checkboxes.js' %}"></script>
 </html>
