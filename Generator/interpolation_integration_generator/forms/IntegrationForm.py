@@ -61,5 +61,8 @@ class IntegrationForm(forms.Form):
             raise forms.ValidationError("You need to choice at least one generation format.")
 
         variants_types = ['digits', 'surnames']
-        if cleaned_data.get('variants_type') not in variants_types:
+        variants_type = cleaned_data.get('variants_type')
+        if variants_type not in variants_types:
             raise forms.ValidationError("Variants types must be digits ot surnames.")
+        if variants_type == 'digits' and cleaned_data.get('number_of_variants') is None:
+            raise forms.ValidationError("Number of variants must be not ''.")
