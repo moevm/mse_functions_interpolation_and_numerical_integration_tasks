@@ -61,7 +61,6 @@ class InterpolationForm(forms.Form):
         initial='digits',
         choices=variants_type_choices,
         widget=forms.RadioSelect,
-        required=True,
     )
 
     file_with_surnames = forms.FileField(
@@ -85,12 +84,12 @@ class InterpolationForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        if len(cleaned_data.get('generation_format')) == 0:
-            raise forms.ValidationError("You need to choice at least one generation format.")
+        if cleaned_data.get('generation_format') is None:
+            raise forms.ValidationError("Выберите формат генерации")
 
         variants_types = ['digits', 'surnames']
         variants_type = cleaned_data.get('variants_type')
         if variants_type not in variants_types:
             raise forms.ValidationError("Variants types must be digits ot surnames.")
         if variants_type == 'digits' and cleaned_data.get('number_of_variants') is None:
-            raise forms.ValidationError("Number of variants must be not ''.")
+            raise forms.ValidationError("Укажите количество вариантов")
