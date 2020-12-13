@@ -1,3 +1,8 @@
+{% for error in form.non_field_errors %}
+    <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+    </div>
+{% endfor %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -18,7 +23,6 @@
                   class="col mr-4">
                 {% csrf_token %}
                 <h3 class="mt-2">Интерполяционный многочлен Ньютона и Лагранжа</h3>
-
                 <div class="row mt-2">
                     <div class="col">
                         <h5>{{ form.filename.label }}</h5>
@@ -119,5 +123,4 @@
 </body>
 <script src="{% static 'interpolation_integration_generator/js/relations_between_variants_and_max_degree.js' %}"></script>
 <script src="{% static 'interpolation_integration_generator/js/relation_between_file_field_and_variants.js' %}"></script>
-<script src="{% static 'interpolation_integration_generator/js/control_checkboxes.js' %}"></script>
 </html>

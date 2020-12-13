@@ -4,6 +4,7 @@ import zipfile
 from datetime import datetime
 from os.path import basename
 
+from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from integration.main import run
@@ -102,7 +103,8 @@ def generate_interpolation(request):
             context = {'files': zip(names, files, sizes)}
 
             return render(request, "interpolation_integration_generator/result_page.html", context=context)
-        # return render(request, 'interpolation_integration_generator/index.html', {'form': form})
+        return render(request, "interpolation_integration_generator/interpolation.html", context={'form': form})
+    return HttpResponseNotFound('<h1>Page not found</h1>')
 
 
 def generate_integration(request):
@@ -181,3 +183,5 @@ def generate_integration(request):
             context = {'files': zip(names, files, sizes)}
 
             return render(request, "interpolation_integration_generator/result_page.html", context=context)
+        return render(request, "interpolation_integration_generator/integration.html", context={'form': form})
+    return HttpResponseNotFound('<h1>Page not found</h1>')

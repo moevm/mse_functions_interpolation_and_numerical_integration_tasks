@@ -1,3 +1,8 @@
+{% for error in form.non_field_errors %}
+    <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+    </div>
+{% endfor %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -105,5 +110,4 @@
 </div>
 </body>
 <script src="{% static 'interpolation_integration_generator/js/relation_between_file_field_and_variants.js' %}"></script>
-<script src="{% static 'interpolation_integration_generator/js/control_checkboxes.js' %}"></script>
 </html>
