@@ -29,3 +29,10 @@
 <h1>Трекер задач</h1>
 
 [Task tracker](https://github.com/moevm/mse_functions_interpolation_and_numerical_integration_tasks/projects/1?add_cards_query=is%3Aopen)
+
+newcommands:
+make sure that you in dir with Dockerfile and:
+<h6>docker build -t tasks .</h6>
+<h6>docker run -p 8000:8000 tasks</h6>
+
+and go to your browser on: http://localhost:8000/
