@@ -30,10 +30,6 @@
 > python3 manage.py runserver
 </ol>
 
-<h1>Трекер задач</h1>
-
-[Task tracker](https://github.com/moevm/mse_functions_interpolation_and_numerical_integration_tasks/projects/1?add_cards_query=is%3Aopen)
-
 <h1>Сборка через Docker</h1>
 <ol>
 <li>Перейдите в каталог, в котором находится файл Dockerfile</li>
@@ -45,3 +41,7 @@
     
 <li>Откройте браузер по адресу: http://localhost:8000/</li>
 </ol>
+
+<h1>Трекер задач</h1>
+
+[Task tracker](https://github.com/moevm/mse_functions_interpolation_and_numerical_integration_tasks/projects/1?add_cards_query=is%3Aopen)
