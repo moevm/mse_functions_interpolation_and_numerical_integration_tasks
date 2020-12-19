@@ -20,16 +20,15 @@
 
 > pip3 install -r requirments.txt
 
-
-
 <h1>Запуск сервера</h1>
+<ol>
+<li>Перейдите в каталог, в котором расположен файл manage.py.</li>
 
 > cd Generator
-
-Запуск (временно) выполняется только из директории `Generator`
+<li>Запустите сервер</li>
 
 > python3 manage.py runserver
-
+</ol>
 
 <h1>Трекер задач</h1>
 
@@ -37,12 +36,12 @@
 
 <h1>Сборка через Docker</h1>
 <ol>
-    <li>Перейдите в каталог, в котором находится файл Dockerfile</li>
-    <li>Выполниет следующие команды:
-        <ol>
-        <li>docker build -t tasks .</li>
-        <li>docker run -p 8000:8000 tasks</li>
-        </ol>
-    </li>
-    <li>Откройте браузер по адресу: http://localhost:8000/</li>
+<li>Перейдите в каталог, в котором находится файл Dockerfile</li>
+<li>Выполниет следующие команды:</li>
+
+> docker build -t tasks .
+
+> docker run -p 8000:8000 tasks
+    
+<li>Откройте браузер по адресу: http://localhost:8000/</li>
 </ol>
