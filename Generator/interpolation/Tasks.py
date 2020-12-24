@@ -57,7 +57,7 @@ class Tasks:
 
     def generate_answer_table(self, coefficients):
         center = Center()
-        num=len(coefficients)-2
+        num=len(coefficients)-1
         result = "$L_" +  str(num) + "(x)$ = "
         for i, coefficient in enumerate(coefficients):
             if coefficient != 0:
