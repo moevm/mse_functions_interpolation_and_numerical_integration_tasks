@@ -21,14 +21,8 @@
 > pip3 install -r requirements.txt
 
 <h1>Запуск сервера</h1>
-<ol>
-<li>Перейдите в каталог, в котором расположен файл manage.py.</li>
 
-> cd Generator
-<li>Запустите сервер</li>
-
-> python3 manage.py runserver
-</ol>
+> python3 InterpolationIntegrationGenerator/manage.py runserver
 
 <h1>Сборка через Dockerfile</h1>
 <ol>
