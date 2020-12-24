@@ -4,6 +4,7 @@ import zipfile
 from datetime import datetime
 from os.path import basename
 
+from django.conf import settings
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -40,7 +41,14 @@ def generate_interpolation(request):
             sizes = []
 
             timestamp = str(datetime.now()).replace(":", "-").replace(" ", "_")
-            folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+            folder = os.path.join(
+                settings.BASE_DIR,
+                'interpolation_integration_generator',
+                'static',
+                'interpolation_integration_generator',
+                timestamp
+            )
+#            folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
             static_folder = f"/static/interpolation_integration_generator/{timestamp}"
             os.mkdir(f"{folder}")
 
@@ -117,7 +125,14 @@ def generate_integration(request):
             sizes = []
 
             timestamp = str(datetime.now()).replace(":", "-").replace(" ", "_")
-            folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+            folder = os.path.join(
+                settings.BASE_DIR,
+                'interpolation_integration_generator',
+                'static',
+                'interpolation_integration_generator',
+                timestamp
+            )
+#           folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
             static_folder = f"/static/interpolation_integration_generator/{timestamp}"
             os.mkdir(f"{folder}")
 

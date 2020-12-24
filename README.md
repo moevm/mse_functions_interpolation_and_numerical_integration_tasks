@@ -18,7 +18,7 @@
 
 5) Установить виртуальное окружение:
 
-> pip3 install -r requirments.txt
+> pip3 install -r requirements.txt
 
 <h1>Запуск сервера</h1>
 <ol>
