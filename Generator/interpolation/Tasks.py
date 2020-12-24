@@ -4,6 +4,8 @@ from interpolation.PolynomialHelper import PolynomialHelper
 from pylatex.utils import NoEscape
 import math
 from numpy import random
+from django.conf import settings
+import os
 
 
 class tasktext(CommandBase):
@@ -55,7 +57,8 @@ class Tasks:
 
     def generate_answer_table(self, coefficients):
         center = Center()
-        result = ''
+        num=len(coefficients)-1
+        result = "$L_" +  str(num) + "(x)$ = "
         for i, coefficient in enumerate(coefficients):
             if coefficient != 0:
                 if i == 0:
@@ -158,7 +161,14 @@ class Tasks:
             self.tasks.append(NewPage())
             self.answers.append(NewPage())
 
-        folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+        folder = os.path.join(
+            settings.BASE_DIR,
+            'interpolation_integration_generator',
+            'static',
+            'interpolation_integration_generator',
+            timestamp
+        )
+#       folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
         if is_pdf:
             self.tasks.generate_pdf(f'{folder}/interpolation_{filename}')
             self.answers.generate_pdf(f'{folder}/interpolation_answers_for_{filename}')
