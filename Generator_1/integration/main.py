@@ -162,7 +162,7 @@ class SimpsonTask:
     def answerStr(self):
         return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.3f}".format(self.halfAnswer) +
                         r"\rightarrow" + "{0:.3f}".format(self.answer) + r"\rightarrow" +
-                        "{0:.3f}".format(self.answer + (self.answer - self.halfAnswer)/3) + r"$\hspace{1mm}(Симпсон)")
+                        "{0:.3f}".format(self.answer + (self.answer - self.halfAnswer)/15) + r"$\hspace{1mm}(Симпсон)")
 
 
 def simpson(y, h):
