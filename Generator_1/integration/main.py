@@ -94,7 +94,7 @@ class TrapezoidTask:
     def answerStr(self):
         return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.2f}".format(self.halfAnswer) +
                         r"\rightarrow" + "{0:.2f}".format(self.answer) + r"\rightarrow" +
-                        "{0:.3f}".format(self.answer + self.errorRunge()) + r"$\hspace{1mm}(трапеции)")
+                        "{0:.3f}".format(self.answer + (self.answer - self.halfAnswer)/3) + r"$\hspace{1mm}(трапеции)")
 
 
 class SimpsonTask:

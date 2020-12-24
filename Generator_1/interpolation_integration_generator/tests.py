@@ -2,7 +2,6 @@ import django.test
 from interpolation_integration_generator.forms.IntegrationForm import IntegrationForm
 from interpolation_integration_generator.forms.InterpolationForm import InterpolationForm
 
-
 class Test(django.test.SimpleTestCase):
     def test_homePage(self):
         page = self.client.get('/')
@@ -44,5 +43,23 @@ class Test(django.test.SimpleTestCase):
 
         self.assertNotEqual(page1.status_code, 200)
         self.assertNotEqual(page2.status_code, 200)
+
+    def test_generateUrls(self):
+        page = self.client.post('/generate_interpolation/', {
+            'filename': '8304_2sem',
+            'number_of_variants': 30,
+            'number_of_variants_in_string': 2,
+            'the_biggest_polynomial_degree': 3,
+            'variants_type': 'digits',
+            'file_with_surnames': '',
+            'generation_format': ['pdf'],
+            'seed': 20208304
+        })
+
+        self.assertEqual(page.status_code, 200)
+
+        self.assertTrue('.pdf' in page.content.decode('utf-8'))
+        self.assertTrue('.zip' in page.content.decode('utf-8'))
+        self.assertFalse('.tex' in page.content.decode('utf-8'))
 
 
