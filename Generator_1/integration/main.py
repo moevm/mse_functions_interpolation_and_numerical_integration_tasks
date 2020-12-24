@@ -345,7 +345,14 @@ async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_l
     answerDoc, taskDoc = initDocs()
     createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames)
 
-    folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+    folder = os.path.join(
+        settings.BASE_DIR,
+        'interpolation_integration_generator',
+        'static',
+        'interpolation_integration_generator',
+        timestamp
+    )
+#    folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
     if is_pdf:
         taskDoc.generate_pdf(f'{folder}/integration_{fileName}')
         answerDoc.generate_pdf(f'{folder}/integration_answers_for_{fileName}')
