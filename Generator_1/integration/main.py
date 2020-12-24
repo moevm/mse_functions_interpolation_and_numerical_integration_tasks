@@ -162,7 +162,7 @@ class SimpsonTask:
     def answerStr(self):
         return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.3f}".format(self.halfAnswer) +
                         r"\rightarrow" + "{0:.3f}".format(self.answer) + r"\rightarrow" +
-                        "{0:.3f}".format(self.answer + self.errorRunge()) + r"$\hspace{1mm}(Симпсон)")
+                        "{0:.3f}".format(self.answer + (self.answer - self.halfAnswer)/3) + r"$\hspace{1mm}(Симпсон)")
 
 
 def simpson(y, h):
@@ -199,9 +199,9 @@ def createTables(xValues, yValues):
 
         table = Tabular(tableView)
         table.add_hline()
-        table.add_row(["x"] + ["{0:.1f}".format(xValues[i]) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
+        table.add_row(["x"] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
         table.add_hline()
-        table.add_row(["y"] + ["{0:.1f}".format(yValues[i]) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
+        table.add_row(["y"] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
         table.add_hline()
 
         tables.append(copy(table))
@@ -214,9 +214,9 @@ def createTables(xValues, yValues):
 
     table = Tabular(tableView)
     table.add_hline()
-    table.add_row(["x"] + ["{0:.1f}".format(xValues[i]) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
+    table.add_row(["x"] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
     table.add_hline()
-    table.add_row(["y"] + ["{0:.1f}".format(yValues[i]) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
+    table.add_row(["y"] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
     table.add_hline()
 
     tables.append(table)
