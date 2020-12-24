@@ -58,7 +58,7 @@ class Tasks:
     def generate_answer_table(self, coefficients):
         center = Center()
         num=len(coefficients)-1
-        result = "$L_" +  str(num) + "(x)$ = "
+        result = "$L_" +  str(num) + "(x) = "
         for i, coefficient in enumerate(coefficients):
             if coefficient != 0:
                 if i == 0:
@@ -70,14 +70,14 @@ class Tasks:
                         result += "x"
                 else:
                     if coefficient != 1:
-                        result += f"{coefficient}$x^{i}$"
+                        result += f"{coefficient}x^{i}"
                     else:
-                        result += f"$x^{i}$"
+                        result += f"x^{i}"
 
             if i != len(coefficients) - 1:
                 if coefficients[i+1] > 0:
                     result += "+"
-
+        result += "$"
         center.append(NoEscape(result))
         return center
 

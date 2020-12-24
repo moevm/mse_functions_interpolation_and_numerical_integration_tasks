@@ -45,14 +45,14 @@ class IntegrationForm(forms.Form):
         label='Количество точек: (формула Трапеции)',
         min_value=1,
         max_value=15,
-        initial=10,
+        initial=11,
     )
 
     number_of_Simpson_points = forms.IntegerField(
         label='Количество точек: (формула Симпсона)',
         min_value=1,
         max_value=15,
-        initial=10,
+        initial=9,
     )
 
     def clean(self):
