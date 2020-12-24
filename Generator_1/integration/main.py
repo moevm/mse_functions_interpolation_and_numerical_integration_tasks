@@ -3,8 +3,6 @@ from copy import copy
 from pylatex import Document, Tabular, Package, NewLine, \
     MultiRow, Command, NewPage
 from pylatex.utils import NoEscape
-from django.conf import settings
-import os
 
 d = {
     1: "одному",
@@ -53,15 +51,33 @@ class TrapezoidTask:
 
         self.n = dotsCnt
 
-        self.yValues.append(random.randint(-10, 10))
-        for i in range(1, dotsCnt):
-            self.yValues.append(self.yValues[i - 1] + random.randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
+        half = int((dotsCnt - 2) / 2)
 
-        if (self.yValues[-1] + self.yValues[0]) % 2 != 0:
-            self.yValues[-1] -= 1
+        self.yValues.append(random.randint(-9, 9))
+        for i in range(1, half + 1):
+            new_elem = random.randint(-9, 9)
+            while new_elem in self.yValues:
+                new_elem = random.randint(-9, 9)
+            self.yValues.append(new_elem)
+
+        tmp = self.yValues[1::]
+        tmp.reverse()
+        self.yValues += tmp
+        self.yValues.append(0)
+
+        coef = random.randint(-4, 4) + 1
+        self.yValues[-1] += coef
+        self.yValues[-2] += coef
+
+        self.yValues.append(random.randint(-9, 9))
+
+        res = abs(self.yValues[0] + self.yValues[-1]) * h / 2
+        while res > 0.45 or res == 0:
+            self.yValues[-1] = random.randint(-9, 9)
+            res = abs(self.yValues[0] + self.yValues[-1]) * h / 2
 
         self.answer = trapezoid(self.yValues, h)
-        self.halfAnswer = trapezoid(self.yValues[::2], h)
+        self.halfAnswer = trapezoid(self.yValues[::2], h * 2)
 
         return self
 
@@ -78,7 +94,7 @@ class TrapezoidTask:
     def answerStr(self):
         return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.2f}".format(self.halfAnswer) +
                         r"\rightarrow" + "{0:.2f}".format(self.answer) + r"\rightarrow" +
-                        "{0:.3f}".format(self.answer + self.errorRunge()) + r"$\hspace{1mm}(трапеции)")
+                        "{0:.3f}".format(self.answer + (self.answer - self.halfAnswer)/3) + r"$\hspace{1mm}(трапеции)")
 
 
 class SimpsonTask:
@@ -104,15 +120,32 @@ class SimpsonTask:
 
         self.n = dotsCnt
 
-        self.yValues.append(random.randint(-10, 10))
-        for i in range(1, dotsCnt):
-            self.yValues.append(self.yValues[i - 1] + random.randint(-dotsCnt - 2 + i, dotsCnt + 2 - i))
+        half = int((dotsCnt - 2) / 2)
 
-        if (self.yValues[-1] + self.yValues[0]) % 2 != 0:
-            self.yValues[-1] -= 1
+        self.yValues.append(random.choice([-9, -6, -3, 0, 3, 6, 9]))
+        for i in range(1, half + 1):
+            new_elem = random.randint(-9, 9)
+            while new_elem in self.yValues:
+                new_elem = random.randint(-9, 9)
+            self.yValues.append(new_elem)
+
+        tmp = self.yValues[1::]
+        tmp.reverse()
+        self.yValues += tmp
+        self.yValues.append(0)
+
+        coef = random.randint(-4, 4) + 1
+        self.yValues[-1] += coef
+        self.yValues[-2] += coef
+
+        self.yValues.append(random.choice([-9, -6, -3, 0, 3, 6, 9]))
+        res = abs(self.yValues[0] + self.yValues[-1]) * h / 3
+        while res > 0.15 * 15 or res == 0:
+            self.yValues[-1] = random.choice([-9, -6, -3, 0, 3, 6, 9])
+            res = abs(self.yValues[0] + self.yValues[-1]) * h / 3
 
         self.answer = simpson(self.yValues, h)
-        self.halfAnswer = simpson(self.yValues[::2], h)
+        self.halfAnswer = simpson(self.yValues[::2], h * 2)
 
         return self
 
@@ -129,7 +162,7 @@ class SimpsonTask:
     def answerStr(self):
         return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.3f}".format(self.halfAnswer) +
                         r"\rightarrow" + "{0:.3f}".format(self.answer) + r"\rightarrow" +
-                        "{0:.3f}".format(self.answer + self.errorRunge()) + r"$\hspace{1mm}(Симпсон)")
+                        "{0:.3f}".format(self.answer + (self.answer - self.halfAnswer)/15) + r"$\hspace{1mm}(Симпсон)")
 
 
 def simpson(y, h):
@@ -166,9 +199,9 @@ def createTables(xValues, yValues):
 
         table = Tabular(tableView)
         table.add_hline()
-        table.add_row(["x"] + ["{0:.1f}".format(xValues[i]) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
+        table.add_row(["x"] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
         table.add_hline()
-        table.add_row(["y"] + ["{0:.1f}".format(yValues[i]) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
+        table.add_row(["y"] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
         table.add_hline()
 
         tables.append(copy(table))
@@ -181,9 +214,9 @@ def createTables(xValues, yValues):
 
     table = Tabular(tableView)
     table.add_hline()
-    table.add_row(["x"] + ["{0:.1f}".format(xValues[i]) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
+    table.add_row(["x"] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
     table.add_hline()
-    table.add_row(["y"] + ["{0:.1f}".format(yValues[i]) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
+    table.add_row(["y"] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
     table.add_hline()
 
     tables.append(table)
@@ -312,14 +345,7 @@ async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_l
     answerDoc, taskDoc = initDocs()
     createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames)
 
-    folder = os.path.join(
-        settings.BASE_DIR,
-        'interpolation_integration_generator',
-        'static',
-        'interpolation_integration_generator',
-        timestamp
-    )
-#    folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+    folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
     if is_pdf:
         taskDoc.generate_pdf(f'{folder}/integration_{fileName}')
         answerDoc.generate_pdf(f'{folder}/integration_answers_for_{fileName}')
