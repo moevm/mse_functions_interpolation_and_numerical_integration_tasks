@@ -7,10 +7,10 @@
 /**/venv/*
 
 /**/__pycache__/*
-Generator_1/interpolation_integration_generator/static/interpolation_integration_generator/*/*.tex
-Generator_1/interpolation_integration_generator/static/interpolation_integration_generator/*/*.pdf
-Generator_1/interpolation_integration_generator/static/interpolation_integration_generator/*/*.log
-Generator_1/interpolation_integration_generator/static/interpolation_integration_generator/*/*.aux
-Generator_1/interpolation_integration_generator/static/interpolation_integration_generator/*/*.fls
-Generator_1/interpolation_integration_generator/static/interpolation_integration_generator/*/*.fdb_latexmk
-Generator_1/interpolation_integration_generator/static/interpolation_integration_generator/*/*.zip
+**/interpolation_integration_generator/static/interpolation_integration_generator/*/*.tex
+**/interpolation_integration_generator/static/interpolation_integration_generator/*/*.pdf
+**/interpolation_integration_generator/static/interpolation_integration_generator/*/*.log
+**/interpolation_integration_generator/static/interpolation_integration_generator/*/*.aux
+**/interpolation_integration_generator/static/interpolation_integration_generator/*/*.fls
+**/interpolation_integration_generator/static/interpolation_integration_generator/*/*.fdb_latexmk
+**/interpolation_integration_generator/static/interpolation_integration_generator/*/*.zip
