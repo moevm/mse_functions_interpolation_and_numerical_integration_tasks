@@ -4,6 +4,8 @@ from interpolation.PolynomialHelper import PolynomialHelper
 from pylatex.utils import NoEscape
 import math
 from numpy import random
+from django.conf import settings
+import os
 
 
 class tasktext(CommandBase):
@@ -55,7 +57,8 @@ class Tasks:
 
     def generate_answer_table(self, coefficients):
         center = Center()
-        result = ''
+        num=len(coefficients)-1
+        result = "$L_" +  str(num) + "(x) = "
         for i, coefficient in enumerate(coefficients):
             if coefficient != 0:
                 if i == 0:
@@ -67,14 +70,14 @@ class Tasks:
                         result += "x"
                 else:
                     if coefficient != 1:
-                        result += f"{coefficient}$x^{i}$"
+                        result += f"{coefficient}x^{i}"
                     else:
-                        result += f"$x^{i}$"
+                        result += f"x^{i}"
 
             if i != len(coefficients) - 1:
                 if coefficients[i+1] > 0:
                     result += "+"
-
+        result += "$"
         center.append(NoEscape(result))
         return center
 
@@ -112,8 +115,8 @@ class Tasks:
                             task_argument = f"Вариант {variant_number}"
                             answer_argument = f"{variant_number}-го варианта"
                         else:
-                            task_argument = surnames[variant_number]
-                            answer_argument = surnames[variant_number]
+                            task_argument = surnames[variant_number-1]
+                            answer_argument = surnames[variant_number-1]
 
                         tasks_row.append(MultiRow(5, width=f'{column_size}cm', data=tasktext(arguments=Arguments(task_argument))))
                         answers_row.append(MultiRow(5, width=f'{column_size}cm', data=answertext(arguments=Arguments(answer_argument))))
@@ -158,7 +161,14 @@ class Tasks:
             self.tasks.append(NewPage())
             self.answers.append(NewPage())
 
-        folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+        folder = os.path.join(
+            settings.BASE_DIR,
+            'interpolation_integration_generator',
+            'static',
+            'interpolation_integration_generator',
+            timestamp
+        )
+#       folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
         if is_pdf:
             self.tasks.generate_pdf(f'{folder}/interpolation_{filename}')
             self.answers.generate_pdf(f'{folder}/interpolation_answers_for_{filename}')
