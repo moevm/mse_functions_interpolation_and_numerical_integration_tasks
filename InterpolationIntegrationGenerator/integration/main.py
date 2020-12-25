@@ -31,7 +31,7 @@ d = {
 
 
 class TrapezoidTask:
-    def __init__(self, seed=None):
+    def __init__(self):
         self.xValues = []
         self.yValues = []
         self.answer = 0
@@ -89,7 +89,7 @@ class TrapezoidTask:
             self.xValues[-1]) + "}f(x)dx$" \
                                 r"\hspace{1mm}от таблично заданной функции по формуле трапеций по "
                         + d[int(self.n / 2) + self.n % 2] + " и по " + d[self.n] + " узлам." \
-                                                                                   "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
+                         "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
     def answerStr(self):
         return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.2f}".format(self.halfAnswer) +
@@ -99,7 +99,7 @@ class TrapezoidTask:
 
 
 class SimpsonTask:
-    def __init__(self, seed=''):
+    def __init__(self):
         self.xValues = []
         self.yValues = []
         self.answer = 0
@@ -348,8 +348,8 @@ async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_l
     if seed is not None:
         random.seed(seed)
 
-    simpsonTasks = [SimpsonTask(seed).randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
-    trapezoidTasks = [TrapezoidTask(seed).randomize(simpsonDotsCnt) for j in range(taskCnt)]
+    simpsonTasks = [SimpsonTask().randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
+    trapezoidTasks = [TrapezoidTask().randomize(simpsonDotsCnt) for j in range(taskCnt)]
 
     answerDoc, taskDoc = initDocs()
     createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames)
