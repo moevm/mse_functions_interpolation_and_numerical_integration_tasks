@@ -38,9 +38,6 @@ class TrapezoidTask:
         self.halfAnswer = 0
         self.n = 0
 
-        if seed != None:
-            random.seed(seed)
-
     def randomize(self, dotsCnt):
 
         if type(dotsCnt) != int:
@@ -88,15 +85,17 @@ class TrapezoidTask:
 
     def taskText(self):
         return NoEscape("1) Вычислить приближённое значение " +
-                        r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(self.xValues[-1]) + "}f(x)dx$" \
-                        r"\hspace{1mm}от таблично заданной функции по формуле трапеций по "
+                        r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(
+            self.xValues[-1]) + "}f(x)dx$" \
+                                r"\hspace{1mm}от таблично заданной функции по формуле трапеций по "
                         + d[int(self.n / 2) + self.n % 2] + " и по " + d[self.n] + " узлам." \
-                        "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
+                                                                                   "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
     def answerStr(self):
         return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.2f}".format(self.halfAnswer) +
                         r"\rightarrow" + "{0:.2f}".format(self.answer) + r"\rightarrow" +
-                        "{0:.3f}".format(self.answer + (self.answer - self.halfAnswer)/3) + r"$\hspace{1mm}(трапеции)")
+                        "{0:.3f}".format(
+                            self.answer + (self.answer - self.halfAnswer) / 3) + r"$\hspace{1mm}(трапеции)")
 
 
 class SimpsonTask:
@@ -106,9 +105,6 @@ class SimpsonTask:
         self.answer = 0
         self.halfAnswer = 0
         self.n = 0
-
-        if seed != '':
-            random.seed(seed)
 
     def randomize(self, dotsCnt):
 
@@ -156,15 +152,17 @@ class SimpsonTask:
 
     def taskText(self):
         return NoEscape("1) Вычислить приближённое значение " +
-                        r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(self.xValues[-1]) + "}f(x)dx$" \
-                        r"\hspace{1mm}от таблично заданной функции по формуле Симпсона по "
+                        r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(
+            self.xValues[-1]) + "}f(x)dx$" \
+                                r"\hspace{1mm}от таблично заданной функции по формуле Симпсона по "
                         + d[int(self.n / 2) + self.n % 2] + " и по " + d[self.n] + " узлам." \
-                        " Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
+                                                                                   " Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
     def answerStr(self):
         return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.3f}".format(self.halfAnswer) +
                         r"\rightarrow" + "{0:.3f}".format(self.answer) + r"\rightarrow" +
-                        "{0:.3f}".format(self.answer + (self.answer - self.halfAnswer)/15) + r"$\hspace{1mm}(Симпсон)")
+                        "{0:.3f}".format(
+                            self.answer + (self.answer - self.halfAnswer) / 15) + r"$\hspace{1mm}(Симпсон)")
 
 
 def simpson(y, h):
@@ -201,9 +199,11 @@ def createTables(xValues, yValues):
 
         table = Tabular(tableView)
         table.add_hline()
-        table.add_row(["x"] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
+        table.add_row(["x"] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in
+                               range(valueStartPoint, valueStartPoint + colmsCnt)])
         table.add_hline()
-        table.add_row(["y"] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in range(valueStartPoint, valueStartPoint + colmsCnt)])
+        table.add_row(["y"] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in
+                               range(valueStartPoint, valueStartPoint + colmsCnt)])
         table.add_hline()
 
         tables.append(copy(table))
@@ -216,9 +216,11 @@ def createTables(xValues, yValues):
 
     table = Tabular(tableView)
     table.add_hline()
-    table.add_row(["x"] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
+    table.add_row(
+        ["x"] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
     table.add_hline()
-    table.add_row(["y"] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
+    table.add_row(
+        ["y"] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
     table.add_hline()
 
     tables.append(table)
@@ -257,11 +259,12 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
 
         addEmptySpace(table, 1)
 
-        table.add_row(trapezoidTasks[i].taskText(), "" if trapezoidTasks[i + 1] is None else trapezoidTasks[i + 1].taskText())
+        table.add_row(trapezoidTasks[i].taskText(),
+                      "" if trapezoidTasks[i + 1] is None else trapezoidTasks[i + 1].taskText())
         fillTaskTables(table, trapezoidTasks[i], trapezoidTasks[i + 1])
         addEmptySpace(table, 2)
 
-        table.add_row(simpsonTasks[i].taskText(),  "" if simpsonTasks[i + 1] is None else simpsonTasks[i + 1].taskText())
+        table.add_row(simpsonTasks[i].taskText(), "" if simpsonTasks[i + 1] is None else simpsonTasks[i + 1].taskText())
         fillTaskTables(table, simpsonTasks[i], simpsonTasks[i + 1])
         addEmptySpace(table, 3)
 
@@ -293,7 +296,8 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
         fillTaskTables(answerTable, trapezoidTasks[i], trapezoidTasks[i + 1])
         addEmptySpace(answerTable, 2)
 
-        answerTable.add_row(trapezoidTasks[i].answerStr(), "" if i + 1 == taskCnt else trapezoidTasks[i + 1].answerStr())
+        answerTable.add_row(trapezoidTasks[i].answerStr(),
+                            "" if i + 1 == taskCnt else trapezoidTasks[i + 1].answerStr())
         addEmptySpace(answerTable, 1)
         answerTable.add_row("Err = " + "{0:.4f}".format(trapezoidTasks[i].errorRunge()),
                             "" if i + 1 == taskCnt else "Err = " + "{0:.4f}".format(trapezoidTasks[i + 1].errorRunge()))
@@ -341,6 +345,9 @@ def initDocs():
 
 
 async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex, timestamp, seed, surnames=None):
+    if seed is not None:
+        random.seed(seed)
+
     simpsonTasks = [SimpsonTask(seed).randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
     trapezoidTasks = [TrapezoidTask(seed).randomize(simpsonDotsCnt) for j in range(taskCnt)]
 
@@ -354,7 +361,7 @@ async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_l
         'interpolation_integration_generator',
         timestamp
     )
-#    folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+    #    folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
     if is_pdf:
         taskDoc.generate_pdf(f'{folder}/integration_{fileName}')
         answerDoc.generate_pdf(f'{folder}/integration_answers_for_{fileName}')
