@@ -22,7 +22,7 @@
 
 <h1>Запуск сервера</h1>
 
-> python3 InterpolationIntegrationGenerator/manage.py runserver
+> python3 mse_functions_interpolation_and_numerical_integration_tasks/InterpolationIntegrationGenerator/manage.py runserver
 
 <h1>Сборка через Dockerfile</h1>
 <ol>
