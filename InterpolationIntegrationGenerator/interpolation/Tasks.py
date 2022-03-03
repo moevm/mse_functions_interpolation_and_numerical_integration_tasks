@@ -87,7 +87,8 @@ class Tasks:
 
     async def generate(self, filename, is_pdf, is_latex, timestamp, surnames=None):
         random.seed(self.seed)
-        quantity_of_variants_on_one_page = self.options_in_line * 6  # 6 rows in one page
+        rows_in_page = 5
+        quantity_of_variants_on_one_page = self.options_in_line * rows_in_page  # 5 rows in one page
         quantity_of_pages = math.ceil(self.options_summary / quantity_of_variants_on_one_page)
         column_size = 18 // self.options_in_line  # 18cm - width of a4 format
 
@@ -98,7 +99,7 @@ class Tasks:
             tasks_table.add_hline()
             answers_table.add_hline()
 
-            for i in range(6):
+            for i in range(rows_in_page):
                 variants = []
                 answers = []
                 for j in range(self.options_in_line):
