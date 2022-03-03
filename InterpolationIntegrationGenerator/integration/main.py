@@ -239,7 +239,9 @@ def fillTaskTables(table, firstTask, secondTask):
         addEmptySpace(table, 2)
 
 
-def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames):
+def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames, seed):
+    seedStr = "seed: {0}\n".format(seed)
+
     trapezoidTasks.append(None)
     simpsonTasks.append(None)
 
@@ -273,11 +275,13 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
         if addedVariantsCnt == 4 and i + 2 < taskCnt:
             addedVariantsCnt = 0
             table.add_hline()
+            taskDoc.append(seedStr)
             taskDoc.append(copy(table))
             taskDoc.append(NewPage())
             table.clear()
         table.add_hline()
-
+        
+    taskDoc.append(seedStr)
     taskDoc.append(table)
 
     answerTable = Tabular(" |p{9cm}|p{9cm}| ")
@@ -316,11 +320,13 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
         if addedVariantsCnt == 4 and i + 2 < taskCnt:
             addedVariantsCnt = 0
             answerTable.add_hline()
+            answerDoc.append(seedStr)
             answerDoc.append(copy(answerTable))
             answerDoc.append(NewPage())
             answerTable.clear()
         answerTable.add_hline()
-
+    
+    answerDoc.append(seedStr)
     answerDoc.append(answerTable)
 
 
@@ -345,14 +351,15 @@ def initDocs():
 
 
 async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex, timestamp, seed, surnames=None):
-    if seed is not None:
-        random.seed(seed)
+    if seed is None:
+        seed = random.randint(0, 1000000)
+    random.seed(seed)
 
     simpsonTasks = [SimpsonTask().randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
     trapezoidTasks = [TrapezoidTask().randomize(simpsonDotsCnt) for j in range(taskCnt)]
 
     answerDoc, taskDoc = initDocs()
-    createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames)
+    createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames, seed)
 
     folder = os.path.join(
         settings.BASE_DIR,
