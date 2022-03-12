@@ -151,7 +151,7 @@ class SimpsonTask:
         return abs(self.halfAnswer - self.answer) / 15
 
     def taskText(self):
-        return NoEscape("1) Вычислить приближённое значение " +
+        return NoEscape("2) Вычислить приближённое значение " +
                         r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(
             self.xValues[-1]) + "}f(x)dx$" \
                                 r"\hspace{1mm}от таблично заданной функции по формуле Симпсона по "
