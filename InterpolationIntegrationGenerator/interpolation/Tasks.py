@@ -21,7 +21,7 @@ class Tasks:
         # Создание случайного сида, если он не задан
         self.init_seed(seed)
 
-        self.seed_str = f'seed: {self.seed}\n'
+        self.seed_str = f'seed: {self.seed}'
         self.options_summary = options_summary
         self.options_in_line = options_in_line
         self.degree = degree
@@ -41,9 +41,9 @@ class Tasks:
             document.packages.append(Package('longtable'))
             document.packages.append(Package('lastpage'))
 
-            text_variant = r'{#1}.\newline Построить интерполяционный многочлен в форме Лагранжа, в форме Ньютона и ' \
+            text_variant = r'{#1} ('+ self.seed_str + r').\newline Построить интерполяционный многочлен в форме Лагранжа, в форме Ньютона и ' \
                            r'сравнить результаты.'
-            answer_variant = r'Ответ для {#1}:'
+            answer_variant = r'Ответ для {#1} ('+ self.seed_str + r'):'
 
             document.append(UnsafeCommand('newcommand', r'\tasktext', options=1, extra_arguments=text_variant))
             document.append(UnsafeCommand('newcommand', r'\answertext', options=1, extra_arguments=answer_variant))
@@ -160,10 +160,7 @@ class Tasks:
                 # если последний_индекс_в_текущей_строке >= нужному количеству вариантов
                 if page*quantity_of_variants_on_one_page + i*self.options_in_line + self.options_in_line - 1 >= self.options_summary - 1:
                     break
-            self.tasks.append(self.seed_str)
             self.tasks.append(tasks_table)
-
-            self.answers.append(self.seed_str)
             self.answers.append(answers_table)
 
             self.tasks.append(NewPage())

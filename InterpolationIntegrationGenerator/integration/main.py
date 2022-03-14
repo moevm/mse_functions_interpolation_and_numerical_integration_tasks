@@ -240,7 +240,7 @@ def fillTaskTables(table, firstTask, secondTask):
 
 
 def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames, seed):
-    seedStr = "seed: {0}\n".format(seed)
+    seedStr = "(seed: {0})".format(seed)
 
     trapezoidTasks.append(None)
     simpsonTasks.append(None)
@@ -255,9 +255,9 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
     for i in range(0, taskCnt, 2):
         addEmptySpace(table, 1)
         if surnames is None:
-            table.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
+            table.add_row(["Вариант {0}".format(i + 1) + seedStr, "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2) + seedStr])
         else:
-            table.add_row([surnames[i], "" if surnames[i + 1] is None else surnames[i + 1]])
+            table.add_row([surnames[i] + seedStr, "" if surnames[i + 1] is None else surnames[i + 1] + seedStr])
 
         addEmptySpace(table, 1)
 
@@ -275,13 +275,11 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
         if addedVariantsCnt == 4 and i + 2 < taskCnt:
             addedVariantsCnt = 0
             table.add_hline()
-            taskDoc.append(seedStr)
             taskDoc.append(copy(table))
             taskDoc.append(NewPage())
             table.clear()
         table.add_hline()
         
-    taskDoc.append(seedStr)
     taskDoc.append(table)
 
     answerTable = Tabular(" |p{9cm}|p{9cm}| ")
@@ -291,9 +289,9 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
     for i in range(0, taskCnt, 2):
         addEmptySpace(answerTable, 1)
         if surnames is None:
-            answerTable.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
+            answerTable.add_row(["Вариант {0}".format(i + 1) + seedStr, "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2) + seedStr])
         else:
-            answerTable.add_row([surnames[i], "" if surnames[i + 1] is None else surnames[i + 1]])
+            answerTable.add_row([surnames[i] + seedStr, "" if surnames[i + 1] is None else surnames[i + 1] + seedStr])
 
         addEmptySpace(answerTable, 1)
 
@@ -320,13 +318,11 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
         if addedVariantsCnt == 4 and i + 2 < taskCnt:
             addedVariantsCnt = 0
             answerTable.add_hline()
-            answerDoc.append(seedStr)
             answerDoc.append(copy(answerTable))
             answerDoc.append(NewPage())
             answerTable.clear()
         answerTable.add_hline()
     
-    answerDoc.append(seedStr)
     answerDoc.append(answerTable)
 
 
