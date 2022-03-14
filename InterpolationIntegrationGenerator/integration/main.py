@@ -290,7 +290,9 @@ def fillTaskTables(table, firstTask, secondTask):
         addEmptySpace(table, 2)
 
 
-def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames):
+def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames, seed):
+    seedStr = "(seed: {0})".format(seed)
+
     trapezoidTasks.append(None)
     simpsonTasks.append(None)
 
@@ -304,9 +306,9 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
     for i in range(0, taskCnt, 2):
         addEmptySpace(table, 1)
         if surnames is None:
-            table.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
+            table.add_row(["Вариант {0}".format(i + 1) + seedStr, "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2) + seedStr])
         else:
-            table.add_row([surnames[i], "" if surnames[i + 1] is None else surnames[i + 1]])
+            table.add_row([surnames[i] + seedStr, "" if surnames[i + 1] is None else surnames[i + 1] + seedStr])
 
         addEmptySpace(table, 1)
 
@@ -328,7 +330,7 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
             taskDoc.append(NewPage())
             table.clear()
         table.add_hline()
-
+        
     taskDoc.append(table)
 
     answerTable = Tabular(" |p{9cm}|p{9cm}| ")
@@ -338,9 +340,9 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
     for i in range(0, taskCnt, 2):
         addEmptySpace(answerTable, 1)
         if surnames is None:
-            answerTable.add_row(["Вариант {0}".format(i + 1), "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2)])
+            answerTable.add_row(["Вариант {0}".format(i + 1) + seedStr, "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2) + seedStr])
         else:
-            answerTable.add_row([surnames[i], "" if surnames[i + 1] is None else surnames[i + 1]])
+            answerTable.add_row([surnames[i] + seedStr, "" if surnames[i + 1] is None else surnames[i + 1] + seedStr])
 
         addEmptySpace(answerTable, 1)
 
@@ -371,7 +373,7 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
             answerDoc.append(NewPage())
             answerTable.clear()
         answerTable.add_hline()
-
+    
     answerDoc.append(answerTable)
 
 
@@ -396,14 +398,15 @@ def initDocs():
 
 
 async def run(taskCnt, trapezoidsDotsCnt, simpsonDotsCnt, fileName, is_pdf, is_latex, timestamp, seed, surnames=None):
-    if seed is not None:
-        random.seed(seed)
+    if seed is None:
+        seed = random.randint(0, 1000000)
+    random.seed(seed)
 
     simpsonTasks = [SimpsonTask().randomize(trapezoidsDotsCnt) for i in range(taskCnt)]
     trapezoidTasks = [TrapezoidTask().randomize(simpsonDotsCnt) for j in range(taskCnt)]
 
     answerDoc, taskDoc = initDocs()
-    createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames)
+    createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames, seed)
 
     folder = os.path.join(
         settings.BASE_DIR,
