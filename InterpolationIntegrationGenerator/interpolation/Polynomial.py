@@ -16,7 +16,7 @@ class Polynomial:
         while True:
             if len(self.x) == degree + 1 and np.all(np.diff(self.x) == step):
                 break
-            self.coefficients = random.randint(-10, 11, degree + 1)
+            self.coefficients = np.round(random.uniform(-10, 10, degree+1), 1)
 
             if self.degree in [5, 6]:
                 step = 1
@@ -26,7 +26,7 @@ class Polynomial:
                 x = np.arange(-30, 31, step)
 
             while np.any(self.coefficients == 0):
-                self.coefficients = random.randint(-10, 11, degree + 1)
+                self.coefficients = np.round(random.uniform(-10, 10, degree+1), 1)
 
             p = P(self.coefficients)
             y = p(x)
@@ -37,7 +37,7 @@ class Polynomial:
                 continue
             else:
                 self.x = list(x[mask][:degree + 1])
-                self.y = list(map(int, list(y[mask][:degree + 1])))
+                self.y = list(np.round(y[mask][:degree + 1]))
 
         print(self.x)
 
