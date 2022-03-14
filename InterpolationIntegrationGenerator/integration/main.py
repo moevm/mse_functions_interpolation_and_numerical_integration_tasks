@@ -89,7 +89,7 @@ class TrapezoidTask:
             self.xValues[-1]) + "}f(x)dx$" \
                                 r"\hspace{1mm}от таблично заданной функции по формуле трапеций по "
                         + d[int(self.n / 2) + self.n % 2] + " и по " + d[self.n] + " узлам." \
-                         "Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
+                         " Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
     def answerStr(self):
         return NoEscape("$S_" + str(int(self.n / 2) + len(self.yValues) % 2) + "=" + "{0:.2f}".format(self.halfAnswer) +
@@ -202,7 +202,7 @@ class SimpsonTask:
         return abs(self.halfAnswer - self.answer) / 15
 
     def taskText(self):
-        return NoEscape("1) Вычислить приближённое значение " +
+        return NoEscape("2) Вычислить приближённое значение " +
                         r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(
             self.xValues[-1]) + "}f(x)dx$" \
                                 r"\hspace{1mm}от таблично заданной функции по формуле Симпсона по "
