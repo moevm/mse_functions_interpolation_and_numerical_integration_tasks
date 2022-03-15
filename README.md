@@ -1,52 +1,78 @@
-<h1>Подготовка среды</h1>
 
-1) Установка зависимостей
+# Генератор заданий и билетов по вычислительной математике
 
-> sudo apt-get install python3-dev python3-pip texlive-fonts-recommended texlive-lang-cyrillic texlive-latex-extra texlive-latex-recommended
+## Запуск
 
-2) Создать виртуальное окружение:
+### Подготовка среды
 
-> python3 -m venv <venv_name>
+1. Установите зависимости
 
-3) Активировать виртуальное окружение:
+```shell
+sudo apt-get install python3-dev python3-pip texlive-fonts-recommended texlive-lang-cyrillic texlive-latex-extra texlive-latex-recommended
+```
 
-> source <venv_name>/bin/activate
+2. Создайте виртуальное окружение:
 
-4) Загрузить проект в это окружение:
+```shell
+python3 -m venv <venv_name>
+```
 
-> git clone https://github.com/moevm/mse_functions_interpolation_and_numerical_integration_tasks.git
+3. Активируйте виртуальное окружение:
 
-5) Установить виртуальное окружение:
+```shell
+source <venv_name>/bin/activate
+```
 
-> pip3 install -r requirements.txt
+4. Загрузите проект в это окружение:
 
-<h1>Запуск сервера</h1>
+```shell
+git clone https://github.com/moevm/mse_functions_interpolation_and_numerical_integration_tasks.git
+```
 
-> python3 InterpolationIntegrationGenerator/manage.py runserver
+5. Установите виртуальное окружение:
 
-<h1>Сборка через Dockerfile</h1>
-<ol>
-<li>Перейдите в каталог, в котором находится файл Dockerfile</li>
-<li>Выполниет следующие команды:</li>
+```shell
+pip3 install -r requirements.txt
+```
 
-> docker build -t tasks .
+### Запуск сервера
 
-> docker run -p 8000:8000 tasks
+```shell
+python3 InterpolationIntegrationGenerator/manage.py runserver
+```
+
+#### Сборка через Dockerfile
+
+1. Перейдите в каталог, в котором находится файл Dockerfile
+
+```shell
+cd mse_functions_interpolation_and_numerical_integration_tasks/
+```
+
+2. Выполните следующие команды:
+
+```shell
+docker build -t tasks .
+docker run -p 8000:8000 tasks
+```
+
+3. Откройте браузер по адресу: [http://localhost:8000/](http://localhost:8000/)
+
+#### Сборка через DockerHub
+
+1. Выполните следующие команды:
+
+```shell
+docker pull mukhamux/tasks:1.0
+docker run -p 8000:8000 tasks
+```
     
-<li>Откройте браузер по адресу: http://localhost:8000/</li>
-</ol>
+2. Откройте браузер по адресу: [http://localhost:8000/](http://localhost:8000/)
 
-<h1>Сборка через DockerHub</h1>
-<ol>
-<li>Выполниет следующие команды:</li>
+## Тестирование 
 
-> docker pull mukhamux/tasks:1.0
+**what about unit tests???**
 
-> docker run -p 8000:8000 tasks
-    
-<li>Откройте браузер по адресу: http://localhost:8000/</li>
-</ol>
+## Состояние задач
 
-<h1>Трекер задач</h1>
-
-[Task tracker](https://github.com/moevm/mse_functions_interpolation_and_numerical_integration_tasks/projects/1?add_cards_query=is%3Aopen)
+[kanban доска](https://github.com/moevm/mse_functions_interpolation_and_numerical_integration_tasks/projects/2)
