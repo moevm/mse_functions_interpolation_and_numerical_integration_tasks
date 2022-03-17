@@ -5,10 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'interpolation_integration_generator/css/result_page.css' %}">
 </head>
 <body>
-    <a href="integration/" class="bigButton left">Интегрирование</a>
-    <a href="interpolation/" class="bigButton right">Интерполирование</a>
+    <div class="btn-toolbar">
+        <a href="integration/"><button class="bigButton">Интегрирование</button></a>
+        <a href="interpolation/"><button class="bigButton">Интерполирование</button></a>
+        <a href="custom_variants/"><button class="bigButton">Билеты</button></a>
+    </div>
 </body>
 </html>
