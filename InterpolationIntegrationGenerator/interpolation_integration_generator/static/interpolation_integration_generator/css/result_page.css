@@ -2,9 +2,15 @@ body {
     background-color: #AECCC7;
 }
 
+.btn-toolbar{
+    justify-content: center;
+    margin-top: 20%;
+}
+
 .bigButton
 {
     background-color: #0062CC;
+    border: none;
     border-radius: 5px;
     color: white;
     padding: 15px 32px;
@@ -13,9 +19,13 @@ body {
     display: inline-block;
     font-size: 30px;
     color: white;
-    width: 250px;
+    width: auto;
     cursor: pointer;
-    margin-top: 20%;
+    margin-left: 10px
+}
+
+.bigButton:last-child{
+    margin-left: none;
 }
 
 .backButton

@@ -1,12 +1,13 @@
 from django.urls import path
 
 from . import views
-from .views import integration, interpolation, index
+from .views import integration, interpolation, index, custom_variants
 
 urlpatterns = [
     path('', index, name='index'),
     path('interpolation/', interpolation, name='interpolation'),
     path('integration/', integration, name='integration'),
+    path('custom_variants/', custom_variants, name='custom_variants'),
     path('generate_interpolation/', views.generate_interpolation, name='generate_interpolation'),
     path('generate_integration/', views.generate_integration, name='generate_integration')
 ]
