@@ -12,6 +12,7 @@ from integration.main import run
 from interpolation.Tasks import Tasks
 from interpolation_integration_generator.forms.IntegrationForm import IntegrationForm
 from interpolation_integration_generator.forms.InterpolationForm import InterpolationForm
+from interpolation_integration_generator.forms.SplinesForm import SplinesForm
 from interpolation_integration_generator.forms.CustomVariantsForm import CustomVariantsForm
 
 @csrf_exempt
@@ -24,6 +25,12 @@ def interpolation(request):
 def integration(request):
     form = IntegrationForm()
     return render(request, 'interpolation_integration_generator/integration.html', context={'form': form})
+
+
+@csrf_exempt
+def splines(request):
+    form = SplinesForm()
+    return render(request, 'interpolation_integration_generator/splines.html', context={'form': form})
 
 
 @csrf_exempt
