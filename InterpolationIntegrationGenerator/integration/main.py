@@ -2,7 +2,7 @@ from numpy import random
 from copy import copy
 from pylatex import Document, Tabular, Package, NewLine, \
     MultiRow, Command, NewPage
-from pylatex.utils import NoEscape
+from pylatex.utils import NoEscape, bold, italic
 from django.conf import settings
 import os
 
@@ -84,10 +84,10 @@ class TrapezoidTask:
         return abs(self.halfAnswer - self.answer) / 3
 
     def taskText(self):
-        return NoEscape("1) Вычислить приближённое значение " +
+        return NoEscape(r"\hspace{5mm}" + bold("1). ") + "Вычислить приближённое значение " +
                         r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(
             self.xValues[-1]) + "}f(x)dx$" \
-                                r"\hspace{1mm}от таблично заданной функции по формуле трапеций по "
+                                r"\hspace{1mm}от таблично заданной функции по " + italic("формуле трапеций ")+ "по "
                         + d[int(self.n / 2) + self.n % 2] + " и по " + d[self.n] + " узлам." \
                          " Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
@@ -202,10 +202,10 @@ class SimpsonTask:
         return abs(self.halfAnswer - self.answer) / 15
 
     def taskText(self):
-        return NoEscape("2) Вычислить приближённое значение " +
+        return NoEscape( r"\hspace{5mm}" + bold('2). ') + "Вычислить приближённое значение " +
                         r"$\int_{" + "{0:.1f}".format(self.xValues[0]) + "}^{" + "{0:.1f}".format(
             self.xValues[-1]) + "}f(x)dx$" \
-                                r"\hspace{1mm}от таблично заданной функции по формуле Симпсона по "
+                                r"\hspace{1mm}от таблично заданной функции по " + italic("формуле Симпсона ")+ "по "
                         + d[int(self.n / 2) + self.n % 2] + " и по " + d[self.n] + " узлам." \
                                                                                    " Оценить погрешность по правилу Рунге; уточнить результат по Ричардсону.")
 
@@ -250,10 +250,10 @@ def createTables(xValues, yValues):
 
         table = Tabular(tableView)
         table.add_hline()
-        table.add_row(["x"] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in
+        table.add_row([NoEscape("$ x_i $")] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in
                                range(valueStartPoint, valueStartPoint + colmsCnt)])
         table.add_hline()
-        table.add_row(["y"] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in
+        table.add_row([NoEscape("$ f_i $")] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in
                                range(valueStartPoint, valueStartPoint + colmsCnt)])
         table.add_hline()
 
@@ -268,10 +268,10 @@ def createTables(xValues, yValues):
     table = Tabular(tableView)
     table.add_hline()
     table.add_row(
-        ["x"] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
+        [NoEscape("$ x_i $")] + [NoEscape("${0:.1f}$".format(xValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
     table.add_hline()
     table.add_row(
-        ["y"] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
+        [NoEscape("$ f_i $")] + [NoEscape("${0:.1f}$".format(yValues[i])) for i in range(valueStartPoint, valueStartPoint + valueCnt)])
     table.add_hline()
 
     tables.append(table)
@@ -291,7 +291,7 @@ def fillTaskTables(table, firstTask, secondTask):
 
 
 def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames, seed):
-    seedStr = "(seed: {0})".format(seed)
+    seedStr = "({0})".format(seed)
 
     trapezoidTasks.append(None)
     simpsonTasks.append(None)
@@ -299,14 +299,13 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
     if surnames is not None:
         surnames.append(None)
 
-    table = Tabular(" |p{9cm}|p{9cm}| ")
-    table.add_hline()
+    table = Tabular("p{9cm}p{9cm}")
 
     addedVariantsCnt = 0
     for i in range(0, taskCnt, 2):
         addEmptySpace(table, 1)
         if surnames is None:
-            table.add_row(["Вариант {0}".format(i + 1) + seedStr, "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2) + seedStr])
+            table.add_row([bold("Вариант {0} ".format(i + 1) + seedStr), "" if i + 1 == taskCnt else bold("Вариант {0} ".format(i + 2) + seedStr)])
         else:
             table.add_row([surnames[i] + seedStr, "" if surnames[i + 1] is None else surnames[i + 1] + seedStr])
 
@@ -325,11 +324,9 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
 
         if addedVariantsCnt == 4 and i + 2 < taskCnt:
             addedVariantsCnt = 0
-            table.add_hline()
             taskDoc.append(copy(table))
             taskDoc.append(NewPage())
             table.clear()
-        table.add_hline()
         
     taskDoc.append(table)
 
@@ -340,7 +337,7 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
     for i in range(0, taskCnt, 2):
         addEmptySpace(answerTable, 1)
         if surnames is None:
-            answerTable.add_row(["Вариант {0}".format(i + 1) + seedStr, "" if i + 1 == taskCnt else "Вариант {0}".format(i + 2) + seedStr])
+            answerTable.add_row([bold("Вариант {0} ".format(i + 1) + seedStr), "" if i + 1 == taskCnt else bold("Вариант {0} ".format(i + 2) + seedStr)])
         else:
             answerTable.add_row([surnames[i] + seedStr, "" if surnames[i + 1] is None else surnames[i + 1] + seedStr])
 
@@ -387,13 +384,14 @@ def initDocs():
                          documentclass=Command('documentclass', options=['a4paper'], arguments=['article']),
                          page_numbers=False)
 
-    taskDoc = Document("tasks", geometry_options={"lmargin": "1cm", "tmargin": "1cm"},
+    taskDoc = Document("tasks", geometry_options={"lmargin": "3mm", "tmargin": "3mm"},
                        documentclass=Command('documentclass', options=['a4paper'], arguments=['article']),
                        page_numbers=False)
-
+    
     answerDoc.packages.append(Package('babel', options=["russian"]))
+    answerDoc.packages.append(Package('tempora'))
     taskDoc.packages.append(Package('babel', options=["russian"]))
-
+    taskDoc.packages.append(Package('tempora'))
     return answerDoc, taskDoc
 
 
