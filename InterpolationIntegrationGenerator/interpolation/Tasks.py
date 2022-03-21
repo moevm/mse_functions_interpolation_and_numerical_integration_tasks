@@ -1,7 +1,7 @@
 from pylatex import Document, NewPage, Command, Package, UnsafeCommand, Center, Tabular, MultiRow
 from pylatex.base_classes import CommandBase, Arguments
 from interpolation.PolynomialHelper import PolynomialHelper
-from pylatex.utils import NoEscape
+from pylatex.utils import NoEscape, italic, bold
 import math
 from numpy import random
 from django.conf import settings
@@ -21,11 +21,11 @@ class Tasks:
         # Создание случайного сида, если он не задан
         self.init_seed(seed)
 
-        self.seed_str = f'seed: {self.seed}'
+        self.seed_str = f'{self.seed}'
         self.options_summary = options_summary
         self.options_in_line = options_in_line
         self.degree = degree
-        self.tasks = Document(documentclass=Command('documentclass', options=['a4paper'], arguments=['article']))
+        self.tasks = Document(documentclass=Command('documentclass', options=['a4paper'], arguments=['article']),font_size="large")#, ))
         self.answers = Document(documentclass=Command('documentclass', options=['a4paper'], arguments=['article']))
         documents = [self.tasks, self.answers]
         for document in documents:
@@ -35,14 +35,14 @@ class Tasks:
             document.packages.append(Package('fontenc', options=["T2A"]))
             document.packages.append(Package('inputenc', options=["utf8"]))
             document.packages.append(Package('babel', options=["russian"]))
+            document.packages.append(Package('tempora'))
             document.packages.append(Package('array'))
             document.packages.append(Package('multirow'))
             document.packages.append(Package('underscore'))
             document.packages.append(Package('longtable'))
             document.packages.append(Package('lastpage'))
 
-            text_variant = r'{#1} ('+ self.seed_str + r').\newline Построить интерполяционный многочлен в форме Лагранжа, в форме Ньютона и ' \
-                           r'сравнить результаты.'
+            text_variant = r'{#1} ('+ NoEscape(bold(self.seed_str)) + r') \\ \hspace{10mm}' + NoEscape(r'Построить интерполяционный многочлен в') + italic(' форме Лагранжа')+', в ' + italic('форме Ньютона')+' и сравнить результаты.'
             answer_variant = r'Ответ для {#1} ('+ self.seed_str + r'):'
 
             document.append(UnsafeCommand('newcommand', r'\tasktext', options=1, extra_arguments=text_variant))
@@ -94,9 +94,9 @@ class Tasks:
 
         for page in range(quantity_of_pages):
             # большая таблица на всю страницу состоящая либо из 2х либо из 3х столбцов
-            tasks_table = Tabular('c'.join(['|' for _ in range(self.options_in_line + 1)]))
+            tasks_table = Tabular('c'.join(['' for _ in range(self.options_in_line + 1)]))
             answers_table = Tabular('c'.join(['|' for _ in range(self.options_in_line + 1)]))
-            tasks_table.add_hline()
+            #tasks_table.add_hline()
             answers_table.add_hline()
 
             for i in range(rows_in_page):
@@ -117,11 +117,11 @@ class Tasks:
                     else:
                         variant_number = page * quantity_of_variants_on_one_page + i * self.options_in_line + j + 1
                         if surnames is None:
-                            task_argument = f"Вариант {variant_number}"
-                            answer_argument = f"{variant_number}-го варианта"
+                            task_argument = NoEscape(bold(f"Вариант {variant_number}" +" (" + self.seed_str+ ")"))
+                            answer_argument = f"{variant_number}-го варианта" + " (" + self.seed_str+ ")"
                         else:
-                            task_argument = surnames[variant_number-1]
-                            answer_argument = surnames[variant_number-1]
+                            task_argument = NoEscape(bold(surnames[variant_number-1]))
+                            answer_argument = NoEscape(bold(surnames[variant_number-1]))
 
                         tasks_row.append(MultiRow(5, width=f'{column_size}cm', data=tasktext(arguments=Arguments(task_argument))))
                         answers_row.append(MultiRow(5, width=f'{column_size}cm', data=answertext(arguments=Arguments(answer_argument))))
@@ -154,7 +154,7 @@ class Tasks:
                 tasks_table = self.suplement_table(tasks_table)
                 answers_table = self.suplement_table(answers_table)
 
-                tasks_table.add_hline()
+                #tasks_table.add_hline()
                 answers_table.add_hline()
 
                 # если последний_индекс_в_текущей_строке >= нужному количеству вариантов
