@@ -117,11 +117,11 @@ class Tasks:
                     else:
                         variant_number = page * quantity_of_variants_on_one_page + i * self.options_in_line + j + 1
                         if surnames is None:
-                            task_argument = NoEscape(bold(f"Вариант {variant_number}"))
-                            answer_argument = f"{variant_number}-го варианта"
+                            task_argument = NoEscape(bold(f"Вариант {variant_number}" +" (" + self.seed_str+ ")"))
+                            answer_argument = f"{variant_number}-го варианта" + " (" + self.seed_str+ ")"
                         else:
-                            task_argument = surnames[variant_number-1]
-                            answer_argument = surnames[variant_number-1]
+                            task_argument = NoEscape(bold(surnames[variant_number-1]))
+                            answer_argument = NoEscape(bold(surnames[variant_number-1]))
 
                         tasks_row.append(MultiRow(5, width=f'{column_size}cm', data=tasktext(arguments=Arguments(task_argument))))
                         answers_row.append(MultiRow(5, width=f'{column_size}cm', data=answertext(arguments=Arguments(answer_argument))))
