@@ -1,4 +1,5 @@
-from Generator.integration.main import TrapezoidTask, SimpsonTask, trapezoid, simpson, createDocs, initDocs
+from InterpolationIntegrationGenerator.integration.main import TrapezoidTask, SimpsonTask, \
+    trapezoid, simpson, createDocs, initDocs
 import unittest
 
 

@@ -1,5 +1,5 @@
-from Generator.interpolation.PolynomialHelper import PolynomialHelper
-from Generator.interpolation.Tasks import Tasks
+from InterpolationIntegrationGenerator.interpolation.PolynomialHelper import PolynomialHelper
+from InterpolationIntegrationGenerator.interpolation.Tasks import Tasks
 import unittest
 
 
@@ -44,7 +44,6 @@ class Test(unittest.TestCase):
         polynomial_3 = PolynomialHelper.generatePolynomial(5, 2**32-1)
         polynomial_4 = PolynomialHelper.generatePolynomial(6, 7543)
 
-        message = "Object is none!"
         self.assertIsNotNone(polynomial_1, message)
         self.assertIsNotNone(polynomial_2, message)
         self.assertIsNotNone(polynomial_3, message)
@@ -52,7 +51,7 @@ class Test(unittest.TestCase):
 
     def docs_with_same_seed_are_same(self):
         answerDoc, taskDoc = initDocs()
-    createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames, seed)
+        createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnames, seed)
 
         message_1 = "Same seeds generates different docs!"
         message_2 = "Different seeds generates same docs!"
