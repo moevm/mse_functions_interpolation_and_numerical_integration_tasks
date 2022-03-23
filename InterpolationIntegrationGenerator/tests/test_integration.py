@@ -7,25 +7,21 @@ class Test(unittest.TestCase):
     def test_Trapezoid(self):
         task = TrapezoidTask().randomize(10)
 
-        message = "First value and second value are not equal!"
-        self.assertEqual(10, task.n, message)
+        self.assertEqual(10, task.n)
         self.assertEqual(0, (task.yValues[0] + task.yValues[-1]) % 2)
 
     def test_Simpson(self):
         task = SimpsonTask().randomize(10)
 
-        message = "First value and second value are not equal!"
-        self.assertEqual(10, task.n, message)
+        self.assertEqual(10, task.n)
         self.assertEqual(0, (task.yValues[0] + task.yValues[-1]) % 2)
 
     def test_trapezoid(self):
-        message = "First value and second value are not equal!"
-        self.assertEqual(0.8, trapezoid([0, 1, 2, 3, 4], 0.1), message)
+        self.assertEqual(0.8, trapezoid([0, 1, 2, 3, 4], 0.1))
         self.assertEqual(1, trapezoid([0, 10, -10, 5, 10], 0.1))
 
     def test_simpson(self):
-        message = "First value and second value are not equal!"
-        self.assertEqual(4.8, simpson([0, 1, 2, 3, 4], 0.6), message)
+        self.assertEqual(4.8, simpson([0, 1, 2, 3, 4], 0.6))
         self.assertEqual(10, simpson([0, 10, -10, 5, 10], 0.6))
 
     def test_incorrectDotsCnt(self):
@@ -35,10 +31,9 @@ class Test(unittest.TestCase):
         taskS = SimpsonTask().randomize("hello")
         taskS2 = SimpsonTask().randomize(2.8)
 
-        message = "Object is not none"
-        self.assertIsNone(taskT, message)
+        self.assertIsNone(taskT)
         self.assertIsNone(taskT2)
-        self.assertIsNone(taskS, message)
+        self.assertIsNone(taskS)
         self.assertIsNone(taskS2)
 
     def test_sameSeeds(self):
@@ -73,12 +68,10 @@ class Test(unittest.TestCase):
         answerDoc3, taskDoc3 = initDocs()
         createDocs(answerDoc3, taskDoc3, 30, 11, 9, None, seed=200)
 
-        message_1 = "Same seeds generates different docs!"
-        message_2 = "Different seeds generates same docs!"
-        self.assertEqual(taskDoc1, taskDoc2, message_1)
-        self.assertEqual(answerDoc1, answerDoc2, message_1)
-        self.assertNotEqual(taskDoc1, taskDoc3, message_2)
-        self.assertNotEqual(answerDoc1, answerDoc3, message_2)
+        self.assertEqual(taskDoc1, taskDoc2)
+        self.assertEqual(answerDoc1, answerDoc2)
+        self.assertNotEqual(taskDoc1, taskDoc3)
+        self.assertNotEqual(answerDoc1, answerDoc3)
 
 
 if __name__ == '__main__':
