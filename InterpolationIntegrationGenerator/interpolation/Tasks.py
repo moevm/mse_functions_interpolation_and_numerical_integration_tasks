@@ -42,7 +42,7 @@ class Tasks:
             document.packages.append(Package('longtable'))
             document.packages.append(Package('lastpage'))
 
-            text_variant = r'{#1} ('+ NoEscape(bold(self.seed_str)) + r') \\ \hspace{10mm}' + NoEscape(r'Построить интерполяционный многочлен в') + italic(' форме Лагранжа')+', в ' + italic('форме Ньютона')+' и сравнить результаты.'
+            text_variant = r'{#1} ('+ NoEscape(self.seed_str) + r') \\ \hspace{10mm}' + NoEscape(r'Построить интерполяционный многочлен в') + italic(' форме Лагранжа')+', в ' + italic('форме Ньютона')+' и сравнить результаты.'
             answer_variant = r'Ответ для {#1} ('+ self.seed_str + r'):'
 
             document.append(UnsafeCommand('newcommand', r'\tasktext', options=1, extra_arguments=text_variant))
@@ -117,8 +117,8 @@ class Tasks:
                     else:
                         variant_number = page * quantity_of_variants_on_one_page + i * self.options_in_line + j + 1
                         if surnames is None:
-                            task_argument = NoEscape(bold(f"Вариант {variant_number}" +" (" + self.seed_str+ ")"))
-                            answer_argument = f"{variant_number}-го варианта" + " (" + self.seed_str+ ")"
+                            task_argument = NoEscape(bold(f"Вариант {variant_number}"))
+                            answer_argument = f"{variant_number}-го варианта" 
                         else:
                             task_argument = NoEscape(bold(surnames[variant_number-1]))
                             answer_argument = NoEscape(bold(surnames[variant_number-1]))
