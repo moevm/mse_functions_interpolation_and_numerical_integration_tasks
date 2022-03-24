@@ -305,9 +305,9 @@ def createDocs(answerDoc, taskDoc, taskCnt, trapezoidTasks, simpsonTasks, surnam
     for i in range(0, taskCnt, 2):
         addEmptySpace(table, 1)
         if surnames is None:
-            table.add_row([bold("Вариант {0} ".format(i + 1) + seedStr), "" if i + 1 == taskCnt else bold("Вариант {0} ".format(i + 2) + seedStr)])
+            table.add_row([NoEscape(bold("Вариант {0} ".format(i + 1)) + seedStr), "" if i + 1 == taskCnt else NoEscape(bold("Вариант {0} ".format(i + 2)) + seedStr)])
         else:
-            table.add_row([surnames[i] + seedStr, "" if surnames[i + 1] is None else surnames[i + 1] + seedStr])
+            table.add_row([surnames[i] +" " +seedStr, "" if surnames[i + 1] is None else surnames[i + 1] +" "+ seedStr])
 
         addEmptySpace(table, 1)
 
