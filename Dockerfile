@@ -9,6 +9,7 @@ RUN apt-get install \
 	python3-dev \
 	texlive-fonts-recommended \
 	texlive-lang-cyrillic \
+	texlive-lang-greek \
 	texlive-latex-extra \
 	texlive-latex-recommended -y
 
