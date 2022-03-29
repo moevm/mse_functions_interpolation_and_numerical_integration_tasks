@@ -10,14 +10,11 @@ class SplineTask:
  
     @classmethod
     def randomize(cls, seed=None, x_range=(-5, 5), y_range=(-20, 20),
-                  step=1, middle_is_zero=False):
+                  step=1):
         if seed is not None:
             random.seed(seed)
- 
-        if middle_is_zero:
-            center_x = 0
-        else:
-            center_x = random.randint(x_range[0], x_range[1])
+
+        center_x = random.randint(x_range[0], x_range[1]+1)
         x_values = [center_x + step * i for i in range(-1, 2)]
  
         y_values = [round(random.uniform(y_range[0], y_range[1]), 1) for _ in range(3)]
