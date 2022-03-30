@@ -8,7 +8,7 @@
 1. Установите зависимости
 
 ```shell
-sudo apt-get install python3-dev python3-pip texlive-fonts-recommended texlive-lang-cyrillic texlive-latex-extra texlive-latex-recommended
+sudo apt-get install python3-dev python3-pip texlive-fonts-extra texlive-lang-cyrillic texlive-lang-greek texlive-latex-recommended
 ```
 
 2. Создайте виртуальное окружение:
