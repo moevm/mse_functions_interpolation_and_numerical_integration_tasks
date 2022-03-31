@@ -5,14 +5,6 @@ from InterpolationIntegrationGenerator.Spline.SplineTask import SplineTask
 
 
 class TestSplines(unittest.TestCase):
-    def test_same_seed_same_spline(self):
-        spline_task1 = SplineTask.randomize(seed=100)
-        spline_task2 = SplineTask.randomize(seed=100)
-
-        self.assertEqual(spline_task1.x_values, spline_task2.x_values)
-        self.assertEqual(spline_task1.y_values, spline_task2.y_values)
-        assert_almost_equal(spline_task1.answer, spline_task2.answer)
-
     def test_center_x_is_in_range(self):
         spline_default_range = SplineTask.randomize()
         spline_custom_range = SplineTask.randomize(x_range=(-3, 1))
