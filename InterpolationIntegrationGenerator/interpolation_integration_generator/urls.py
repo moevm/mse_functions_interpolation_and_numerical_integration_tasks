@@ -10,5 +10,6 @@ urlpatterns = [
     path('splines/', splines, name='splines'),
     path('custom_variants/', custom_variants, name='custom_variants'),
     path('generate_interpolation/', views.generate_interpolation, name='generate_interpolation'),
-    path('generate_integration/', views.generate_integration, name='generate_integration')
+    path('generate_integration/', views.generate_integration, name='generate_integration'),
+    path('generate_splines/', views.generate_splines, name='generate_splines')
 ]
