@@ -7,10 +7,12 @@ RUN apt-get install \
 	python3.8 \
 	python3-pip \
 	python3-dev \
-    texlive-fonts-extra \
-    texlive-lang-greek \
+  texlive-fonts-extra \
+  texlive-lang-greek \
 	texlive-lang-cyrillic \
-	texlive-latex-recommended  -y
+	texlive-lang-greek \
+	texlive-latex-extra \
+	texlive-latex-recommended -y
 
 WORKDIR /app
 COPY ./ ./
