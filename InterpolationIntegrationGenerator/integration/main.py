@@ -40,46 +40,38 @@ class TrapezoidTask:
 
     def randomize(self, dotsCnt):
 
+        # проверка адекватности переданного параметра (проверка типа)
         if type(dotsCnt) != int:
             return None
 
+        # todo: А зачем нам вообще выводить в задание и хранить массив Х-ов - они нигде нам не нужны
+        # первое значение Х рандомно, все последующие будут выставляться от него
         firstX = random.randint(-10, 10)
 
+        # берется рандомное значение интервала
         h = random.choice([0.1, 0.2, 0.3])
+
+        # даем значения всем Х в задании (начинаем от первого значения и дальше через равные интервалы)
         self.xValues = [i * h + firstX for i in range(dotsCnt)]
 
+        # сохраняем количество точек
         self.n = dotsCnt
 
-        half = int((dotsCnt - 2) / 2)
 
-        self.yValues.append(round(random.uniform(-9, 9), 1))
-        for i in range(1, half + 1):
-            new_elem = round(random.uniform(-9, 9), 1)
+        # заполняем массив Y случайными значениями
+        for i in range(dotsCnt):
+            new_elem = random.randint(-9, 9)
             while new_elem in self.yValues:
-                new_elem = round(random.uniform(-9, 9), 1)
+                new_elem = random.randint(-9, 9)
             self.yValues.append(new_elem)
 
-        tmp = self.yValues[1::]
-        tmp.reverse()
-        self.yValues += tmp
-        self.yValues.append(0)
 
-        coef = round(random.uniform(-4, 4), 1) + 1
-        self.yValues[-1] += coef
-        self.yValues[-2] += coef
-
-        self.yValues.append(round(random.uniform(-9, 9), 1))
-
-        res = abs(self.yValues[0] + self.yValues[-1]) * h / 2
-        while res > 0.2 or res == 0:
-            self.yValues[-1] = round(random.uniform(-9, 9), 1)
-            res = abs(self.yValues[0] + self.yValues[-1]) * h / 2
-
+        # получаем результаты для заданного условия
         self.answer = trapezoid(self.yValues, h)
         self.halfAnswer = trapezoid(self.yValues[::2], h * 2)
 
         return self
-
+        
     def errorRunge(self):
         return abs(self.halfAnswer - self.answer) / 3
 
