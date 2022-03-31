@@ -1,5 +1,6 @@
 import asyncio
 import os
+from numpy import random
 import zipfile
 from datetime import datetime
 from os.path import basename
@@ -10,34 +11,40 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from integration.main import run
 from interpolation.Tasks import Tasks
+from Spline.SplineDocument import SplineDocument
+from Spline.SplineTask import SplineTask
 from interpolation_integration_generator.forms.IntegrationForm import IntegrationForm
 from interpolation_integration_generator.forms.InterpolationForm import InterpolationForm
 from interpolation_integration_generator.forms.SplinesForm import SplinesForm
 from interpolation_integration_generator.forms.CustomVariantsForm import CustomVariantsForm
 
+
 @csrf_exempt
 def interpolation(request):
     form = InterpolationForm()
-    return render(request, 'interpolation_integration_generator/interpolation.html', context={'form': form})
+    return render(request, 'interpolation_integration_generator/interpolation.html',
+                  context={'form': form})
 
 
 @csrf_exempt
 def integration(request):
     form = IntegrationForm()
-    return render(request, 'interpolation_integration_generator/integration.html', context={'form': form})
+    return render(request, 'interpolation_integration_generator/integration.html',
+                  context={'form': form})
 
 
 @csrf_exempt
 def splines(request):
     form = SplinesForm()
-    return render(request, 'interpolation_integration_generator/splines.html', context={'form': form})
+    return render(request, 'interpolation_integration_generator/splines.html',
+                  context={'form': form})
 
 
 @csrf_exempt
 def custom_variants(request):
     form = CustomVariantsForm()
-    return render(request, 'interpolation_integration_generator/custom_variants.html', context={'form': form})
-
+    return render(request, 'interpolation_integration_generator/custom_variants.html',
+                  context={'form': form})
 
 
 def index(request):
@@ -62,7 +69,7 @@ def generate_interpolation(request):
                 'interpolation_integration_generator',
                 timestamp
             )
-#            folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+            #            folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
             static_folder = f"/static/interpolation_integration_generator/{timestamp}"
             os.mkdir(f"{folder}")
 
@@ -82,9 +89,11 @@ def generate_interpolation(request):
                 surnames = request.FILES['file_with_surnames'].read().decode("utf-8").splitlines()
                 number_of_variants = len(surnames)
 
-            document = Tasks(number_of_variants, number_of_variants_in_string, the_biggest_polynomial_degree, seed)
+            document = Tasks(number_of_variants, number_of_variants_in_string,
+                             the_biggest_polynomial_degree, seed)
             loop = asyncio.new_event_loop()
-            loop.run_until_complete(document.generate(filename, is_pdf, is_tex, timestamp, surnames))
+            loop.run_until_complete(
+                document.generate(filename, is_pdf, is_tex, timestamp, surnames))
             loop.close()
 
             filenames = []
@@ -124,8 +133,10 @@ def generate_interpolation(request):
 
             context = {'files': zip(names, files, sizes)}
 
-            return render(request, "interpolation_integration_generator/result_page.html", context=context)
-        return render(request, "interpolation_integration_generator/interpolation.html", context={'form': form})
+            return render(request, "interpolation_integration_generator/result_page.html",
+                          context=context)
+        return render(request, "interpolation_integration_generator/interpolation.html",
+                      context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 
@@ -146,7 +157,7 @@ def generate_integration(request):
                 'interpolation_integration_generator',
                 timestamp
             )
-#           folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+            #           folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
             static_folder = f"/static/interpolation_integration_generator/{timestamp}"
             os.mkdir(f"{folder}")
 
@@ -169,7 +180,8 @@ def generate_integration(request):
 
             loop = asyncio.new_event_loop()
             loop.run_until_complete(
-                run(options_count, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_tex, timestamp, seed,
+                run(options_count, SimpsonPointsCnt, TrapezoidPointsCnt, filename, is_pdf, is_tex,
+                    timestamp, seed,
                     surnames))
             loop.close()
 
@@ -211,6 +223,106 @@ def generate_integration(request):
 
             context = {'files': zip(names, files, sizes)}
 
-            return render(request, "interpolation_integration_generator/result_page.html", context=context)
-        return render(request, "interpolation_integration_generator/integration.html", context={'form': form})
+            return render(request, "interpolation_integration_generator/result_page.html",
+                          context=context)
+        return render(request, "interpolation_integration_generator/integration.html",
+                      context={'form': form})
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+
+def generate_splines(request):
+    if request.method == 'POST':
+        form = SplinesForm(request.POST)
+        if form.is_valid():
+            information = form.cleaned_data
+            names = []
+            files = []
+            sizes = []
+
+            timestamp = str(datetime.now()).replace(":", "-").replace(" ", "_")
+            folder = os.path.join(
+                settings.BASE_DIR,
+                'interpolation_integration_generator',
+                'static',
+                'interpolation_integration_generator',
+                timestamp
+            )
+            #           folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+            static_folder = f"/static/interpolation_integration_generator/{timestamp}"
+            os.mkdir(f"{folder}")
+
+            filename = information.get('filename')
+            x1 = information.get("x1")
+            x2 = information.get("x2")
+            y1 = information.get("y1")
+            y2 = information.get("y2")
+            step = information.get("step")
+            generation_format = information.get('generation_format')
+
+            is_pdf = 'pdf' in generation_format
+            is_tex = 'tex' in generation_format
+            seed = information.get("seed")
+            if seed is None:
+                seed = random.randint(0, 1000000)
+            variants_type = information.get("variants_type")
+
+            if variants_type == "digits":
+                surnames = None
+                options_count = information.get("number_of_variants")
+            elif variants_type == 'surnames':
+                surnames = request.FILES['file_with_surnames'].read().decode("utf-8").splitlines()
+                options_count = len(surnames)
+
+            # Task generation
+            task_list = [SplineTask.randomize(x_range=(x1, x2), y_range=(y1, y2), step=step)
+                         for _ in range(options_count)]
+
+            # Document generation
+            spline_document = SplineDocument(task_list, seed)
+            loop = asyncio.new_event_loop()
+            loop.run_until_complete(
+                spline_document.generate(filename, is_pdf, is_tex, timestamp, surnames))
+            loop.close()
+
+            filenames = []
+            if is_pdf:
+                filenames.append(f"{folder}/splines_{filename}.pdf")
+                filenames.append(f'{folder}/splines_answers_for_{filename}.pdf')
+
+                names.append(f"splines_{filename}.pdf")
+                files.append(f"{static_folder}/splines_{filename}.pdf")
+                sizes.append(os.path.getsize(f"{folder}/splines_{filename}.pdf"))
+
+                names.append(f"splines_answers_for_{filename}.pdf")
+                files.append(f"{static_folder}/splines_answers_for_{filename}.pdf")
+                sizes.append(os.path.getsize(f"{folder}/splines_answers_for_{filename}.pdf"))
+
+            if is_tex:
+                filenames.append(f"{folder}/splines_{filename}.tex")
+                filenames.append(f'{folder}/splines_answers_for_{filename}.tex')
+
+                names.append(f"splines_{filename}.tex")
+                files.append(f"{static_folder}/splines_{filename}.tex")
+                sizes.append(os.path.getsize(f"{folder}/splines_{filename}.tex"))
+
+                names.append(f"splines_answers_for_{filename}.tex")
+                files.append(f"{static_folder}/splines_answers_for_{filename}.tex")
+                sizes.append(os.path.getsize(f"{folder}/splines_answers_for_{filename}.tex"))
+
+            with zipfile.ZipFile(f'{folder}/splines_result.zip', 'w') as zipObj:
+                for file in filenames:
+                    zipObj.write(file, basename(file))
+
+            names.append("splines_result.zip")
+            files.append(f"{static_folder}/splines_result.zip")
+
+            sizes.append(os.path.getsize(f"{folder}/splines_result.zip"))
+            sizes = list(map(lambda size: round(size / 1024, 1), sizes))
+
+            context = {'files': zip(names, files, sizes)}
+
+            return render(request, "interpolation_integration_generator/result_page.html",
+                          context=context)
+        return render(request, "interpolation_integration_generator/splines.html",
+                      context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')

@@ -19,7 +19,7 @@
 <div class="container">
     <div class="row">
         <div class="col mr-4">
-            <form action="{% url 'generate_integration' %}" method="post" enctype="multipart/form-data" class="col mr-4">
+            <form action="{% url 'generate_splines' %}" method="post" enctype="multipart/form-data" class="col mr-4">
                 {% csrf_token %}
                 <h3 class="mt-2">Генератор заданий по сплайнам</h3>
                 <br>
@@ -57,24 +57,6 @@
                     </div>
                 </div>
                 <br>
-                <div class="row mt-2">
-                    <div class="col">
-                        <h5>{{ form.number_of_trapezoid_points.label }}</h5>
-                    </div>
-                    <div class="col">
-                        {{ form.number_of_trapezoid_points }}
-                    </div>
-                </div>
-                <br>
-                <div class="row mt-2">
-                    <div class="col">
-                        <h5>{{ form.number_of_Simpson_points.label }}</h5>
-                    </div>
-                    <div class="col">
-                        {{ form.number_of_Simpson_points }}
-                    </div>
-                </div>
-                <br>
 
                 <div class="row mt-2">
                     <div class="col">
@@ -91,6 +73,60 @@
                     </div>
                 </div>
                 <br>
+
+                <div class="row">
+                    <div class="col">
+                        <h5>{{ form.x1.label }}</h5>
+                    </div>
+                    <div class="col">
+                        {{ form.x1 }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <h5>{{ form.x2.label }}</h5>
+                    </div>
+                    <div class="col">
+                        {{ form.x2 }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <h5>{{ form.y1.label }}</h5>
+                    </div>
+                    <div class="col">
+                        {{ form.y1 }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <h5>{{ form.y2.label }}</h5>
+                    </div>
+                    <div class="col">
+                        {{ form.y2 }}
+                    </div>
+                </div>
+                <br>
+
+                 <div class="row mt-2">
+                    <div class="col">
+                        <h5>{{ form.step.label }}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {% for choice in form.step %}
+                            <div>
+                                {{ choice }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <br>
+
                 <em>Необязательный параметр</em>
                 <div class="row">
                     <div class="col">

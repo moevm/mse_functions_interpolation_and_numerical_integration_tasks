@@ -1,26 +1,73 @@
+from pylatex.utils import NoEscape
+from pylatex import Tabular, Center
 import numpy
 from numpy import random
- 
- 
+
+
 class SplineTask:
     def __init__(self, x_values, y_values):
         self.x_values = x_values
         self.y_values = y_values
         self.answer = self.solve()
- 
-    @classmethod
-    def randomize(cls, seed=None, x_range=(-5, 5), y_range=(-20, 20),
-                  step=1):
-        if seed is not None:
-            random.seed(seed)
 
-        center_x = random.randint(x_range[0], x_range[1]+1)
+    @classmethod
+    def randomize(cls, x_range=(-5, 5), y_range=(-20, 20),
+                  step=1):
+        center_x = random.randint(x_range[0], x_range[1] + 1)
         x_values = [center_x + step * i for i in range(-1, 2)]
- 
+
         y_values = [round(random.uniform(y_range[0], y_range[1]), 1) for _ in range(3)]
- 
+
         return cls(x_values, y_values)
- 
+
+    def get_tex_text(self):
+        main_table = Tabular("p{9cm}")
+        task_text_1 = NoEscape("\\hspace{5mm} Дана таблица значений функции ($ i = 0, \dots, 2 $):")
+
+        main_table.append(task_text_1)
+
+        valueCnt = len(self.x_values)
+        valueStartPoint = 0
+        tableView = "|l|"
+        tableView += "l|" * valueCnt
+        table = Tabular(tableView)
+        table.add_hline()
+        table.add_row(
+            [NoEscape("$ x_i $")] + [NoEscape("${0:.1f}$".format(self.x_values[i])) for i in
+                                     range(valueStartPoint, valueStartPoint + valueCnt)])
+        table.add_hline()
+        table.add_row(
+            [NoEscape("$ f_i $")] + [NoEscape("${0:.1f}$".format(self.y_values[i])) for i in
+                                     range(valueStartPoint, valueStartPoint + valueCnt)])
+        table.add_hline()
+
+        center = Center()
+        center.append(table)
+        main_table.append(center)
+
+        task_text_2 = NoEscape(
+            "\\hspace{5mm} Необходимо построить параболический сплайн $ S_2(x) $ дефекта " +
+            "1 при граничном условии $ S'_2(x_0)=0 $.")
+
+        main_table.append(task_text_2)
+        return main_table
+
+    def get_tex_answer(self, task_number, seed=None):
+        p0 = f'Ответ для {task_number}-го номера'
+        if seed is not None:
+            p0 += f' ({seed})'
+
+        p1, p2 = "$ P_{ 11 } =" + \
+                 " {0:.1f} + {1:.1f} * x + {2:.1f} * x^2, x \in [{3:.1f}, {4:.1f}] $". \
+                     format(self.answer[0], self.answer[1], self.answer[2], self.x_values[0],
+                            self.x_values[1]), \
+                 "$ P_{ 12 } =" + \
+                 " {0:.1f} + {1:.1f} * x + {2:.1f} * x^2, x \in [{3:.1f}, {4:.1f}] $". \
+                     format(self.answer[3], self.answer[4], self.answer[5], self.x_values[1],
+                            self.x_values[2]),
+        return NoEscape(p0) + NoEscape(':') + NoEscape(r'\newline ') + \
+               NoEscape(p1) + NoEscape(r'\newline ') + NoEscape(p2)
+
     def solve(self):
         a_matrix = numpy.array([[1, self.x_values[0], self.x_values[0] ** 2, 0, 0, 0],
                                 [1, self.x_values[1], self.x_values[1] ** 2, 0, 0, 0],
@@ -28,12 +75,12 @@ class SplineTask:
                                 [0, 0, 0, 1, self.x_values[2], self.x_values[2] ** 2],
                                 [0, 1, 2 * self.x_values[1], 0, -1, -2 * self.x_values[1]],
                                 [0, 1, 2 * self.x_values[0], 0, 0, 0]])
- 
+
         b_matrix = numpy.array([self.y_values[0],
                                 self.y_values[1],
                                 self.y_values[1],
                                 self.y_values[2],
                                 0,
                                 0])
- 
+
         return numpy.linalg.solve(a_matrix, b_matrix)
