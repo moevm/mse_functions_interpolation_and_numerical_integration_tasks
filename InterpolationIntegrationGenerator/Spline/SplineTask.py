@@ -57,16 +57,22 @@ class SplineTask:
         if seed is not None:
             p0 += f' ({seed})'
 
-        p1, p2 = "$ P_{ 11 } =" + \
-                 " {0:.1f} + {1:.1f} * x + {2:.1f} * x^2, x \in [{3:.1f}, {4:.1f}] $". \
-                     format(self.answer[0], self.answer[1], self.answer[2], self.x_values[0],
-                            self.x_values[1]), \
-                 "$ P_{ 12 } =" + \
-                 " {0:.1f} + {1:.1f} * x + {2:.1f} * x^2, x \in [{3:.1f}, {4:.1f}] $". \
-                     format(self.answer[3], self.answer[4], self.answer[5], self.x_values[1],
-                            self.x_values[2]),
-        return NoEscape(p0) + NoEscape(':') + NoEscape(r'\newline ') + \
-               NoEscape(p1) + NoEscape(r'\newline ') + NoEscape(p2)
+        p1 = "{0:.1f}".format(self.answer[0]) + \
+             "{0:+.1f} \cdot x".format(abs(self.answer[1])) + \
+             "{0:+.1f} \cdot x^2,x \in [{1:.1f}, {2:.1f}]".format(self.answer[2],
+                                                                  self.x_values[0],
+                                                                  self.x_values[1])
+
+        p2 = "{0:.1f}".format(self.answer[3]) + \
+             "{0:+.1f} \cdot x".format(abs(self.answer[4])) + \
+             "{0:+.1f} \cdot x^2,x \in [{1:.1f}, {2:.1f}]".format(self.answer[5],
+                                                                 self.x_values[1],
+                                                                 self.x_values[2])
+
+        return NoEscape(p0) + NoEscape(':') + NoEscape(r"\newline") + NoEscape("$S_2(x) = $") + \
+               NoEscape("$\\begin{cases}") + \
+               NoEscape(p1) + NoEscape(r'\\') + NoEscape(p2) + NoEscape(r"\\") + \
+               NoEscape("\\end{cases}$")
 
     def solve(self):
         a_matrix = numpy.array([[1, self.x_values[0], self.x_values[0] ** 2, 0, 0, 0],

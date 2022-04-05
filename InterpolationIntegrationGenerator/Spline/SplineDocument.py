@@ -1,4 +1,4 @@
-from pylatex import Document, Command, Package, Center, LongTable
+from pylatex import Document, Command, Package, LongTable, Tabular
 from pylatex.utils import NoEscape, bold
 from django.conf import settings
 import os
@@ -27,21 +27,29 @@ class SplineDocument:
             document.packages.append(Package('underscore'))
             document.packages.append(Package('longtable'))
             document.packages.append(Package('lastpage'))
+            document.packages.append(Package('amsmath'))
 
-        task_table = LongTable("p{9cm}p{9cm}")
-        answer_table = LongTable("p{9cm}p{9cm}")
+        task_table = LongTable("p{9.5cm}p{9.5cm}")
+        answer_table = LongTable("p{9.5cm}p{9.5cm}")
         for i in range(1, len(task_list), 2):
             task1 = task_list[i - 1]
             task2 = task_list[i]
             # Add variant and task text
-            task_table.add_row([NoEscape(bold(f'Вариант {i} ') + f'({seed})'),
-                                NoEscape(bold(f'Вариант {i + 1} ') + f'({seed})')])
-            task_table.add_row([task1.get_tex_text(), task2.get_tex_text()])
-            task_table.add_empty_row()
+            subtable1 = Tabular("p{9.5cm}")
+            subtable2 = Tabular("p{9.5cm}")
+            subtable1.add_row([NoEscape(bold(f'Вариант {i} ') + f'({seed})')])
+            subtable2.add_row([NoEscape(bold(f'Вариант {i + 1} ') + f'({seed})')])
+            subtable1.add_row([task1.get_tex_text()])
+            subtable2.add_row([task2.get_tex_text()])
+
+            task_table.add_row([subtable1, subtable2])
 
             # Add answer text
             answer_table.add_row([task1.get_tex_answer(i, seed), task2.get_tex_answer(i + 1, seed)])
-            answer_table.add_empty_row()
+
+            if i != len(task_list) - 1:
+                task_table.add_empty_row()
+                answer_table.add_empty_row()
 
         if len(task_list) % 2 == 1:
             last_task = task_list[-1]
