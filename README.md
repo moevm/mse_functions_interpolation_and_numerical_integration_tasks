@@ -38,7 +38,7 @@ pip3 install -r requirements.txt
 ### Запуск сервера
 
 ```shell
-python3 InterpolationIntegrationGenerator/manage.py runserver
+python3 Generator/manage.py runserver
 ```
 
 #### Сборка через Dockerfile

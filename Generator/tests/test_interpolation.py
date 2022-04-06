@@ -1,5 +1,4 @@
-from InterpolationIntegrationGenerator.interpolation.PolynomialHelper import PolynomialHelper
-from InterpolationIntegrationGenerator.interpolation.Tasks import Tasks
+from Generator.Tasks.PolynomialHelper import PolynomialHelper
 import unittest
 
 

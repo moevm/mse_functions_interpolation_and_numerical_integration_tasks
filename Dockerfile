@@ -18,5 +18,5 @@ WORKDIR /app
 COPY ./ ./
 RUN python3.8 -m pip install -r requirements.txt
 
-WORKDIR /app/InterpolationIntegrationGenerator
+WORKDIR /app/Generator
 ENTRYPOINT ["python3.8", "manage.py", "runserver", "0.0.0.0:8000"]

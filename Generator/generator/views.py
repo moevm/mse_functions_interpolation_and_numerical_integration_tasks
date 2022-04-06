@@ -9,46 +9,46 @@ from django.conf import settings
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from integration.main import run
-from interpolation.Tasks import Tasks
-from Spline.SplineDocument import SplineDocument
-from Spline.SplineTask import SplineTask
-from interpolation_integration_generator.forms.IntegrationForm import IntegrationForm
-from interpolation_integration_generator.forms.InterpolationForm import InterpolationForm
-from interpolation_integration_generator.forms.SplinesForm import SplinesForm
-from interpolation_integration_generator.forms.CustomVariantsForm import CustomVariantsForm
+from Tasks.IntegrationTask import run
+from Tasks.InterpolationDocument import InterpolationDocument
+from Tasks.SplineDocument import SplineDocument
+from Tasks.SplineTask import SplineTask
+from generator.forms.IntegrationForm import IntegrationForm
+from generator.forms.InterpolationForm import InterpolationForm
+from generator.forms.SplinesForm import SplinesForm
+from generator.forms.CustomVariantsForm import CustomVariantsForm
 
 
 @csrf_exempt
 def interpolation(request):
     form = InterpolationForm()
-    return render(request, 'interpolation_integration_generator/interpolation.html',
+    return render(request, 'generator/interpolation.html',
                   context={'form': form})
 
 
 @csrf_exempt
 def integration(request):
     form = IntegrationForm()
-    return render(request, 'interpolation_integration_generator/integration.html',
+    return render(request, 'generator/integration.html',
                   context={'form': form})
 
 
 @csrf_exempt
 def splines(request):
     form = SplinesForm()
-    return render(request, 'interpolation_integration_generator/splines.html',
+    return render(request, 'generator/splines.html',
                   context={'form': form})
 
 
 @csrf_exempt
 def custom_variants(request):
     form = CustomVariantsForm()
-    return render(request, 'interpolation_integration_generator/custom_variants.html',
+    return render(request, 'generator/custom_variants.html',
                   context={'form': form})
 
 
 def index(request):
-    return render(request, 'interpolation_integration_generator/index.html')
+    return render(request, 'generator/index.html')
 
 
 def generate_interpolation(request):
@@ -64,13 +64,14 @@ def generate_interpolation(request):
             timestamp = str(datetime.now()).replace(":", "-").replace(" ", "_")
             folder = os.path.join(
                 settings.BASE_DIR,
-                'interpolation_integration_generator',
+                'generator',
                 'static',
-                'interpolation_integration_generator',
+                'generator',
+                'variants',
                 timestamp
             )
-            #            folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
-            static_folder = f"/static/interpolation_integration_generator/{timestamp}"
+            #            folder = f'generator/static/generator/{timestamp}'
+            static_folder = f"/static/generator/variants/{timestamp}"
             os.mkdir(f"{folder}")
 
             filename = information.get('filename')
@@ -89,7 +90,7 @@ def generate_interpolation(request):
                 surnames = request.FILES['file_with_surnames'].read().decode("utf-8").splitlines()
                 number_of_variants = len(surnames)
 
-            document = Tasks(number_of_variants, number_of_variants_in_string,
+            document = InterpolationDocument(number_of_variants, number_of_variants_in_string,
                              the_biggest_polynomial_degree, seed)
             loop = asyncio.new_event_loop()
             loop.run_until_complete(
@@ -133,9 +134,9 @@ def generate_interpolation(request):
 
             context = {'files': zip(names, files, sizes)}
 
-            return render(request, "interpolation_integration_generator/result_page.html",
+            return render(request, "generator/result_page.html",
                           context=context)
-        return render(request, "interpolation_integration_generator/interpolation.html",
+        return render(request, "generator/interpolation.html",
                       context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -152,13 +153,14 @@ def generate_integration(request):
             timestamp = str(datetime.now()).replace(":", "-").replace(" ", "_")
             folder = os.path.join(
                 settings.BASE_DIR,
-                'interpolation_integration_generator',
+                'generator',
                 'static',
-                'interpolation_integration_generator',
+                'generator',
+                'variants',
                 timestamp
             )
-            #           folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
-            static_folder = f"/static/interpolation_integration_generator/{timestamp}"
+            #           folder = f'generator/static/generator/{timestamp}'
+            static_folder = f"/static/generator/variants/{timestamp}"
             os.mkdir(f"{folder}")
 
             filename = information.get('filename')
@@ -223,9 +225,9 @@ def generate_integration(request):
 
             context = {'files': zip(names, files, sizes)}
 
-            return render(request, "interpolation_integration_generator/result_page.html",
+            return render(request, "generator/result_page.html",
                           context=context)
-        return render(request, "interpolation_integration_generator/integration.html",
+        return render(request, "generator/integration.html",
                       context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -242,13 +244,14 @@ def generate_splines(request):
             timestamp = str(datetime.now()).replace(":", "-").replace(" ", "_")
             folder = os.path.join(
                 settings.BASE_DIR,
-                'interpolation_integration_generator',
+                'generator',
                 'static',
-                'interpolation_integration_generator',
+                'generator',
+                'variants',
                 timestamp
             )
-            #           folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
-            static_folder = f"/static/interpolation_integration_generator/{timestamp}"
+            #           folder = f'generator/static/generator/{timestamp}'
+            static_folder = f"/static/generator/variants/{timestamp}"
             os.mkdir(f"{folder}")
 
             filename = information.get('filename')
@@ -321,8 +324,8 @@ def generate_splines(request):
 
             context = {'files': zip(names, files, sizes)}
 
-            return render(request, "interpolation_integration_generator/result_page.html",
+            return render(request, "generator/result_page.html",
                           context=context)
-        return render(request, "interpolation_integration_generator/splines.html",
+        return render(request, "generator/splines.html",
                       context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')

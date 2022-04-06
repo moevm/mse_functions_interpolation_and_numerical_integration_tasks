@@ -65,12 +65,13 @@ class SplineDocument:
     async def generate(self, filename, is_pdf, is_latex, timestamp, surnames=None):
         folder = os.path.join(
             settings.BASE_DIR,
-            'interpolation_integration_generator',
+            'generator',
             'static',
-            'interpolation_integration_generator',
+            'generator',
+            'variants',
             timestamp
         )
-        #       folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+        #       folder = f'generator/static/generator/{timestamp}'
         if is_pdf:
             self.tasks.generate_pdf(f'{folder}/splines_{filename}')
             self.answers.generate_pdf(f'{folder}/splines_answers_for_{filename}')

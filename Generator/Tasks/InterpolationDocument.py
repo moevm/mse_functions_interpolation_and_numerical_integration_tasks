@@ -1,6 +1,6 @@
 from pylatex import Document, NewPage, Command, Package, UnsafeCommand, Center, Tabular, MultiRow
 from pylatex.base_classes import CommandBase, Arguments
-from interpolation.PolynomialHelper import PolynomialHelper
+from Tasks.PolynomialHelper import PolynomialHelper
 from pylatex.utils import NoEscape, italic, bold
 import math
 from numpy import random
@@ -16,7 +16,7 @@ class answertext(CommandBase):
     _latex_name = 'answertext'
 
 
-class Tasks:
+class InterpolationDocument:
     def __init__(self, options_summary: int, options_in_line: int, degree: int, seed=None):
         # Создание случайного сида, если он не задан
         self.init_seed(seed)
@@ -168,12 +168,13 @@ class Tasks:
 
         folder = os.path.join(
             settings.BASE_DIR,
-            'interpolation_integration_generator',
+            'generator',
             'static',
-            'interpolation_integration_generator',
+            'generator',
+            'variants',
             timestamp
         )
-#       folder = f'interpolation_integration_generator/static/interpolation_integration_generator/{timestamp}'
+#       folder = f'generator/static/generator/{timestamp}'
         if is_pdf:
             self.tasks.generate_pdf(f'{folder}/interpolation_{filename}')
             self.answers.generate_pdf(f'{folder}/interpolation_answers_for_{filename}')
