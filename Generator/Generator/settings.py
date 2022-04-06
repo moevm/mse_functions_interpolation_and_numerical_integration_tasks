@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
-    'interpolation_integration_generator',
+    'generator',
 ]
 
 MIDDLEWARE = [

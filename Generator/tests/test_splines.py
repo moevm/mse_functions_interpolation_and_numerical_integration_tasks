@@ -1,7 +1,7 @@
 import unittest
 import numpy
 from numpy.testing import assert_almost_equal
-from InterpolationIntegrationGenerator.Spline.SplineTask import SplineTask
+from Generator.Tasks.SplineTask import SplineTask
 
 
 class TestSplines(unittest.TestCase):
