@@ -11,12 +11,12 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from Tasks.IntegrationTask import run
 from Tasks.InterpolationDocument import InterpolationDocument
-from Tasks.SplineDocument import SplineDocument
-from Tasks.SplineTask import SplineTask
 from generator.forms.IntegrationForm import IntegrationForm
 from generator.forms.InterpolationForm import InterpolationForm
 from generator.forms.SplinesForm import SplinesForm
 from generator.forms.CustomVariantsForm import CustomVariantsForm
+from generator_classes.TaskGenerator import TaskGenerator
+from generator_classes.DocumentGenerator import DocumentGenerator
 
 
 @csrf_exempt
@@ -91,7 +91,7 @@ def generate_interpolation(request):
                 number_of_variants = len(surnames)
 
             document = InterpolationDocument(number_of_variants, number_of_variants_in_string,
-                             the_biggest_polynomial_degree, seed)
+                                             the_biggest_polynomial_degree, seed)
             loop = asyncio.new_event_loop()
             loop.run_until_complete(
                 document.generate(filename, is_pdf, is_tex, timestamp, surnames))
@@ -236,93 +236,50 @@ def generate_splines(request):
     if request.method == 'POST':
         form = SplinesForm(request.POST)
         if form.is_valid():
-            information = form.cleaned_data
-            names = []
-            files = []
-            sizes = []
-
             timestamp = str(datetime.now()).replace(":", "-").replace(" ", "_")
-            folder = os.path.join(
-                settings.BASE_DIR,
-                'generator',
-                'static',
-                'generator',
-                'variants',
-                timestamp
-            )
-            #           folder = f'generator/static/generator/{timestamp}'
-            static_folder = f"/static/generator/variants/{timestamp}"
-            os.mkdir(f"{folder}")
 
-            filename = information.get('filename')
-            x1 = information.get("x1")
-            x2 = information.get("x2")
-            y1 = information.get("y1")
-            y2 = information.get("y2")
-            step = information.get("step")
-            generation_format = information.get('generation_format')
+            information = form.cleaned_data
 
-            is_pdf = 'pdf' in generation_format
-            is_tex = 'tex' in generation_format
+            # Task generation parameters
+            variants_type = information.get("variants_type")
+            if variants_type == "digits":
+                surnames = None
+                number_of_variants = information.get("number_of_variants")
+            elif variants_type == 'surnames':
+                surnames = request.FILES['file_with_surnames'].read().decode("utf-8").splitlines()
+                number_of_variants = len(surnames)
+
             seed = information.get("seed")
             if seed is None:
                 seed = random.randint(0, 1000000)
-            variants_type = information.get("variants_type")
 
-            if variants_type == "digits":
-                surnames = None
-                options_count = information.get("number_of_variants")
-            elif variants_type == 'surnames':
-                surnames = request.FILES['file_with_surnames'].read().decode("utf-8").splitlines()
-                options_count = len(surnames)
+            task_generator = TaskGenerator(['Spline'], number_of_variants, seed)
+
+            spline_parameters = {
+                'x1': information.get('x1'),
+                'x2': information.get('x2'),
+                'y1': information.get('y1'),
+                'y2': information.get('y2'),
+                'step': information.get('step')
+            }
+
+            task_generator.set_task_parameters('Spline', spline_parameters)
 
             # Task generation
-            task_list = [SplineTask.randomize(x_range=(x1, x2), y_range=(y1, y2), step=step)
-                         for _ in range(options_count)]
+            variants_list = task_generator.generate_tasks()
+
+            # Document generation parameters
+            filename = information.get('filename')
+
+            generation_format = information.get('generation_format')
+            generate_pdf = 'pdf' in generation_format
+            generate_latex = 'tex' in generation_format
+
+            document_generator = DocumentGenerator(task_generator.seed, filename, timestamp,
+                                                   generate_pdf, generate_latex)
 
             # Document generation
-            spline_document = SplineDocument(task_list, seed)
-            loop = asyncio.new_event_loop()
-            loop.run_until_complete(
-                spline_document.generate(filename, is_pdf, is_tex, timestamp, surnames))
-            loop.close()
-
-            filenames = []
-            if is_pdf:
-                filenames.append(f"{folder}/splines_{filename}.pdf")
-                filenames.append(f'{folder}/splines_answers_for_{filename}.pdf')
-
-                names.append(f"splines_{filename}.pdf")
-                files.append(f"{static_folder}/splines_{filename}.pdf")
-                sizes.append(os.path.getsize(f"{folder}/splines_{filename}.pdf"))
-
-                names.append(f"splines_answers_for_{filename}.pdf")
-                files.append(f"{static_folder}/splines_answers_for_{filename}.pdf")
-                sizes.append(os.path.getsize(f"{folder}/splines_answers_for_{filename}.pdf"))
-
-            if is_tex:
-                filenames.append(f"{folder}/splines_{filename}.tex")
-                filenames.append(f'{folder}/splines_answers_for_{filename}.tex')
-
-                names.append(f"splines_{filename}.tex")
-                files.append(f"{static_folder}/splines_{filename}.tex")
-                sizes.append(os.path.getsize(f"{folder}/splines_{filename}.tex"))
-
-                names.append(f"splines_answers_for_{filename}.tex")
-                files.append(f"{static_folder}/splines_answers_for_{filename}.tex")
-                sizes.append(os.path.getsize(f"{folder}/splines_answers_for_{filename}.tex"))
-
-            with zipfile.ZipFile(f'{folder}/splines_result.zip', 'w') as zipObj:
-                for file in filenames:
-                    zipObj.write(file, basename(file))
-
-            names.append("splines_result.zip")
-            files.append(f"{static_folder}/splines_result.zip")
-
-            sizes.append(os.path.getsize(f"{folder}/splines_result.zip"))
-            sizes = list(map(lambda size: round(size / 1024, 1), sizes))
-
-            context = {'files': zip(names, files, sizes)}
+            context = document_generator.generate_document(variants_list, task_generator.seed)
 
             return render(request, "generator/result_page.html",
                           context=context)
