@@ -52,23 +52,50 @@ class SplineTask:
         main_table.append(task_text_2)
         return main_table
 
+    def get_polynomial_strings(self):
+        string_1 = ""
+        string_2 = ""
+
+        if round(self.answer[0], 1) != 0:
+            string_1 += "{0:.1f}".format(self.answer[0])
+        if round(self.answer[1], 1) != 0:
+            if len(string_1) != 0:
+                string_1 += "{0:+.1f} \cdot x".format(abs(self.answer[1]))
+            else:
+                string_1 += "{0:.1f} \cdot x".format(abs(self.answer[1]))
+        if round(self.answer[2], 1) != 0:
+            if len(string_1) != 0:
+                string_1 += "{0:+.1f} \cdot x^2".format(abs(self.answer[2]))
+            else:
+                string_1 += "{0:.1f} \cdot x^2".format(abs(self.answer[2]))
+        if string_1 == "":
+            string_1 += "{0:.1f}".format(0)
+
+        if round(self.answer[3], 1) != 0:
+            string_2 += "{0:.1f}".format(self.answer[3])
+        if round(self.answer[4], 1) != 0:
+            if len(string_2) != 0:
+                string_2 += "{0:+.1f} \cdot x".format(abs(self.answer[4]))
+            else:
+                string_2 += "{0:.1f} \cdot x".format(abs(self.answer[4]))
+        if round(self.answer[5], 1) != 0:
+            if len(string_2) != 0:
+                string_2 += "{0:+.1f} \cdot x^2".format(abs(self.answer[5]))
+            else:
+                string_2 += "{0:.1f} \cdot x^2".format(abs(self.answer[5]))
+        if string_2 == "":
+            string_2 += "{0:.1f}".format(0)
+
+        string_1 += ",x \in [{0:.1f}, {1:.1f}]".format(self.x_values[0], self.x_values[1])
+        string_2 += ",x \in [{0:.1f}, {1:.1f}]".format(self.x_values[1], self.x_values[2])
+        return [string_1, string_2]
+
     def get_tex_answer(self, task_number, seed=None):
         p0 = f'Ответ для {task_number}-го номера'
         if seed is not None:
             p0 += f' ({seed})'
 
-        p1 = "{0:.1f}".format(self.answer[0]) + \
-             "{0:+.1f} \cdot x".format(abs(self.answer[1])) + \
-             "{0:+.1f} \cdot x^2,x \in [{1:.1f}, {2:.1f}]".format(self.answer[2],
-                                                                  self.x_values[0],
-                                                                  self.x_values[1])
-
-        p2 = "{0:.1f}".format(self.answer[3]) + \
-             "{0:+.1f} \cdot x".format(abs(self.answer[4])) + \
-             "{0:+.1f} \cdot x^2,x \in [{1:.1f}, {2:.1f}]".format(self.answer[5],
-                                                                 self.x_values[1],
-                                                                 self.x_values[2])
-
+        p1, p2 = self.get_polynomial_strings()
         return NoEscape(p0) + NoEscape(':') + NoEscape(r"\newline") + NoEscape("$S_2(x) = $") + \
                NoEscape("$\\begin{cases}") + \
                NoEscape(p1) + NoEscape(r'\\') + NoEscape(p2) + NoEscape(r"\\") + \
