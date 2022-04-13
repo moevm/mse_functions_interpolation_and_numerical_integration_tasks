@@ -40,6 +40,8 @@ class InterpolationForm(forms.Form):
         required=False,
     )
 
+    # TODO: remove or add support
+    '''
     number_of_variants_in_string = forms.IntegerField(
         label='Количество вариантов в строке:',
         initial=2,
@@ -47,6 +49,7 @@ class InterpolationForm(forms.Form):
             choices=number_of_variants_in_string_choices,
         ),
     )
+    '''
 
     the_biggest_polynomial_degree = forms.IntegerField(
         label='Наибольшая степень многочлена:',

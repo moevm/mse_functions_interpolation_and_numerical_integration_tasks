@@ -1,6 +1,8 @@
+# This code is not used anywhere
+
 from pylatex import Document, NewPage, Command, Package, UnsafeCommand, Center, Tabular, MultiRow
 from pylatex.base_classes import CommandBase, Arguments
-from Tasks.PolynomialHelper import PolynomialHelper
+from Tasks.InterpolationTask import InterpolationTask
 from pylatex.utils import NoEscape, italic, bold
 import math
 from numpy import random
@@ -103,7 +105,7 @@ class InterpolationDocument:
                 variants = []
                 answers = []
                 for j in range(self.options_in_line):
-                    polynom = PolynomialHelper.generatePolynomial(self.degree)
+                    polynom = InterpolationTask(self.degree)
                     variants.append(polynom)
                     answers.append(polynom)
                 tasks_row = []
