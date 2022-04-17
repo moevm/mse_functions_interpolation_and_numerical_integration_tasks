@@ -48,23 +48,34 @@ class DocumentGenerator:
             document.packages.append(Package('longtable'))
             document.packages.append(Package('lastpage'))
             document.packages.append(Package('amsmath'))
+            document.packages.append(Package('booktabs'))
 
     def generate_document(self, variants_list, seed):
-        task_table = LongTable("p{9.5cm}p{9.5cm}")
-        answer_table = LongTable("p{9.5cm}p{9.5cm}")
-        length = len(variants_list[0])
-        print(length)
+        line_width = 1.83
+        task_table = LongTable(
+            f"!{{\\vrule width {line_width}pt}}p{{9.5cm}}"
+            f"!{{\\vrule width {line_width}pt}}p{{9.5cm}}"
+            f"!{{\\vrule width {line_width}pt}}")
+        answer_table = LongTable(
+            f"!{{\\vrule width {line_width}pt}}p{{9.5cm}}"
+            f"!{{\\vrule width {line_width}pt}}p{{9.5cm}}"
+            f"!{{\\vrule width {line_width}pt}}")
+
         for j in range(1, len(variants_list), 2):
             task_list1 = variants_list[j - 1]
             task_list2 = variants_list[j]
 
             task_subtable1 = Tabular("p{9.5cm}")
             task_subtable2 = Tabular("p{9.5cm}")
+            task_subtable1.add_empty_row()
+            task_subtable2.add_empty_row()
             task_subtable1.add_row([NoEscape(bold(f'Вариант {j} ') + f'({seed})')])
             task_subtable2.add_row([NoEscape(bold(f'Вариант {j + 1} ') + f'({seed})')])
 
             answer_subtable1 = Tabular("p{9.5cm}")
             answer_subtable2 = Tabular("p{9.5cm}")
+            answer_subtable1.add_empty_row()
+            answer_subtable2.add_empty_row()
             answer_subtable1.add_row([NoEscape(bold(f'Вариант {j} ') + f'({seed})')])
             answer_subtable2.add_row([NoEscape(bold(f'Вариант {j + 1} ') + f'({seed})')])
 
@@ -80,12 +91,17 @@ class DocumentGenerator:
                 answer_subtable1.add_row([task1.get_tex_answer(i + 1, seed)])
                 answer_subtable2.add_row([task2.get_tex_answer(i + 1, seed)])
 
+            if j != len(variants_list) - 1:
+                task_subtable1.add_empty_row()
+                task_subtable2.add_empty_row()
+                answer_subtable1.add_empty_row()
+                answer_subtable2.add_empty_row()
+
             task_table.add_row([task_subtable1, task_subtable2])
             answer_table.add_row([answer_subtable1, answer_subtable2])
 
-            if j != len(variants_list) - 1:
-                task_table.add_empty_row()
-                answer_table.add_empty_row()
+            task_table.append(NoEscape(f'\\specialrule{{{line_width}pt}}{{0pt}}{{0pt}}'))
+            answer_table.append(NoEscape(f'\\specialrule{{{line_width}pt}}{{0pt}}{{0pt}}'))
 
         if len(variants_list) % 2 == 1:
             last_task_list = variants_list[-1]
@@ -108,6 +124,8 @@ class DocumentGenerator:
 
             task_table.add_row([task_subtable, NoEscape("")])
             answer_table.add_row([answer_subtable, NoEscape("")])
+            task_table.append(NoEscape(f'\\specialrule{{{line_width}pt}}{{0pt}}{{0pt}}'))
+            answer_table.append(NoEscape(f'\\specialrule{{{line_width}pt}}{{0pt}}{{0pt}}'))
 
         self.tasks_document.append(task_table)
         self.answers_document.append(answer_table)
