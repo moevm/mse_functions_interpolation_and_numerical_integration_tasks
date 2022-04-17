@@ -1,4 +1,4 @@
-from pylatex.utils import NoEscape
+from pylatex.utils import NoEscape, bold
 from pylatex import Tabular, Center
 import numpy
 from numpy import random
@@ -20,25 +20,24 @@ class SplineTask:
 
         return cls(x_values, y_values)
 
-    def get_tex_text(self):
+    def get_tex_text(self, task_number):
         main_table = Tabular("p{9cm}")
-        task_text_1 = NoEscape("\\hspace{5mm} Дана таблица значений функции ($ i = 0, \dots, 2 $):")
+        task_text_1 = NoEscape("\\hspace{5mm}" + bold(f"{task_number}).") +
+                               " Дана таблица значений функции ($ i = 0, \dots, 2 $):")
 
         main_table.append(task_text_1)
 
-        valueCnt = len(self.x_values)
-        valueStartPoint = 0
-        tableView = "|l|"
-        tableView += "l|" * valueCnt
-        table = Tabular(tableView)
+        table_spec = "|c|"
+        table_spec += "c|" * len(self.x_values)
+        table = Tabular(table_spec)
         table.add_hline()
         table.add_row(
             [NoEscape("$ x_i $")] + [NoEscape("${0:.1f}$".format(self.x_values[i])) for i in
-                                     range(valueStartPoint, valueStartPoint + valueCnt)])
+                                     range(len(self.x_values))])
         table.add_hline()
         table.add_row(
             [NoEscape("$ f_i $")] + [NoEscape("${0:.1f}$".format(self.y_values[i])) for i in
-                                     range(valueStartPoint, valueStartPoint + valueCnt)])
+                                     range(len(self.x_values))])
         table.add_hline()
 
         center = Center()
@@ -90,10 +89,8 @@ class SplineTask:
         string_2 += ",x \in [{0:.1f}, {1:.1f}]".format(self.x_values[1], self.x_values[2])
         return [string_1, string_2]
 
-    def get_tex_answer(self, task_number, seed=None):
+    def get_tex_answer(self, task_number):
         p0 = f'Ответ для {task_number}-го номера'
-        if seed is not None:
-            p0 += f' ({seed})'
 
         p1, p2 = self.get_polynomial_strings()
         return NoEscape(p0) + NoEscape(':') + NoEscape(r"\newline") + NoEscape("$S_2(x) = $") + \
