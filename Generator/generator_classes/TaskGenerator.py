@@ -1,5 +1,8 @@
 from numpy import random
+from Tasks.InterpolationTask import InterpolationTask
 from Tasks.SplineTask import SplineTask
+from Tasks.Integration.SimpsonTask import SimpsonTask
+from Tasks.Integration.TrapezoidTask import TrapezoidTask
 
 
 class TaskGenerator:
@@ -8,11 +11,16 @@ class TaskGenerator:
         self.structure = structure
         self.number_of_variants = number_of_variants
 
-        self.task_parameters = {'Spline': {'x1': -5,
-                                           'x2': 5,
-                                           'y1': -20,
-                                           'y2': 20,
-                                           'step': 1}}
+
+        self.task_parameters = {'Spline': {'x1': None,
+                                           'x2': None,
+                                           'y1': None,
+                                           'y2': None,
+                                           'step': None},
+                                'Trapezoid': {'n': 11},
+                                'Simpson': {'n': 9},
+                                'Interpolation': {'degree': 3}
+                                }
 
     def set_task_parameters(self, task_name, parameters_to_set):
         parameters = self.task_parameters[task_name]
@@ -33,7 +41,13 @@ class TaskGenerator:
                         task = SplineTask.randomize(x_range=(parameters['x1'], parameters['x2']),
                                                     y_range=(parameters['y1'], parameters['y2']),
                                                     step=parameters['step'])
-                        tasks_list.append(task)
+                    if task_name == 'Trapezoid':
+                        task = TrapezoidTask().randomize(parameters['n'])
+                    if task_name == 'Simpson':
+                        task = SimpsonTask().randomize(parameters['n'])
+                    if task_name == 'Interpolation':
+                        task = InterpolationTask(degree=(parameters['degree']))
+                    tasks_list.append(task)
             variants_list.append(tasks_list)
 
         return variants_list

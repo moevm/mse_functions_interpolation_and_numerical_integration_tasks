@@ -7,9 +7,11 @@ from django.conf import settings
 
 
 class DocumentGenerator:
-    def __init__(self, seed, filename, timestamp, generate_pdf=False, generate_latex=False):
+    def __init__(self, seed, filename, timestamp, type_str='custom',
+                 generate_pdf=False, generate_latex=False):
         self.seed = seed
         self.filename = filename
+        self.type = type_str
         self.folder = os.path.join(
             settings.BASE_DIR,
             'generator',
@@ -28,7 +30,7 @@ class DocumentGenerator:
 
         self.tasks_document = Document(
             documentclass=Command('documentclass', options=['a4paper'], arguments=['article']),
-            font_size="large")  # , ))
+            font_size="normalsize")
         self.answers_document = Document(
             documentclass=Command('documentclass', options=['a4paper'], arguments=['article']))
 
@@ -84,12 +86,18 @@ class DocumentGenerator:
                 task2 = task_list2[i]
 
                 # Add task text
-                task_subtable1.add_row([task1.get_tex_text()])
-                task_subtable2.add_row([task2.get_tex_text()])
+                task_subtable1.add_row([task1.get_tex_text(i + 1)])
+                task_subtable2.add_row([task2.get_tex_text(i + 1)])
 
                 # Add task answer
-                answer_subtable1.add_row([task1.get_tex_answer(i + 1, seed)])
-                answer_subtable2.add_row([task2.get_tex_answer(i + 1, seed)])
+                answer_subtable1.add_row([task1.get_tex_answer(i + 1)])
+                answer_subtable2.add_row([task2.get_tex_answer(i + 1)])
+
+                # Add empty row between tasks
+                task_subtable1.add_empty_row()
+                task_subtable2.add_empty_row()
+                answer_subtable1.add_empty_row()
+                answer_subtable2.add_empty_row()
 
             if j != len(variants_list) - 1:
                 task_subtable1.add_empty_row()
@@ -120,7 +128,11 @@ class DocumentGenerator:
                 task_subtable.add_row([task.get_tex_text()])
 
                 # Add task answer
-                answer_subtable.add_row([task.get_tex_answer(i + 1, seed)])
+                answer_subtable.add_row([task.get_tex_answer(i + 1)])
+
+                # Add empty row between tasks
+                task_subtable.add_empty_row()
+                answer_subtable.add_empty_row()
 
             task_table.add_row([task_subtable, NoEscape("")])
             answer_table.add_row([answer_subtable, NoEscape("")])
@@ -136,47 +148,47 @@ class DocumentGenerator:
         sizes = []
 
         if self.generate_pdf:
-            self.tasks_document.generate_pdf(f'{self.folder}/splines_{self.filename}')
+            self.tasks_document.generate_pdf(f'{self.folder}/{self.type}_{self.filename}')
             self.answers_document.generate_pdf(
-                f'{self.folder}/splines_answers_for_{self.filename}')
+                f'{self.folder}/{self.type}_answers_for_{self.filename}')
 
-            filenames.append(f"{self.folder}/splines_{self.filename}.pdf")
-            filenames.append(f'{self.folder}/splines_answers_for_{self.filename}.pdf')
+            filenames.append(f"{self.folder}/{self.type}_{self.filename}.pdf")
+            filenames.append(f'{self.folder}/{self.type}_answers_for_{self.filename}.pdf')
 
-            names.append(f"splines_{self.filename}.pdf")
-            files.append(f"{self.static_folder}/splines_{self.filename}.pdf")
-            sizes.append(os.path.getsize(f"{self.folder}/splines_{self.filename}.pdf"))
+            names.append(f"{self.type}_{self.filename}.pdf")
+            files.append(f"{self.static_folder}/{self.type}_{self.filename}.pdf")
+            sizes.append(os.path.getsize(f"{self.folder}/{self.type}_{self.filename}.pdf"))
 
-            names.append(f"splines_answers_for_{self.filename}.pdf")
-            files.append(f"{self.static_folder}/splines_answers_for_{self.filename}.pdf")
+            names.append(f"{self.type}_answers_for_{self.filename}.pdf")
+            files.append(f"{self.static_folder}/{self.type}_answers_for_{self.filename}.pdf")
             sizes.append(
-                os.path.getsize(f"{self.folder}/splines_answers_for_{self.filename}.pdf"))
+                os.path.getsize(f"{self.folder}/{self.type}_answers_for_{self.filename}.pdf"))
 
         if self.generate_latex:
-            self.tasks_document.generate_tex(f'{self.folder}/splines_{self.filename}')
+            self.tasks_document.generate_tex(f'{self.folder}/{self.type}_{self.filename}')
             self.answers_document.generate_tex(
-                f'{self.folder}/splines_answers_for_{self.filename}')
+                f'{self.folder}/{self.type}_answers_for_{self.filename}')
 
-            filenames.append(f"{self.folder}/splines_{self.filename}.tex")
-            filenames.append(f'{self.folder}/splines_answers_for_{self.filename}.tex')
+            filenames.append(f"{self.folder}/{self.type}_{self.filename}.tex")
+            filenames.append(f'{self.folder}/{self.type}_answers_for_{self.filename}.tex')
 
-            names.append(f"splines_{self.filename}.tex")
-            files.append(f"{self.static_folder}/splines_{self.filename}.tex")
-            sizes.append(os.path.getsize(f"{self.folder}/splines_{self.filename}.tex"))
+            names.append(f"{self.type}_{self.filename}.tex")
+            files.append(f"{self.static_folder}/{self.type}_{self.filename}.tex")
+            sizes.append(os.path.getsize(f"{self.folder}/{self.type}_{self.filename}.tex"))
 
-            names.append(f"splines_answers_for_{self.filename}.tex")
-            files.append(f"{self.static_folder}/splines_answers_for_{self.filename}.tex")
+            names.append(f"{self.type}_answers_for_{self.filename}.tex")
+            files.append(f"{self.static_folder}/{self.type}_answers_for_{self.filename}.tex")
             sizes.append(
-                os.path.getsize(f"{self.folder}/splines_answers_for_{self.filename}.tex"))
+                os.path.getsize(f"{self.folder}/{self.type}_answers_for_{self.filename}.tex"))
 
-        with zipfile.ZipFile(f'{self.folder}/splines_result.zip', 'w') as zipObj:
+        with zipfile.ZipFile(f'{self.folder}/{self.type}_result.zip', 'w') as zipObj:
             for file in filenames:
                 zipObj.write(file, basename(file))
 
-        names.append("splines_result.zip")
-        files.append(f"{self.static_folder}/splines_result.zip")
+        names.append(f"{self.type}_result.zip")
+        files.append(f"{self.static_folder}/{self.type}_result.zip")
 
-        sizes.append(os.path.getsize(f"{self.folder}/splines_result.zip"))
+        sizes.append(os.path.getsize(f"{self.folder}/{self.type}_result.zip"))
         sizes = list(map(lambda size: round(size / 1024, 1), sizes))
 
         context = {'files': zip(names, files, sizes)}
