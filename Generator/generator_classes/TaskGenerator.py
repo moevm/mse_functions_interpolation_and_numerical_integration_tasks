@@ -11,6 +11,7 @@ class TaskGenerator:
         self.structure = structure
         self.number_of_variants = number_of_variants
 
+
         self.task_parameters = {'Spline': {'x1': None,
                                            'x2': None,
                                            'y1': None,
@@ -26,7 +27,7 @@ class TaskGenerator:
         if parameters:
             for key in parameters:
                 parameter = parameters_to_set[key]
-                if parameter:
+                if parameter is not None:
                     parameters[key] = parameter
 
     def generate_tasks(self):
