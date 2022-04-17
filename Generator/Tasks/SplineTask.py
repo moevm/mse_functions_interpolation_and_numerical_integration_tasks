@@ -47,7 +47,7 @@ class SplineTask:
 
         task_text_2 = NoEscape(
             "\\hspace{5mm} Необходимо построить параболический сплайн $ S_2(x) $ дефекта " +
-            "1 при граничном условии $ S'_2(x_0)=0 $.")
+            "1 при граничном условии $ {S'_2(x_0)=0} $.")
 
         main_table.append(task_text_2)
         return main_table
