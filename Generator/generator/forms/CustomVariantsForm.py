@@ -1,14 +1,14 @@
 from django import forms
 
-from .InterpolationForm import variants_type_choices, generation_format_choices
+from .InterpolationForm import variants_type_choices, generation_format_choices, the_biggest_polynomial_degree_choices
 
 task_choices = (
-    ('lagrange', 'Интерполяционный многочлен по формуле Лагранжа'),
-    ('newton_forward', 'Интерполяционный многочлен по формуле Ньютона (интерполяция вперед)'),
-    ('newton_backward', 'Интерполяционный многочлен по формуле Ньютона (интерполяция назад)'),
-    ('trapezoid', 'Интегрирование по формуле трапеций'),
-    ('simpson', 'Интегрирование по формуле Симпсона'),
-    ('parabolic_spline', 'Вычисление коэффициентов параболического сплайна')
+    ('Interpolation', 'Интерполяционный многочлен по формуле Лагранжа'),
+    ('Interpolation', 'Интерполяционный многочлен по формуле Ньютона (интерполяция вперед)'),
+    ('Interpolation', 'Интерполяционный многочлен по формуле Ньютона (интерполяция назад)'),
+    ('Trapezoid', 'Интегрирование по формуле трапеций'),
+    ('Simpson', 'Интегрирование по формуле Симпсона'),
+    ('Spline', 'Вычисление коэффициентов параболического сплайна')
 )
 
 
@@ -51,6 +51,58 @@ class CustomVariantsForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(),
     )
 
+    the_biggest_polynomial_degree = forms.IntegerField(
+        label='Наибольшая степень многочлена:',
+        initial=3,
+        widget=forms.RadioSelect(
+            choices=the_biggest_polynomial_degree_choices,
+        ),
+    )
+
+    number_of_trapezoid_points = forms.IntegerField(
+        label='Количество точек: (формула Трапеции)',
+        min_value=1,
+        max_value=15,
+        initial=11,
+    )
+
+    number_of_Simpson_points = forms.IntegerField(
+        label='Количество точек: (формула Симпсона)',
+        min_value=1,
+        max_value=15,
+        initial=9,
+    )
+
+    Splines_x1 = forms.IntegerField(
+        label='Нижняя граница x:',
+        initial=-5,
+        required=False,
+    )
+
+    Splines_x2 = forms.IntegerField(
+        label='Верхняя граница x:',
+        initial=5,
+        required=False,
+    )
+
+    Splines_y1 = forms.FloatField(
+        label='Нижняя граница y:',
+        initial=-20,
+        required=False,
+    )
+
+    Splines_y2 = forms.FloatField(
+        label='Верхняя граница y:',
+        initial=20,
+        required=False,
+    )
+
+    Splines_step = forms.IntegerField(
+        label='Шаг:',
+        initial=1,
+        required=False,
+        min_value=1,
+    )
 
     seed = forms.IntegerField(
         label='Сид для генерации:',
@@ -61,6 +113,8 @@ class CustomVariantsForm(forms.Form):
         cleaned_data = super().clean()
         if cleaned_data.get('generation_format') is None:
             raise forms.ValidationError("Выберите формат генерации")
+        if cleaned_data.get('tasks') is None:
+            raise forms.ValidationError("Выберите хотя бы одно задание")
 
         variants_types = ['digits', 'surnames']
         variants_type = cleaned_data.get('variants_type')

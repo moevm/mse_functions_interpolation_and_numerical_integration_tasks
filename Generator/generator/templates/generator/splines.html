@@ -76,49 +76,49 @@
 
                 <div class="row">
                     <div class="col">
-                        <h5>{{ form.x1.label }}</h5>
+                        <h5>{{ form.Splines_x1.label }}</h5>
                     </div>
                     <div class="col">
-                        {{ form.x1 }}
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <h5>{{ form.x2.label }}</h5>
-                    </div>
-                    <div class="col">
-                        {{ form.x2 }}
+                        {{ form.Splines_x1 }}
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col">
-                        <h5>{{ form.y1.label }}</h5>
+                        <h5>{{ form.Splines_x2.label }}</h5>
                     </div>
                     <div class="col">
-                        {{ form.y1 }}
+                        {{ form.Splines_x2 }}
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col">
-                        <h5>{{ form.y2.label }}</h5>
+                        <h5>{{ form.Splines_y1.label }}</h5>
                     </div>
                     <div class="col">
-                        {{ form.y2 }}
+                        {{ form.Splines_y1 }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <h5>{{ form.Splines_y2.label }}</h5>
+                    </div>
+                    <div class="col">
+                        {{ form.Splines_y2 }}
                     </div>
                 </div>
                 <br>
 
                  <div class="row mt-2">
                     <div class="col">
-                        <h5>{{ form.step.label }}</h5>
+                        <h5>{{ form.Splines_step.label }}</h5>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        {% for choice in form.step %}
+                        {% for choice in form.Splines_step %}
                             <div>
                                 {{ choice }}
                             </div>

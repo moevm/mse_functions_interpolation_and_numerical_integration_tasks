@@ -19,7 +19,7 @@
 <div class="container">
     <div class="row">
         <div class="col mr-4">
-            <form method="post" enctype="multipart/form-data" class="col mr-4">
+            <form action="{% url 'generate_custom' %}" method="post" enctype="multipart/form-data" class="col mr-4">
                 {% csrf_token %}
                 <h3 class="mt-2">Генератор билетов</h3>
                 <br>
@@ -71,6 +71,98 @@
                         {% endfor %}
                     </div>
                 </div>
+
+
+                <div class="row mt-2">
+                    <div class="col">
+                        <h5>{{ form.the_biggest_polynomial_degree.label }}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {% for choice in form.the_biggest_polynomial_degree %}
+                            <div>
+                                {{ choice }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <br>
+
+
+                <div class="row mt-2">
+                    <div class="col">
+                        <h5>{{ form.number_of_trapezoid_points.label }}</h5>
+                    </div>
+                    <div class="col">
+                        {{ form.number_of_trapezoid_points }}
+                    </div>
+                </div>
+                <br>
+                <div class="row mt-2">
+                    <div class="col">
+                        <h5>{{ form.number_of_Simpson_points.label }}</h5>
+                    </div>
+                    <div class="col">
+                        {{ form.number_of_Simpson_points }}
+                    </div>
+                </div>
+                <br>
+
+
+                <div class="row">
+                    <div class="col">
+                        <h5>{{ form.Splines_x1.label }}</h5>
+                    </div>
+                    <div class="col">
+                        {{ form.Splines_x1 }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <h5>{{ form.Splines_x2.label }}</h5>
+                    </div>
+                    <div class="col">
+                        {{ form.Splines_x2 }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <h5>{{ form.Splines_y1.label }}</h5>
+                    </div>
+                    <div class="col">
+                        {{ form.Splines_y1 }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <h5>{{ form.Splines_y2.label }}</h5>
+                    </div>
+                    <div class="col">
+                        {{ form.Splines_y2 }}
+                    </div>
+                </div>
+                <br>
+
+                 <div class="row mt-2">
+                    <div class="col">
+                        <h5>{{ form.Splines_step.label }}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {% for choice in form.Splines_step %}
+                            <div>
+                                {{ choice }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <br>
+
                 <div class="row mt-2">
                     <div class="col">
                         <h5>{{ form.generation_format.label }}</h5>
@@ -96,7 +188,7 @@
                     </div>
                 </div>
                 <button type="submit" class="btn mb-2 btn-primary btn-lg active" role="button" aria-pressed="true"
-                        id="submit" disabled>Сгенерировать
+                        id="submit">Сгенерировать
                 </button>
             </form>
         </div>

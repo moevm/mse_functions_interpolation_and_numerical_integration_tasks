@@ -12,11 +12,11 @@ class TaskGenerator:
         self.number_of_variants = number_of_variants
 
 
-        self.task_parameters = {'Spline': {'x1': None,
-                                           'x2': None,
-                                           'y1': None,
-                                           'y2': None,
-                                           'step': None},
+        self.task_parameters = {'Spline': {'x1': -5,
+                                           'x2': 5,
+                                           'y1': -20,
+                                           'y2': 20,
+                                           'step': 1},
                                 'Trapezoid': {'n': 11},
                                 'Simpson': {'n': 9},
                                 'Interpolation': {'degree': 3}

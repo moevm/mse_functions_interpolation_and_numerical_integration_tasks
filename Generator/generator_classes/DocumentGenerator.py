@@ -125,7 +125,7 @@ class DocumentGenerator:
             for i in range(len(last_task_list)):
                 task = last_task_list[i]
                 # Add task text
-                task_subtable.add_row([task.get_tex_text()])
+                task_subtable.add_row([task.get_tex_text(i + 1)])
 
                 # Add task answer
                 answer_subtable.add_row([task.get_tex_answer(i + 1)])

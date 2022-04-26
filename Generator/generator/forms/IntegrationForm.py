@@ -60,9 +60,12 @@ class IntegrationForm(forms.Form):
         if cleaned_data.get('generation_format') is None:
             raise forms.ValidationError("Выберите формат генерации")
 
+        if cleaned_data.get('number_of_Simpson_points') % 2 == 0:
+            raise forms.ValidationError("Количество точек для Формулы Симпсона должно быть нечётным")
+
         variants_types = ['digits', 'surnames']
         variants_type = cleaned_data.get('variants_type')
         if variants_type not in variants_types:
-            raise forms.ValidationError("Variants types must be digits ot surnames.")
+            raise forms.ValidationError("Variants types must be digits or surnames.")
         if variants_type == 'digits' and cleaned_data.get('number_of_variants') is None:
             raise forms.ValidationError("Укажите количество вариантов")
