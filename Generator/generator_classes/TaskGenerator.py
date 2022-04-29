@@ -11,7 +11,6 @@ class TaskGenerator:
         self.structure = structure
         self.number_of_variants = number_of_variants
 
-
         self.task_parameters = {'Spline': {'x1': -5,
                                            'x2': 5,
                                            'y1': -20,
@@ -32,11 +31,14 @@ class TaskGenerator:
 
     def generate_tasks(self):
         variants_list = []
+        current_numbers = [0 for _ in range(len(self.structure))]
         for variant_n in range(1, self.number_of_variants + 1):
             tasks_list = []
-            for task_name in self.structure:
+            for i in range(len(self.structure)):
+                task_name = self.structure[i][current_numbers[i]]
                 parameters = self.task_parameters[task_name]
                 if parameters is not None:
+                    task = None
                     if task_name == 'Spline':
                         task = SplineTask.randomize(x_range=(parameters['x1'], parameters['x2']),
                                                     y_range=(parameters['y1'], parameters['y2']),
@@ -47,7 +49,12 @@ class TaskGenerator:
                         task = SimpsonTask().randomize(parameters['n'])
                     if task_name == 'Interpolation':
                         task = InterpolationTask(degree=(parameters['degree']))
-                    tasks_list.append(task)
+                    if task is not None:
+                        tasks_list.append(task)
             variants_list.append(tasks_list)
+
+            # Change tasks
+            for i in range(len(current_numbers)):
+                current_numbers[i] = (current_numbers[i] + 1) % len(self.structure[i])
 
         return variants_list

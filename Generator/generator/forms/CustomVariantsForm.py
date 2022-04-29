@@ -12,6 +12,12 @@ task_choices = (
 )
 
 
+alternate_choices = (
+    ('alternate_interpolation', 'Чередовать задания по интерполированию'),
+    ('alternate_integration', 'Чередовать задания по интегрированию')
+)
+
+
 class CustomVariantsForm(forms.Form):
     filename = forms.CharField(
         label='Имя файла:',
@@ -108,6 +114,13 @@ class CustomVariantsForm(forms.Form):
         label='Сид для генерации:',
         required=False,
     )
+
+    alternate = forms.MultipleChoiceField(
+        label='Чередование заданий:',
+        choices=alternate_choices,
+        widget=forms.CheckboxSelectMultiple()
+    )
+
 
     def clean(self):
         cleaned_data = super().clean()

@@ -70,7 +70,7 @@ def generate_interpolation(request):
             if seed is None:
                 seed = random.randint(0, 1000000)
 
-            task_generator = TaskGenerator(['Interpolation'], number_of_variants, seed)
+            task_generator = TaskGenerator([['Interpolation']], number_of_variants, seed)
 
             interpolation_parameters = {
                 'degree': information.get('the_biggest_polynomial_degree')
@@ -122,7 +122,7 @@ def generate_integration(request):
             if seed is None:
                 seed = random.randint(0, 1000000)
 
-            task_generator = TaskGenerator(['Trapezoid', 'Simpson'], number_of_variants, seed)
+            task_generator = TaskGenerator([['Trapezoid'], ['Simpson']], number_of_variants, seed)
 
             trapezoid_parameters = {
                 'n': information.get('number_of_trapezoidD_points')
@@ -179,7 +179,7 @@ def generate_splines(request):
             if seed is None:
                 seed = random.randint(0, 1000000)
 
-            task_generator = TaskGenerator(['Spline'], number_of_variants, seed)
+            task_generator = TaskGenerator([['Spline']], number_of_variants, seed)
 
             spline_parameters = {
                 'x1': information.get('Splines_x1'),
@@ -235,7 +235,30 @@ def generate_custom(request):
             if seed is None:
                 seed = random.randint(0, 1000000)
 
-            structure = information.get('tasks')
+            tasks = information.get('tasks')
+            structure = []
+
+            alternate = information.get('alternate')
+            if 'alternate_interpolation' in alternate:
+                interpolation_tasks = []
+                for task in tasks:
+                    if 'Interpolation' in task:
+                        interpolation_tasks.append(task)
+                if len(interpolation_tasks) != 0:
+                    tasks = [task for task in tasks if 'Interpolation' not in task]
+                    structure.append(interpolation_tasks)
+
+            if 'alternate_integration' in alternate:
+                integration_tasks = []
+                for task in tasks:
+                    if ('Simpson' in task) or ('Trapezoid' in task):
+                        integration_tasks.append(task)
+                if len(integration_tasks) != 0:
+                    tasks = [task for task in tasks if 'Trapezoid' not in task and 'Simpson' not in task]
+                    structure.append(integration_tasks)
+
+            for task in tasks:
+                structure.append([task])
 
             task_generator = TaskGenerator(structure, number_of_variants, seed)
 
