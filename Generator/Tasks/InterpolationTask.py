@@ -6,9 +6,9 @@ from pylatex.utils import NoEscape, italic, bold
 
 
 class InterpolationTask:
-    def __init__(self, degree, seed=None):
+    def __init__(self, degree, type = None, seed=None):
         self.degree = degree
-
+        self.type = type
         if seed is not None:
             random.seed(seed)
         self.x = [0, 1]
@@ -59,11 +59,17 @@ class InterpolationTask:
 
     def get_tex_text(self, task_number):
         task_table = Tabular("p{9cm}")
-
-        # Task text
         task_text = NoEscape("\\hspace{5mm}" + bold(f"{task_number}). ")
-                               + NoEscape(r'Построить интерполяционный многочлен в')
-                               + italic(' форме Лагранжа') + ', в ' + italic('форме Ньютона')
+                               + NoEscape(r'Построить интерполяционный многочлен в'))
+        # Task text
+        if(self.type == 'Back'):
+            task_text += NoEscape(' форме Ньютона назад')
+        elif (self.type == 'Forward'):
+            task_text += NoEscape(' форме Ньютона вперед')
+        elif(self.type == 'Lagrange'):
+            task_text += NoEscape(' форме Лагранжа')
+        else:
+            task_text += NoEscape(italic(' форме Лагранжа') + ', в ' + italic('форме Ньютона')
                                + ' и сравнить результаты.')
         task_table.append(task_text)
 

@@ -3,9 +3,9 @@ from django import forms
 from .InterpolationForm import variants_type_choices, generation_format_choices, the_biggest_polynomial_degree_choices
 
 task_choices = (
-    ('Interpolation', 'Интерполяционный многочлен по формуле Лагранжа'),
-    ('Interpolation', 'Интерполяционный многочлен по формуле Ньютона (интерполяция вперед)'),
-    ('Interpolation', 'Интерполяционный многочлен по формуле Ньютона (интерполяция назад)'),
+    ('Interpolation_Lagrange', 'Интерполяционный многочлен по формуле Лагранжа'),
+    ('Interpolation_Forward', 'Интерполяционный многочлен по формуле Ньютона (интерполяция вперед)'),
+    ('Interpolation_Back', 'Интерполяционный многочлен по формуле Ньютона (интерполяция назад)'),
     ('Trapezoid', 'Интегрирование по формуле трапеций'),
     ('Simpson', 'Интегрирование по формуле Симпсона'),
     ('Spline', 'Вычисление коэффициентов параболического сплайна')
