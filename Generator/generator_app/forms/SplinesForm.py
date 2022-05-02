@@ -36,31 +36,31 @@ class SplinesForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(),
     )
 
-    x1 = forms.IntegerField(
+    Splines_x1 = forms.IntegerField(
         label='Нижняя граница x:',
         initial=-5,
         required=False,
     )
 
-    x2 = forms.IntegerField(
+    Splines_x2 = forms.IntegerField(
         label='Верхняя граница x:',
         initial=5,
         required=False,
     )
 
-    y1 = forms.FloatField(
+    Splines_y1 = forms.FloatField(
         label='Нижняя граница y:',
         initial=-20,
         required=False,
     )
 
-    y2 = forms.FloatField(
+    Splines_y2 = forms.FloatField(
         label='Верхняя граница y:',
         initial=20,
         required=False,
     )
 
-    step = forms.IntegerField(
+    Splines_step = forms.IntegerField(
         label='Шаг:',
         initial=1,
         required=False,
@@ -73,4 +73,14 @@ class SplinesForm(forms.Form):
     )
 
     def clean(self):
-        pass
+        cleaned_data = super().clean()
+        if cleaned_data.get('generation_format') is None:
+            raise forms.ValidationError("Выберите формат генерации")
+
+        variants_types = ['digits', 'surnames']
+        variants_type = cleaned_data.get('variants_type')
+        if variants_type not in variants_types:
+            raise forms.ValidationError("Variants types must be digits or surnames.")
+        if variants_type == 'digits' and cleaned_data.get('number_of_variants') is None:
+            raise forms.ValidationError("Укажите количество вариантов")
+

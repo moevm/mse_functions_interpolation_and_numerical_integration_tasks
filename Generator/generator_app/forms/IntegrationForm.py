@@ -2,17 +2,8 @@ from django import forms
 
 from .InterpolationForm import variants_type_choices, generation_format_choices
 
-task_choices = (
-    ('lagrange', 'Интерполяционный многочлен по формуле Лагранжа'),
-    ('newton_forward', 'Интерполяционный многочлен по формуле Ньютона (интерполяция вперед)'),
-    ('newton_backward', 'Интерполяционный многочлен по формуле Ньютона (интерполяция назад)'),
-    ('trapezoid', 'Интегрирование по формуле трапеций'),
-    ('simpson', 'Интегрирование по формуле Симпсона'),
-    ('parabolic_spline', 'Вычисление коэффициентов параболического сплайна')
-)
 
-
-class CustomVariantsForm(forms.Form):
+class IntegrationForm(forms.Form):
     filename = forms.CharField(
         label='Имя файла:',
         max_length=30,
@@ -45,22 +36,32 @@ class CustomVariantsForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(),
     )
 
-    tasks = forms.MultipleChoiceField(
-        label='Задания:',
-        choices=task_choices,
-        widget=forms.CheckboxSelectMultiple(),
-    )
-
-
     seed = forms.IntegerField(
         label='Сид для генерации:',
         required=False,
+    )
+
+    number_of_trapezoid_points = forms.IntegerField(
+        label='Количество точек: (формула Трапеции)',
+        min_value=1,
+        max_value=15,
+        initial=11,
+    )
+
+    number_of_Simpson_points = forms.IntegerField(
+        label='Количество точек: (формула Симпсона)',
+        min_value=1,
+        max_value=15,
+        initial=9,
     )
 
     def clean(self):
         cleaned_data = super().clean()
         if cleaned_data.get('generation_format') is None:
             raise forms.ValidationError("Выберите формат генерации")
+
+        if cleaned_data.get('number_of_Simpson_points') % 2 == 0:
+            raise forms.ValidationError("Количество точек для Формулы Симпсона должно быть нечётным")
 
         variants_types = ['digits', 'surnames']
         variants_type = cleaned_data.get('variants_type')

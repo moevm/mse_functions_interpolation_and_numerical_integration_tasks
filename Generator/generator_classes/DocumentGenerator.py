@@ -14,16 +14,16 @@ class DocumentGenerator:
         self.type = type_str
         self.folder = os.path.join(
             settings.BASE_DIR,
-            'generator',
+            'generator_app',
             'static',
-            'generator',
+            'generator_app',
             'variants',
             timestamp
         )
         os.mkdir(f"{self.folder}")
 
         # TODO: remove?
-        self.static_folder = f"/static/generator/variants/{timestamp}"
+        self.static_folder = f"/static/generator_app/variants/{timestamp}"
 
         self.generate_pdf = generate_pdf
         self.generate_latex = generate_latex
@@ -125,7 +125,7 @@ class DocumentGenerator:
             for i in range(len(last_task_list)):
                 task = last_task_list[i]
                 # Add task text
-                task_subtable.add_row([task.get_tex_text()])
+                task_subtable.add_row([task.get_tex_text(i + 1)])
 
                 # Add task answer
                 answer_subtable.add_row([task.get_tex_answer(i + 1)])

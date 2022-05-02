@@ -9,10 +9,10 @@ from django.conf import settings
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from generator.forms.IntegrationForm import IntegrationForm
-from generator.forms.InterpolationForm import InterpolationForm
-from generator.forms.SplinesForm import SplinesForm
-from generator.forms.CustomVariantsForm import CustomVariantsForm
+from generator_app.forms.IntegrationForm import IntegrationForm
+from generator_app.forms.InterpolationForm import InterpolationForm
+from generator_app.forms.SplinesForm import SplinesForm
+from generator_app.forms.CustomVariantsForm import CustomVariantsForm
 from generator_classes.TaskGenerator import TaskGenerator
 from generator_classes.DocumentGenerator import DocumentGenerator
 
@@ -20,33 +20,33 @@ from generator_classes.DocumentGenerator import DocumentGenerator
 @csrf_exempt
 def interpolation(request):
     form = InterpolationForm()
-    return render(request, 'generator/interpolation.html',
+    return render(request, 'generator_app/interpolation.html',
                   context={'form': form})
 
 
 @csrf_exempt
 def integration(request):
     form = IntegrationForm()
-    return render(request, 'generator/integration.html',
+    return render(request, 'generator_app/integration.html',
                   context={'form': form})
 
 
 @csrf_exempt
 def splines(request):
     form = SplinesForm()
-    return render(request, 'generator/splines.html',
+    return render(request, 'generator_app/splines.html',
                   context={'form': form})
 
 
 @csrf_exempt
 def custom_variants(request):
     form = CustomVariantsForm()
-    return render(request, 'generator/custom_variants.html',
+    return render(request, 'generator_app/custom_variants.html',
                   context={'form': form})
 
 
 def index(request):
-    return render(request, 'generator/index.html')
+    return render(request, 'generator_app/index.html')
 
 
 def generate_interpolation(request):
@@ -94,9 +94,9 @@ def generate_interpolation(request):
             # Document generation
             context = document_generator.generate_document(variants_list, task_generator.seed)
 
-            return render(request, "generator/result_page.html",
+            return render(request, "generator_app/result_page.html",
                           context=context)
-        return render(request, "generator/interpolation.html",
+        return render(request, "generator_app/interpolation.html",
                       context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -151,9 +151,9 @@ def generate_integration(request):
             # Document generation
             context = document_generator.generate_document(variants_list, task_generator.seed)
 
-            return render(request, "generator/result_page.html",
+            return render(request, "generator_app/result_page.html",
                           context=context)
-        return render(request, "generator/integration.html",
+        return render(request, "generator_app/integration.html",
                       context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -182,11 +182,11 @@ def generate_splines(request):
             task_generator = TaskGenerator(['Spline'], number_of_variants, seed)
 
             spline_parameters = {
-                'x1': information.get('x1'),
-                'x2': information.get('x2'),
-                'y1': information.get('y1'),
-                'y2': information.get('y2'),
-                'step': information.get('step')
+                'x1': information.get('Splines_x1'),
+                'x2': information.get('Splines_x2'),
+                'y1': information.get('Splines_y1'),
+                'y2': information.get('Splines_y2'),
+                'step': information.get('Splines_step')
             }
 
             task_generator.set_task_parameters('Spline', spline_parameters)
@@ -207,8 +207,84 @@ def generate_splines(request):
             # Document generation
             context = document_generator.generate_document(variants_list, task_generator.seed)
 
-            return render(request, "generator/result_page.html",
+            return render(request, "generator_app/result_page.html",
                           context=context)
-        return render(request, "generator/splines.html",
+        return render(request, "generator_app/splines.html",
+                      context={'form': form})
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+
+def generate_custom(request):
+    if request.method == 'POST':
+        form = CustomVariantsForm(request.POST)
+        if form.is_valid():
+            timestamp = str(datetime.now()).replace(":", "-").replace(" ", "_")
+
+            information = form.cleaned_data
+
+            # Task generation parameters
+            variants_type = information.get("variants_type")
+            if variants_type == "digits":
+                surnames = None
+                number_of_variants = information.get("number_of_variants")
+            elif variants_type == 'surnames':
+                surnames = request.FILES['file_with_surnames'].read().decode("utf-8").splitlines()
+                number_of_variants = len(surnames)
+
+            seed = information.get("seed")
+            if seed is None:
+                seed = random.randint(0, 1000000)
+
+            structure = information.get('tasks')
+
+            task_generator = TaskGenerator(structure, number_of_variants, seed)
+
+            if 'Interpolation' in structure:
+                interpolation_parameters = {
+                    'degree': information.get('the_biggest_polynomial_degree')
+                }
+                task_generator.set_task_parameters('Interpolation', interpolation_parameters)
+
+            if 'Spline' in structure:
+                spline_parameters = {
+                    'x1': information.get('Splines_x1'),
+                    'x2': information.get('Splines_x2'),
+                    'y1': information.get('Splines_y1'),
+                    'y2': information.get('Splines_y2'),
+                    'step': information.get('Splines_step')
+                }
+                task_generator.set_task_parameters('Spline', spline_parameters)
+
+            if 'Trapezoid' in structure:
+                trapezoid_parameters = {
+                    'n': information.get('number_of_trapezoid_points')
+                }
+                task_generator.set_task_parameters('Trapezoid', trapezoid_parameters)
+
+            if 'Simpson' in structure:
+                simpson_parameters = {
+                    'n': information.get('number_of_Simpson_points')
+                }
+                task_generator.set_task_parameters('Simpson', simpson_parameters)
+
+            # Task generation
+            variants_list = task_generator.generate_tasks()
+
+            # Document generation parameters
+            filename = information.get('filename')
+
+            generation_format = information.get('generation_format')
+            generate_pdf = 'pdf' in generation_format
+            generate_latex = 'tex' in generation_format
+
+            document_generator = DocumentGenerator(task_generator.seed, filename, timestamp,
+                                                   'custom', generate_pdf, generate_latex)
+
+            # Document generation
+            context = document_generator.generate_document(variants_list, task_generator.seed)
+
+            return render(request, "generator_app/result_page.html",
+                          context=context)
+        return render(request, "generator_app/custom_variants.html",
                       context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')

@@ -10,7 +10,7 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'generator/css/result_page.css' %}">
+    <link rel="stylesheet" href="{% static 'generator_app/css/result_page.css' %}">
     <meta charset="UTF-8">
     <title>Result page</title>
 </head>
@@ -19,10 +19,10 @@
 <div class="container">
     <div class="row">
         <div class="col mr-4">
-            <form action="{% url 'generate_interpolation' %}" method="post" enctype="multipart/form-data"
-                  class="col mr-4">
+            <form action="{% url 'generate_integration' %}" method="post" enctype="multipart/form-data" class="col mr-4">
                 {% csrf_token %}
-                <h3 class="mt-2">Интерполяционный многочлен Ньютона и Лагранжа</h3>
+                <h3 class="mt-2">Численное интегрирование по формуле трапеций и Симпсона</h3>
+                <br>
                 <div class="row mt-2">
                     <div class="col">
                         <h5>{{ form.filename.label }}</h5>
@@ -57,36 +57,21 @@
                     </div>
                 </div>
                 <br>
-                <!---
-                TODO: remove or add support
                 <div class="row mt-2">
                     <div class="col">
-                        <h5>{{ form.number_of_variants_in_string.label }}</h5>
+                        <h5>{{ form.number_of_trapezoid_points.label }}</h5>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col">
-                        {% for choice in form.number_of_variants_in_string %}
-                            <div>
-                                {{ choice }}
-                            </div>
-                        {% endfor %}
+                        {{ form.number_of_trapezoid_points }}
                     </div>
                 </div>
                 <br>
-                --->
                 <div class="row mt-2">
                     <div class="col">
-                        <h5>{{ form.the_biggest_polynomial_degree.label }}</h5>
+                        <h5>{{ form.number_of_Simpson_points.label }}</h5>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col">
-                        {% for choice in form.the_biggest_polynomial_degree %}
-                            <div>
-                                {{ choice }}
-                            </div>
-                        {% endfor %}
+                        {{ form.number_of_Simpson_points }}
                     </div>
                 </div>
                 <br>
@@ -115,15 +100,14 @@
                         {{ form.seed }}
                     </div>
                 </div>
-
-                <button type="submit" id="submit" class="btn mb-2 mt-2 btn-primary btn-lg active" role="button" aria-pressed="true">
-                    Сгенерировать
+                <button type="submit" class="btn mb-2 btn-primary btn-lg active" role="button" aria-pressed="true"
+                        id="submit">Сгенерировать
                 </button>
             </form>
+
         </div>
     </div>
 </div>
 </body>
-<script src="{% static 'interpolation_integration_generator/js/relations_between_variants_and_max_degree.js' %}"></script>
 <script src="{% static 'interpolation_integration_generator/js/relation_between_file_field_and_variants.js' %}"></script>
 </html>

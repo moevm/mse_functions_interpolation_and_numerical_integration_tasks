@@ -12,11 +12,11 @@ class TaskGenerator:
         self.number_of_variants = number_of_variants
 
 
-        self.task_parameters = {'Spline': {'x1': None,
-                                           'x2': None,
-                                           'y1': None,
-                                           'y2': None,
-                                           'step': None},
+        self.task_parameters = {'Spline': {'x1': -5,
+                                           'x2': 5,
+                                           'y1': -20,
+                                           'y2': 20,
+                                           'step': 1},
                                 'Trapezoid': {'n': 11},
                                 'Simpson': {'n': 9},
                                 'Interpolation': {'degree': 3}
@@ -35,7 +35,10 @@ class TaskGenerator:
         for variant_n in range(1, self.number_of_variants + 1):
             tasks_list = []
             for task_name in self.structure:
-                parameters = self.task_parameters[task_name]
+                if task_name == 'Interpolation_Back' or task_name == 'Interpolation_Forward' or task_name == 'Interpolation_Lagrange':
+                    parameters = self.task_parameters['Interpolation']
+                else:
+                    parameters = self.task_parameters[task_name]
                 if parameters is not None:
                     if task_name == 'Spline':
                         task = SplineTask.randomize(x_range=(parameters['x1'], parameters['x2']),
@@ -45,8 +48,12 @@ class TaskGenerator:
                         task = TrapezoidTask().randomize(parameters['n'])
                     if task_name == 'Simpson':
                         task = SimpsonTask().randomize(parameters['n'])
-                    if task_name == 'Interpolation':
-                        task = InterpolationTask(degree=(parameters['degree']))
+                    if task_name == 'Interpolation_Lagrange':
+                        task = InterpolationTask(degree=(parameters['degree']), type='Lagrange')
+                    if task_name == 'Interpolation_Forward':
+                        task = InterpolationTask(degree=(parameters['degree']), type='Forward')
+                    if task_name == 'Interpolation_Back':
+                        task = InterpolationTask(degree=(parameters['degree']), type='Back')
                     tasks_list.append(task)
             variants_list.append(tasks_list)
 
