@@ -89,7 +89,8 @@ def generate_interpolation(request):
             generate_latex = 'tex' in generation_format
 
             document_generator = DocumentGenerator(task_generator.seed, filename, timestamp,
-                                                   'interpolation', generate_pdf, generate_latex)
+                                                   'interpolation', generate_pdf, generate_latex,
+                                                   surnames)
 
             # Document generation
             context = document_generator.generate_document(variants_list, task_generator.seed)
@@ -146,7 +147,8 @@ def generate_integration(request):
             generate_latex = 'tex' in generation_format
 
             document_generator = DocumentGenerator(task_generator.seed, filename, timestamp,
-                                                   'integration', generate_pdf, generate_latex)
+                                                   'integration', generate_pdf, generate_latex,
+                                                   surnames)
 
             # Document generation
             context = document_generator.generate_document(variants_list, task_generator.seed)
@@ -202,7 +204,8 @@ def generate_splines(request):
             generate_latex = 'tex' in generation_format
 
             document_generator = DocumentGenerator(task_generator.seed, filename, timestamp,
-                                                   'splines', generate_pdf, generate_latex)
+                                                   'splines', generate_pdf, generate_latex,
+                                                   surnames)
 
             # Document generation
             context = document_generator.generate_document(variants_list, task_generator.seed)
