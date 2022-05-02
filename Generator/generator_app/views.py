@@ -283,8 +283,8 @@ def generate_custom(request):
             # Document generation
             context = document_generator.generate_document(variants_list, task_generator.seed)
 
-            return render(request, "generator/result_page.html",
+            return render(request, "generator_app/result_page.html",
                           context=context)
-        return render(request, "generator/custom_variants.html",
+        return render(request, "generator_app/custom_variants.html",
                       context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')
