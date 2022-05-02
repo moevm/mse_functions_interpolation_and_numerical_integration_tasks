@@ -2,13 +2,13 @@ import os
 import zipfile
 from os.path import basename
 from pylatex import Document, Command, Package, LongTable, Tabular
-from pylatex.utils import NoEscape, bold
+from pylatex.utils import NoEscape, bold, italic
 from django.conf import settings
 
 
 class DocumentGenerator:
     def __init__(self, seed, filename, timestamp, type_str='custom',
-                 generate_pdf=False, generate_latex=False):
+                 generate_pdf=False, generate_latex=False, surnames=None):
         self.seed = seed
         self.filename = filename
         self.type = type_str
@@ -27,6 +27,7 @@ class DocumentGenerator:
 
         self.generate_pdf = generate_pdf
         self.generate_latex = generate_latex
+        self.surnames = surnames
 
         self.tasks_document = Document(
             documentclass=Command('documentclass', options=['a4paper'], arguments=['article']),
@@ -71,15 +72,15 @@ class DocumentGenerator:
             task_subtable2 = Tabular("p{9.5cm}")
             task_subtable1.add_empty_row()
             task_subtable2.add_empty_row()
-            task_subtable1.add_row([NoEscape(bold(f'Вариант {j} ') + f'({seed})')])
-            task_subtable2.add_row([NoEscape(bold(f'Вариант {j + 1} ') + f'({seed})')])
+            task_subtable1.add_row([NoEscape(bold(f'Вариант {j} ') + f'({seed})' + '\\null\\hfill' + italic(self.surnames[j-1] if self.surnames else ''))])
+            task_subtable2.add_row([NoEscape(bold(f'Вариант {j + 1} ') + f'({seed})' + '\\null\\hfill' + italic(self.surnames[j] if self.surnames else ''))])
 
             answer_subtable1 = Tabular("p{9.5cm}")
             answer_subtable2 = Tabular("p{9.5cm}")
             answer_subtable1.add_empty_row()
             answer_subtable2.add_empty_row()
-            answer_subtable1.add_row([NoEscape(bold(f'Вариант {j} ') + f'({seed})')])
-            answer_subtable2.add_row([NoEscape(bold(f'Вариант {j + 1} ') + f'({seed})')])
+            answer_subtable1.add_row([NoEscape(bold(f'Вариант {j} ') + f'({seed})' + '\\null\\hfill' + italic(self.surnames[j-1] if self.surnames else ''))])
+            answer_subtable2.add_row([NoEscape(bold(f'Вариант {j + 1} ') + f'({seed})' + '\\null\\hfill' + italic(self.surnames[j] if self.surnames else ''))])
 
             for i in range(len(task_list1)):
                 task1 = task_list1[i]
@@ -116,16 +117,16 @@ class DocumentGenerator:
 
             task_subtable = Tabular("p{9.5cm}")
             task_subtable.add_row(
-                [NoEscape(bold(f'Вариант {len(variants_list)} ') + f'({seed})')])
+                [NoEscape(bold(f'Вариант {len(variants_list)} ') + f'({seed})' + '\\null\\hfill' + italic(self.surnames[-1] if self.surnames else ''))])
 
             answer_subtable = Tabular("p{9.5cm}")
             answer_subtable.add_row(
-                [NoEscape(bold(f'Вариант {len(variants_list)} ') + f'({seed})')])
+                [NoEscape(bold(f'Вариант {len(variants_list)} ') + f'({seed})' + '\\null\\hfill' + italic(self.surnames[-1] if self.surnames else ''))])
 
             for i in range(len(last_task_list)):
                 task = last_task_list[i]
                 # Add task text
-                task_subtable.add_row([task.get_tex_text()])
+                task_subtable.add_row([task.get_tex_text(i + 1)])
 
                 # Add task answer
                 answer_subtable.add_row([task.get_tex_answer(i + 1)])
