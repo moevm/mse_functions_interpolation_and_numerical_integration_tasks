@@ -36,7 +36,10 @@ class TaskGenerator:
             tasks_list = []
             for i in range(len(self.structure)):
                 task_name = self.structure[i][current_numbers[i]]
-                parameters = self.task_parameters[task_name]
+                if task_name == 'Interpolation_Back' or task_name == 'Interpolation_Forward' or task_name == 'Interpolation_Lagrange':
+                    parameters = self.task_parameters['Interpolation']
+                else:
+                    parameters = self.task_parameters[task_name]
                 if parameters is not None:
                     task = None
                     if task_name == 'Spline':
@@ -47,8 +50,12 @@ class TaskGenerator:
                         task = TrapezoidTask().randomize(parameters['n'])
                     if task_name == 'Simpson':
                         task = SimpsonTask().randomize(parameters['n'])
-                    if task_name == 'Interpolation':
-                        task = InterpolationTask(degree=(parameters['degree']))
+                    if task_name == 'Interpolation_Lagrange':
+                        task = InterpolationTask(degree=(parameters['degree']), type='Lagrange')
+                    if task_name == 'Interpolation_Forward':
+                        task = InterpolationTask(degree=(parameters['degree']), type='Forward')
+                    if task_name == 'Interpolation_Back':
+                        task = InterpolationTask(degree=(parameters['degree']), type='Back')
                     if task is not None:
                         tasks_list.append(task)
             variants_list.append(tasks_list)
