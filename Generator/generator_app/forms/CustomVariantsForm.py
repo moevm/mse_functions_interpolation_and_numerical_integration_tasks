@@ -117,6 +117,7 @@ class CustomVariantsForm(forms.Form):
 
     alternate = forms.MultipleChoiceField(
         label='Чередование заданий:',
+        required=False,
         choices=alternate_choices,
         widget=forms.CheckboxSelectMultiple()
     )

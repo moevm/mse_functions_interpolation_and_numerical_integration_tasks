@@ -70,7 +70,19 @@ def generate_interpolation(request):
             if seed is None:
                 seed = random.randint(0, 1000000)
 
-            task_generator = TaskGenerator([['Interpolation_Lagrange']], number_of_variants, seed)
+            tasks = information.get('tasks')
+            alternate = information.get('alternate')
+            structure = []
+            if alternate == 'alternate':
+                interpolation_tasks = []
+                for task in tasks:
+                    interpolation_tasks.append(task)
+                structure.append(interpolation_tasks)
+            elif alternate == 'not_alternate':
+                for task in tasks:
+                    structure.append([task])
+
+            task_generator = TaskGenerator(structure, number_of_variants, seed)
 
             interpolation_parameters = {
                 'degree': information.get('the_biggest_polynomial_degree')
