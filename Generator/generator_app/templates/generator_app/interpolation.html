@@ -93,6 +93,38 @@
 
                 <div class="row mt-2">
                     <div class="col">
+                        <h5>{{ form.tasks.label }}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {% for choice in form.tasks %}
+                            <div>
+                                {{ choice }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <br>
+
+                <div class="row mt-2">
+                    <div class="col">
+                        <h5>{{ form.alternate.label }}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {% for choice in form.alternate %}
+                            <div>
+                                {{ choice }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <br>
+
+                <div class="row mt-2">
+                    <div class="col">
                         <h5>{{ form.generation_format.label }}</h5>
                     </div>
                 </div>

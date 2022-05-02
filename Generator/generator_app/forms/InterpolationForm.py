@@ -1,6 +1,12 @@
 from django import forms
 from django.core.files.uploadedfile import UploadedFile
 
+task_choices = (
+    ('Interpolation_Lagrange', 'Интерполяционный многочлен по формуле Лагранжа'),
+    ('Interpolation_Forward', 'Интерполяционный многочлен по формуле Ньютона (интерполяция вперед)'),
+    ('Interpolation_Back', 'Интерполяционный многочлен по формуле Ньютона (интерполяция назад)'),
+)
+
 number_of_variants_in_string_choices = (
     (2, 2),
     (3, 3),
@@ -21,6 +27,11 @@ variants_type_choices = (
 generation_format_choices = (
     ('pdf', 'pdf'),
     ('tex', 'tex'),
+)
+
+alternate_choices = (
+    ('not_alternate', 'Без чередования'),
+    ('alternate', 'Чередовать задания')
 )
 
 
@@ -68,6 +79,19 @@ class InterpolationForm(forms.Form):
 
     file_with_surnames = forms.FileField(
         required=False,
+    )
+
+    tasks = forms.MultipleChoiceField(
+        label='Задания:',
+        choices=task_choices,
+        widget=forms.CheckboxSelectMultiple(),
+    )
+
+    alternate = forms.ChoiceField(
+        label='Чередование:',
+        initial='not_alternate',
+        choices=alternate_choices,
+        widget=forms.RadioSelect(),
     )
 
     generation_format = forms.MultipleChoiceField(

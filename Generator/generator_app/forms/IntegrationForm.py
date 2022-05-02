@@ -1,6 +1,12 @@
 from django import forms
-
 from .InterpolationForm import variants_type_choices, generation_format_choices
+
+structure_choices = (
+    ('both', 'Формула трапеций и формула Симпсона'),
+    ('Trapezoid', 'Формула трапеций'),
+    ('Simpson', 'Формула Симпсона'),
+    ('alternating', 'Чередование')
+)
 
 
 class IntegrationForm(forms.Form):
@@ -53,6 +59,13 @@ class IntegrationForm(forms.Form):
         min_value=1,
         max_value=15,
         initial=9,
+    )
+
+    structure = forms.ChoiceField(
+        label='Структура вариантов:',
+        choices=structure_choices,
+        widget=forms.RadioSelect,
+        required=True
     )
 
     def clean(self):
