@@ -9,10 +9,10 @@ from django.conf import settings
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from generator.forms.IntegrationForm import IntegrationForm
-from generator.forms.InterpolationForm import InterpolationForm
-from generator.forms.SplinesForm import SplinesForm
-from generator.forms.CustomVariantsForm import CustomVariantsForm
+from generator_app.forms.IntegrationForm import IntegrationForm
+from generator_app.forms.InterpolationForm import InterpolationForm
+from generator_app.forms.SplinesForm import SplinesForm
+from generator_app.forms.CustomVariantsForm import CustomVariantsForm
 from generator_classes.TaskGenerator import TaskGenerator
 from generator_classes.DocumentGenerator import DocumentGenerator
 
@@ -20,33 +20,33 @@ from generator_classes.DocumentGenerator import DocumentGenerator
 @csrf_exempt
 def interpolation(request):
     form = InterpolationForm()
-    return render(request, 'generator/interpolation.html',
+    return render(request, 'generator_app/interpolation.html',
                   context={'form': form})
 
 
 @csrf_exempt
 def integration(request):
     form = IntegrationForm()
-    return render(request, 'generator/integration.html',
+    return render(request, 'generator_app/integration.html',
                   context={'form': form})
 
 
 @csrf_exempt
 def splines(request):
     form = SplinesForm()
-    return render(request, 'generator/splines.html',
+    return render(request, 'generator_app/splines.html',
                   context={'form': form})
 
 
 @csrf_exempt
 def custom_variants(request):
     form = CustomVariantsForm()
-    return render(request, 'generator/custom_variants.html',
+    return render(request, 'generator_app/custom_variants.html',
                   context={'form': form})
 
 
 def index(request):
-    return render(request, 'generator/index.html')
+    return render(request, 'generator_app/index.html')
 
 
 def generate_interpolation(request):
@@ -94,9 +94,9 @@ def generate_interpolation(request):
             # Document generation
             context = document_generator.generate_document(variants_list, task_generator.seed)
 
-            return render(request, "generator/result_page.html",
+            return render(request, "generator_app/result_page.html",
                           context=context)
-        return render(request, "generator/interpolation.html",
+        return render(request, "generator_app/interpolation.html",
                       context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -151,9 +151,9 @@ def generate_integration(request):
             # Document generation
             context = document_generator.generate_document(variants_list, task_generator.seed)
 
-            return render(request, "generator/result_page.html",
+            return render(request, "generator_app/result_page.html",
                           context=context)
-        return render(request, "generator/integration.html",
+        return render(request, "generator_app/integration.html",
                       context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -207,8 +207,8 @@ def generate_splines(request):
             # Document generation
             context = document_generator.generate_document(variants_list, task_generator.seed)
 
-            return render(request, "generator/result_page.html",
+            return render(request, "generator_app/result_page.html",
                           context=context)
-        return render(request, "generator/splines.html",
+        return render(request, "generator_app/splines.html",
                       context={'form': form})
     return HttpResponseNotFound('<h1>Page not found</h1>')

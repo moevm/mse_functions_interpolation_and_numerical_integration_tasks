@@ -1,6 +1,6 @@
 import django.test
-from Generator.generator.forms.IntegrationForm import IntegrationForm
-from Generator.generator.forms.InterpolationForm import InterpolationForm
+from Generator.generator_app.forms.IntegrationForm import IntegrationForm
+from Generator.generator_app.forms.InterpolationForm import InterpolationForm
 
 
 class Test(django.test.SimpleTestCase):

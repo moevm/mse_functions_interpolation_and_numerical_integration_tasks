@@ -170,13 +170,13 @@ class InterpolationDocument:
 
         folder = os.path.join(
             settings.BASE_DIR,
-            'generator',
+            'generator_app',
             'static',
-            'generator',
+            'generator_app',
             'variants',
             timestamp
         )
-#       folder = f'generator/static/generator/{timestamp}'
+
         if is_pdf:
             self.tasks.generate_pdf(f'{folder}/interpolation_{filename}')
             self.answers.generate_pdf(f'{folder}/interpolation_answers_for_{filename}')

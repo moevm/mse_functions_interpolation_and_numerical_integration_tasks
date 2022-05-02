@@ -14,16 +14,16 @@ class DocumentGenerator:
         self.type = type_str
         self.folder = os.path.join(
             settings.BASE_DIR,
-            'generator',
+            'generator_app',
             'static',
-            'generator',
+            'generator_app',
             'variants',
             timestamp
         )
         os.mkdir(f"{self.folder}")
 
         # TODO: remove?
-        self.static_folder = f"/static/generator/variants/{timestamp}"
+        self.static_folder = f"/static/generator_app/variants/{timestamp}"
 
         self.generate_pdf = generate_pdf
         self.generate_latex = generate_latex
