@@ -149,7 +149,7 @@ def generate_integration(request):
             task_generator = TaskGenerator(structure, number_of_variants, seed)
 
             trapezoid_parameters = {
-                'n': information.get('number_of_trapezoidD_points')
+                'n': information.get('number_of_trapezoid_points')
             }
 
             simpson_parameters = {
@@ -262,8 +262,39 @@ def generate_custom(request):
                 seed = random.randint(0, 1000000)
 
             tasks = information.get('tasks')
-            structure = []
+            task_generator = TaskGenerator([], number_of_variants, seed)
 
+            # Set parameters
+            if any('Interpolation' in val for val in tasks):
+                interpolation_parameters = {
+                    'degree': information.get('the_biggest_polynomial_degree')
+                }
+                task_generator.set_task_parameters('Interpolation', interpolation_parameters)
+
+            if 'Spline' in tasks:
+                spline_parameters = {
+                    'x1': information.get('Splines_x1'),
+                    'x2': information.get('Splines_x2'),
+                    'y1': information.get('Splines_y1'),
+                    'y2': information.get('Splines_y2'),
+                    'step': information.get('Splines_step')
+                }
+                task_generator.set_task_parameters('Spline', spline_parameters)
+
+            if 'Trapezoid' in tasks:
+                trapezoid_parameters = {
+                    'n': information.get('number_of_trapezoid_points')
+                }
+                task_generator.set_task_parameters('Trapezoid', trapezoid_parameters)
+
+            if 'Simpson' in tasks:
+                simpson_parameters = {
+                    'n': information.get('number_of_Simpson_points')
+                }
+                task_generator.set_task_parameters('Simpson', simpson_parameters)
+
+            # Create structure
+            structure = []
             alternate = information.get('alternate')
             if 'alternate_interpolation' in alternate:
                 interpolation_tasks = []
@@ -286,36 +317,7 @@ def generate_custom(request):
             for task in tasks:
                 structure.append([task])
 
-            task_generator = TaskGenerator(structure, number_of_variants, seed)
-
-            if 'Interpolation' in structure:
-                interpolation_parameters = {
-                    'degree': information.get('the_biggest_polynomial_degree')
-                }
-                task_generator.set_task_parameters('Interpolation', interpolation_parameters)
-
-            if 'Spline' in structure:
-                spline_parameters = {
-                    'x1': information.get('Splines_x1'),
-                    'x2': information.get('Splines_x2'),
-                    'y1': information.get('Splines_y1'),
-                    'y2': information.get('Splines_y2'),
-                    'step': information.get('Splines_step')
-                }
-                task_generator.set_task_parameters('Spline', spline_parameters)
-
-            if 'Trapezoid' in structure:
-                trapezoid_parameters = {
-                    'n': information.get('number_of_trapezoid_points')
-                }
-                task_generator.set_task_parameters('Trapezoid', trapezoid_parameters)
-
-            if 'Simpson' in structure:
-                simpson_parameters = {
-                    'n': information.get('number_of_Simpson_points')
-                }
-                task_generator.set_task_parameters('Simpson', simpson_parameters)
-
+            task_generator.structure = structure
             # Task generation
             variants_list = task_generator.generate_tasks()
 
