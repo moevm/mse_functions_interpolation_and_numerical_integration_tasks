@@ -4,24 +4,24 @@ from pylatex.utils import NoEscape
 
 
 class IntegrationTask:
-    def __init__(self):
-        self.xValues = []
-        self.yValues = []
+    def __init__(self, x_values, y_values):
+        self.x_values = x_values
+        self.y_values = y_values
         self.answer = 0
         self.halfAnswer = 0
         self.n = 0
 
-    def taskText(self, task_number):
+    def task_text(self, task_number):
         pass
 
-    def answerStr(self):
+    def answer_str(self):
         pass
 
-    def errorRunge(self):
+    def error_runge(self):
         pass
 
     def createTables(self):
-        values_left = len(self.xValues)
+        values_left = len(self.x_values)
         current_point = 0
         tables = []
         collums_to_fill = 6
@@ -34,16 +34,17 @@ class IntegrationTask:
             table = Tabular(table_spec)
             table.add_hline()
             table.add_row(
-                [NoEscape("$ x_i $")] + [NoEscape("${0:.1f}$".format(self.xValues[i])) for i in
+                [NoEscape("$ x_i $")] + [NoEscape("${0:.1f}$".format(self.x_values[i])) for i in
                                          range(current_point,
                                                min(current_point + collums_to_fill,
-                                                   len(self.xValues)))])
+                                                   len(self.x_values)))])
             table.add_hline()
             table.add_row(
-                [NoEscape("$ f_i $")] + [NoEscape("${0:.1f}$".format(self.yValues[i])) for i in
+                [NoEscape("$ f_i $")] + [NoEscape("${0:.1f}$".format(self.y_values[i])) for i in
                                          range(current_point,
                                                min(current_point + collums_to_fill,
-                                                   len(self.xValues)))])
+                                                   len(self.x_values)))])
+
             table.add_hline()
 
             tables.append(copy(table))
@@ -55,7 +56,7 @@ class IntegrationTask:
 
     def get_tex_text(self, task_number):
         main_table = Tabular("p{9cm}")
-        task_text = self.taskText(task_number)
+        task_text = self.task_text(task_number)
         sub_table = Tabular("p{9cm}")
         sub_table.append(task_text)
         main_table.add_row(sub_table)
@@ -81,8 +82,8 @@ class IntegrationTask:
             answer_table.add_row(center)
             answer_table.add_empty_row()
 
-        answer_table.append(self.answerStr())
+        answer_table.append(self.answer_str())
         answer_table.add_empty_row()
-        answer_table.append("Err = " + "{0:.4f}".format(self.errorRunge()))
+        answer_table.append("Err = " + "{0:.4f}".format(self.error_runge()))
 
         return answer_table

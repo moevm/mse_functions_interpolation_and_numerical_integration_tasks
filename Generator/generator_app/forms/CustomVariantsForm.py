@@ -11,7 +11,6 @@ task_choices = (
     ('Spline', 'Вычисление коэффициентов параболического сплайна')
 )
 
-
 alternate_choices = (
     ('alternate_interpolation', 'Чередовать задания по интерполированию'),
     ('alternate_integration', 'Чередовать задания по интегрированию')
@@ -67,14 +66,14 @@ class CustomVariantsForm(forms.Form):
 
     number_of_trapezoid_points = forms.IntegerField(
         label='Количество точек: (формула Трапеции)',
-        min_value=1,
+        min_value=3,
         max_value=15,
         initial=11,
     )
 
     number_of_Simpson_points = forms.IntegerField(
         label='Количество точек: (формула Симпсона)',
-        min_value=1,
+        min_value=3,
         max_value=15,
         initial=9,
     )
@@ -121,7 +120,6 @@ class CustomVariantsForm(forms.Form):
         choices=alternate_choices,
         widget=forms.CheckboxSelectMultiple()
     )
-
 
     def clean(self):
         cleaned_data = super().clean()

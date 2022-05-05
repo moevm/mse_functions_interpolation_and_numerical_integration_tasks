@@ -47,9 +47,9 @@ class TaskGenerator:
                                                     y_range=(parameters['y1'], parameters['y2']),
                                                     step=parameters['step'])
                     if task_name == 'Trapezoid':
-                        task = TrapezoidTask().randomize(parameters['n'])
+                        task = TrapezoidTask.randomize(parameters['n'])
                     if task_name == 'Simpson':
-                        task = SimpsonTask().randomize(parameters['n'])
+                        task = SimpsonTask.randomize(parameters['n'])
                     if task_name == 'Interpolation_Lagrange':
                         task = InterpolationTask(degree=(parameters['degree']), type='Lagrange')
                     if task_name == 'Interpolation_Forward':

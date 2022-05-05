@@ -49,14 +49,14 @@ class IntegrationForm(forms.Form):
 
     number_of_trapezoid_points = forms.IntegerField(
         label='Количество точек: (формула Трапеции)',
-        min_value=1,
+        min_value=3,
         max_value=15,
         initial=11,
     )
 
     number_of_Simpson_points = forms.IntegerField(
         label='Количество точек: (формула Симпсона)',
-        min_value=1,
+        min_value=3,
         max_value=15,
         initial=9,
     )
