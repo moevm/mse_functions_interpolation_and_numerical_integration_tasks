@@ -30,6 +30,7 @@ class TaskGenerator:
                     parameters[key] = parameter
 
     def generate_tasks(self):
+        random.seed(self.seed)
         variants_list = []
         current_numbers = [0 for _ in range(len(self.structure))]
         for variant_n in range(1, self.number_of_variants + 1):
