@@ -30,6 +30,7 @@ class TaskGenerator:
                     parameters[key] = parameter
 
     def generate_tasks(self):
+        random.seed(self.seed)
         variants_list = []
         current_numbers = [0 for _ in range(len(self.structure))]
         for variant_n in range(1, self.number_of_variants + 1):
@@ -47,9 +48,9 @@ class TaskGenerator:
                                                     y_range=(parameters['y1'], parameters['y2']),
                                                     step=parameters['step'])
                     if task_name == 'Trapezoid':
-                        task = TrapezoidTask().randomize(parameters['n'])
+                        task = TrapezoidTask.randomize(parameters['n'])
                     if task_name == 'Simpson':
-                        task = SimpsonTask().randomize(parameters['n'])
+                        task = SimpsonTask.randomize(parameters['n'])
                     if task_name == 'Interpolation_Lagrange':
                         task = InterpolationTask(degree=(parameters['degree']), type='Lagrange')
                     if task_name == 'Interpolation_Forward':

@@ -81,7 +81,7 @@ class InterpolationTask:
     def get_tex_answer(self, task_number):
         answer_table = Tabular("p{9cm}")
 
-        answer_table.append(f'Ответ для {task_number}-го номера')
+        answer_table.append(f'Ответ для {task_number}-го номера:')
 
         answer_table.append(self.get_table())
 
