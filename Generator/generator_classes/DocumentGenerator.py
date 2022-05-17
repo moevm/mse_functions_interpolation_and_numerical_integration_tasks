@@ -54,7 +54,7 @@ class DocumentGenerator:
             document.packages.append(Package('booktabs'))
 
     def generate_document(self, variants_list, seed):
-        line_width = 1.83
+        line_width = 1.2
         task_table = LongTable(
             f"!{{\\vrule width {line_width}pt}}p{{9.5cm}}"
             f"!{{\\vrule width {line_width}pt}}p{{9.5cm}}"
