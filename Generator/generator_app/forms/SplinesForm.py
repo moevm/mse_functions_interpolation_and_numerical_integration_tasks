@@ -1,5 +1,5 @@
+import re
 from django import forms
-
 from .InterpolationForm import variants_type_choices, generation_format_choices
 
 
@@ -76,6 +76,16 @@ class SplinesForm(forms.Form):
         cleaned_data = super().clean()
         if cleaned_data.get('generation_format') is None:
             raise forms.ValidationError("Выберите формат генерации")
+        if not re.match(r'^\w+$', cleaned_data.get('filename')) and len(cleaned_data.get('filename')) <= 255:
+            print(cleaned_data.get('filename'))
+            raise forms.ValidationError("Введите имя файла, состоящее из букв, цифр и нижнего подчёркивания")
+
+        if cleaned_data.get('Splines_x1') > cleaned_data.get('Splines_x2'):
+            raise forms.ValidationError("Верхняя граница по x меньше нижней границы")
+        if cleaned_data.get('Splines_y1') > cleaned_data.get('Splines_y2'):
+            raise forms.ValidationError("Верхняя граница по y меньше нижней границы")
+        if cleaned_data.get('Splines_step') > abs(cleaned_data.get('Splines_x1') - cleaned_data.get('Splines_x2')):
+            raise forms.ValidationError("Шаг превышает размер отрезка между нижней и верхней границами")
 
         variants_types = ['digits', 'surnames']
         variants_type = cleaned_data.get('variants_type')

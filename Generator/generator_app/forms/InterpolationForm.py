@@ -1,3 +1,4 @@
+import re
 from django import forms
 from django.core.files.uploadedfile import UploadedFile
 
@@ -113,6 +114,13 @@ class InterpolationForm(forms.Form):
         cleaned_data = super().clean()
         if cleaned_data.get('generation_format') is None:
             raise forms.ValidationError("Выберите формат генерации")
+
+        if not re.match(r'^\w+$', cleaned_data.get('filename')) and len(cleaned_data.get('filename')) <= 255:
+            print(cleaned_data.get('filename'))
+            raise forms.ValidationError("Введите имя файла, состоящее из букв, цифр и нижнего подчёркивания")
+
+        if cleaned_data.get('tasks') is None:
+            raise forms.ValidationError("Выберите хотя бы одно задание")
 
         variants_types = ['digits', 'surnames']
         variants_type = cleaned_data.get('variants_type')
