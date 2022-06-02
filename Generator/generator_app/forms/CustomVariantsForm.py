@@ -131,6 +131,12 @@ class CustomVariantsForm(forms.Form):
             print(cleaned_data.get('filename'))
             raise forms.ValidationError("Введите имя файла, состоящее из букв, цифр и нижнего подчёркивания")
 
+        if cleaned_data.get('Splines_x1') > cleaned_data.get('Splines_x2'):
+            raise forms.ValidationError("Верхняя граница по x меньше нижней границы")
+        if cleaned_data.get('Splines_y1') > cleaned_data.get('Splines_y2'):
+            raise forms.ValidationError("Верхняя граница по y меньше нижней границы")
+        if cleaned_data.get('Splines_step') > abs(cleaned_data.get('Splines_x1') - cleaned_data.get('Splines_x2')):
+            raise forms.ValidationError("Шаг превышает размер отрезка между нижней и верхней границами")
         variants_types = ['digits', 'surnames']
         variants_type = cleaned_data.get('variants_type')
         if variants_type not in variants_types:
