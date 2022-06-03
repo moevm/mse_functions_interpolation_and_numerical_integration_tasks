@@ -140,6 +140,11 @@ class DocumentGenerator:
             task_table.append(NoEscape(f'\\specialrule{{{line_width}pt}}{{0pt}}{{0pt}}'))
             answer_table.append(NoEscape(f'\\specialrule{{{line_width}pt}}{{0pt}}{{0pt}}'))
 
+        # Check if empty
+        if len(variants_list) == 0:
+            task_table.add_empty_row()
+            answer_table.add_empty_row()
+
         self.tasks_document.append(task_table)
         self.answers_document.append(answer_table)
 
